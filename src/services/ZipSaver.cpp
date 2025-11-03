@@ -1,9 +1,10 @@
 #include <iostream>
 #include "services/ZipSaver.h"
 
-void ZipSaver::SaveToZip(const std::vector<std::string> fileVector)
+void ZipSaver::SaveToZip(const std::string folderName, const std::vector<std::string> fileVector)
 {
-    zipFile zf = zipOpen("test.zip", 0);
+    std::string zipFileName = folderName + ".zip";
+    zipFile zf = zipOpen(zipFileName.c_str(), 0);
     if (!zf)
     {
         std::cerr << "Cannot create zip file\n";

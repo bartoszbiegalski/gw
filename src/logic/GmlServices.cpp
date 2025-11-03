@@ -89,7 +89,7 @@ void GmlServices::PerformDivision(const std::string &inFile, std::vector<Namespa
     };
 
     fillZipVec(objVec);
-    ZipSaver::SaveToZip(zipFileVec);
+    ZipSaver::SaveToZip(obj.get()->getFilePath().stem().string(), zipFileVec);
 }
 
 std::map<std::string, std::string> GmlServices::GetRootInfoMap(const Object *obj)

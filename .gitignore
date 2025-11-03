@@ -1,0 +1,15 @@
+#Build folder
+/build/
+
+#Binaries
+*.o
+*.obj
+*.exe
+*.dll
+*.pdb
+
+#CMake
+CMakeCache.txt
+CMakeFiles/
+Makefile
+*.vcxproj*
