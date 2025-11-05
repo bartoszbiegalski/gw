@@ -20,9 +20,9 @@ void GmlDivide::Divide(const std::unique_ptr<XmlConfig> &cfg, std::unique_ptr<Ob
 
             GmlStorage gmlStorage;
             gmlStorage.setGmlMap(gmlMap);
-            const std::string newFileName = obj->getFilePath().stem().string() + fileSuffix + extension;
+            const std::string newFileName = obj->getFilePath().stem().u8string() + fileSuffix + extension;
             newObj->setFileName(newFileName);
-            newObj->setFilePath((obj->getFilePath().parent_path() / newFileName).string());
+            newObj->setFilePath((obj->getFilePath().parent_path() / newFileName).u8string());
             newObj->setNamespaceMap(obj->getNamespaceMap());
             newObj->setGmlStorage(gmlStorage);
 

@@ -30,7 +30,7 @@ void XsdParser::Parse(std::unique_ptr<XmlConfig> &cfg, std::unique_ptr<Object> &
     auto doc = xmlReadFile(obj.get()->getFilePath().string().c_str(), nullptr, 0);
     if (!doc)
     {
-        throw FileNotFoundException(obj.get()->getFilePath());
+        throw FileNotFoundException(obj.get()->getFilePath().string());
     }
     // chcemy miec liste sciezek XSD. zeby to zrobic, wezmiemy z obj mape namespace-ow i wybierzemy te, ktore maja jakies elementy w mapie elementow. potem wg. tychże sparsujemy
     auto xsdVec = NamespaceTool::GetXsdVector(obj);

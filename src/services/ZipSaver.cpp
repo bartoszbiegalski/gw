@@ -1,35 +1,44 @@
 #include <iostream>
 #include "services/ZipSaver.h"
 
-void ZipSaver::SaveToZip(const std::string folderName, const std::vector<std::string> fileVector)
+void ZipSaver::SaveToZip(const std::string &folderName, const std::filesystem::path &folderPath, const std::vector<std::string> &fileVector)
 {
-    std::string zipFileName = folderName + ".zip";
-    zipFile zf = zipOpen(zipFileName.c_str(), 0);
-    if (!zf)
+    std::filesystem::path zipPath = std::filesystem::path(folderPath) / (folderName + ".zip");
+    std::string zipPathStr = zipPath.generic_u8string();
+    int error = 0;
+    zip_t *za = zip_open(zipPathStr.c_str(), ZIP_CREATE | ZIP_TRUNCATE, &error);
+    if (!za)
     {
-        std::cerr << "Cannot create zip file\n";
+        char buf[1024];
+        zip_error_to_str(buf, sizeof(buf), error, errno);
+        std::cerr << "Cannot create zip file: " << buf << "\n";
         return;
     }
 
-    for (auto &filename : fileVector)
+    for (const auto &fileName : fileVector)
     {
-        std::ifstream file(filename, std::ios::binary);
-        if (!file)
-            continue;
-
-        zip_fileinfo zi = {};
-        if (ZIP_OK != zipOpenNewFileInZip(zf, filename.c_str(), &zi,
-                                          nullptr, 0, nullptr, 0, nullptr, Z_DEFLATED, Z_DEFAULT_COMPRESSION))
+        zip_source_t *zs = zip_source_file(za, fileName.c_str(), 0, 0);
+        if (!zs)
         {
-            std::cerr << "Cannot add file: " << filename << "\n";
+            std::cerr << "Error creating zip source for " << fileName << ": " << zip_strerror(za) << "\n";
             continue;
         }
 
-        std::vector<char> buffer((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
-        zipWriteInFileInZip(zf, buffer.data(), buffer.size());
-        zipCloseFileInZip(zf);
+        std::filesystem::path filePath(fileName);
+        zip_int64_t idx = zip_file_add(za, filePath.filename().u8string().c_str(), zs, ZIP_FL_OVERWRITE);
+        if (idx < 0)
+        {
+            std::cerr << "Error adding file " << fileName << ": " << zip_strerror(za) << "\n";
+            zip_source_free(zs);
+        }
     }
 
-    zipClose(zf, nullptr);
-    std::cout << "ZIP created!\n";
+    if (zip_close(za) < 0)
+    {
+        std::cerr << "Error closing zip: " << zip_strerror(za) << "\n";
+    }
+    else
+    {
+        std::cout << "ZIP created at: " << zipPath.generic_u8string() << "\n";
+    }
 }

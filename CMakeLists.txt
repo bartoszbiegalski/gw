@@ -1,5 +1,4 @@
 cmake_minimum_required(VERSION 3.16)
-
 project(gw VERSION 0.3 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
@@ -7,40 +6,68 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wpedantic -Wconversion -O3")
 
 add_definitions(-DLIBXML_STATIC)
+add_definitions(-DLIBZIP_NO_CRYPTO)
 
 # -------------------------------
 # libxml2
 # -------------------------------
-if(WIN32)
-    # Windows: podaj ścieżki do libxml2 ręcznie lub użyj vcpkg
-    set(LIBXML2_INCLUDE_DIR "C:/Libraries/libxml2/include")
+if(MINGW)
+    # Cross-kompilacja Windows z Linuxa (MXE)
+    set(LIBXML2_INCLUDE_DIR "/home/bartek/mxe/usr/x86_64-w64-mingw32.static/include/libxml2")
+    set(LIBXML2_LIBRARIES "/home/bartek/mxe/usr/x86_64-w64-mingw32.static/lib/libxml2.a")
+    set(ZLIB_LIB "/home/bartek/mxe/usr/x86_64-w64-mingw32.static/lib/libz.a")
+
+    set(BZIP2_LIB "/home/bartek/mxe/usr/x86_64-w64-mingw32.static/lib/libbz2.a")
+    set(ICONV_LIB "/home/bartek/mxe/usr/x86_64-w64-mingw32.static/lib/libiconv.a")
+    set(BCRYPT_LIB "bcrypt")
+
+elseif(WIN32)
+    # Windows natywnie (Visual Studio)
+    set(LIBXML2_INCLUDE_DIR "C:/libxml-2.0/include")
     set(LIBXML2_LIBRARIES "C:/Libraries/libxml2/lib/libxml2.lib")
 else()
+    # Linux
     find_package(PkgConfig REQUIRED)
     pkg_check_modules(LIBXML2 REQUIRED libxml-2.0)
-
     set(LIBXML2_INCLUDE_DIR ${LIBXML2_INCLUDE_DIRS})
     set(LIBXML2_LIBRARIES ${LIBXML2_LIBRARIES})
 endif()
+
 # -------------------------------
-# minizip i zlib
+# libzip i zlib (zamiast minizip)
 # -------------------------------
-if(WIN32)
-    # Windows: podaj ścieżki ręcznie, jeśli masz minizip/zlib w zewnętrznym folderze
-    set(MINIZIP_INCLUDE_DIR "C:/Libraries/minizip/include")
-    set(MINIZIP_LIB "C:/Libraries/minizip/lib/minizip.lib")
+if(MINGW)
+    # Cross-kompilacja Windows z Linuxa (MXE)
+    set(LIBZIP_INCLUDE_DIR "/home/bartek/mxe/usr/x86_64-w64-mingw32.static/include/libzip")
+    set(LIBZIP_LIB "/home/bartek/mxe/usr/x86_64-w64-mingw32.static/lib/libzip.a")
+    set(ZLIB_LIB "/home/bartek/mxe/usr/x86_64-w64-mingw32.static/lib/libz.a")
+    set(ICONV_LIB "/home/bartek/mxe/usr/x86_64-w64-mingw32.static/lib/libiconv.a")
+    set(BCRYPT_LIB "bcrypt")
+elseif(WIN32)
+    set(LIBZIP_INCLUDE_DIR "C:/Libraries/libzip/include")
+    set(LIBZIP_LIB "C:/Libraries/libzip/lib/libzip.lib")
     set(ZLIB_LIB "C:/Libraries/zlib/lib/zlib.lib")
 else()
-    find_path(MINIZIP_INCLUDE_DIR minizip/zip.h)
-    find_library(MINIZIP_LIB minizip)
-    find_library(ZLIB_LIB z)
+    # Linux
+    find_package(PkgConfig REQUIRED)
+    pkg_check_modules(LIBZIP REQUIRED libzip)
+    set(LIBZIP_INCLUDE_DIR ${LIBZIP_INCLUDE_DIRS})
+    set(LIBZIP_LIB ${LIBZIP_LIBRARIES})
+    set(ZLIB_LIB z)
 endif()
+
 
 # -------------------------------
 # Pliki projektu
 # -------------------------------
 file(GLOB_RECURSE GW_LIBRARY_HEADERS "include/*.h")
-file(GLOB_RECURSE GW_LIBRARY_SOURCES "src/*.cpp")
+file(GLOB_RECURSE GW_LIBRARY_SOURCES
+    "src/core/*.cpp"
+    "src/io/*.cpp"
+    "src/logic/*.cpp"
+    "src/services/*.cpp"
+    "src/utils/*.cpp"
+)
 
 # -------------------------------
 # Biblioteka statyczna gw_lib
@@ -48,20 +75,51 @@ file(GLOB_RECURSE GW_LIBRARY_SOURCES "src/*.cpp")
 add_library(gw_lib STATIC ${GW_LIBRARY_HEADERS} ${GW_LIBRARY_SOURCES})
 target_include_directories(gw_lib PUBLIC
     ${LIBXML2_INCLUDE_DIR}
-    ${MINIZIP_INCLUDE_DIR}
+    ${LIBZIP_INCLUDE_DIR}         
     ${CMAKE_CURRENT_BINARY_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
-target_link_libraries(gw_lib PUBLIC ${MINIZIP_LIB} ${ZLIB_LIB} ${LIBXML2_LIBRARIES})
+target_link_libraries(gw_lib PUBLIC
+    ${LIBZIP_LIB}
+    ${ZLIB_LIB}
+    ${LIBXML2_LIBRARIES}
+)
+
+if(MINGW)
+    target_link_libraries(gw_lib PUBLIC
+        ${LIBZIP_LIB}
+        ${LIBXML2_LIBRARIES}  # najpierw libxml2
+        ${ZLIB_LIB}            # potem zlib
+        ${BZIP2_LIB}
+        ${ICONV_LIB}
+        ${BCRYPT_LIB}
+    )
+else()
+    target_link_libraries(gw_lib PUBLIC
+        ${LIBZIP_LIB}
+        ${ZLIB_LIB}
+        ${LIBXML2_LIBRARIES}
+    )
+endif()
 
 # -------------------------------
 # Wykonywalne
 # -------------------------------
-add_executable(gw src/main.cpp)
+add_executable(gw src/release/main.cpp)
 target_link_libraries(gw PRIVATE gw_lib)
 
-add_executable(gw_divide_exe src/release/divide.cpp)
-target_link_libraries(gw_divide_exe PRIVATE gw_lib)
+if(WIN32)
+    add_executable(divide src/release/divide_main.cpp)
+    target_link_libraries(divide PRIVATE gw_lib)
+endif()
+
+if(MINGW)
+    set_target_properties(divide PROPERTIES 
+        COMPILE_FLAGS "-municode"
+        LINK_FLAGS "-Wl,--subsystem,console"
+    )
+endif()
+
 
 # -------------------------------
 # DLL

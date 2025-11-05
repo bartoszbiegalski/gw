@@ -10,18 +10,23 @@
 
 std::map<std::string, std::string> NamespaceTool::GetAttributesMap(const std::unique_ptr<XmlConfig> &cfg, const std::unique_ptr<Object> &obj)
 {
-    xmlTextReaderPtr reader = xmlReaderForFile(obj->getFilePath().string().c_str(), nullptr, 0);
+    xmlTextReaderPtr reader = xmlReaderForFile(obj->getFilePath().u8string().c_str(), nullptr, 0);
     if (!reader)
     {
-        throw FileNotFoundException(obj->getFilePath().string());
+        throw FileNotFoundException(obj->getFilePath().u8string());
     }
 
     /// uzywamy cfg do sprawdzania elementow gml-a
     std::string cfgSeparator = cfg.get()->get("gml_separator", ":");
     auto foundAttributesMap = std::map<std::string, std::string>();
 
+    bool foundComment, foundRootAttributes = false;
+
     while (xmlTextReaderRead(reader) == 1)
     {
+        if (foundRootAttributes == true && foundComment == true)
+            break;
+
         if (xmlTextReaderNodeType(reader) == XML_READER_TYPE_ELEMENT)
         {
             int attrCount = xmlTextReaderAttributeCount(reader);
@@ -35,7 +40,16 @@ std::map<std::string, std::string> NamespaceTool::GetAttributesMap(const std::un
                 std::string attrName = prefix + cfgSeparator + name;
                 foundAttributesMap.emplace(attrName, attrValue);
             }
-            break;
+            foundRootAttributes = true;
+        }
+        else if (xmlTextReaderNodeType(reader) == XML_READER_TYPE_COMMENT)
+        {
+            const xmlChar *comment = xmlTextReaderConstValue(reader);
+            if (comment)
+            {
+                obj.get()->setComment(reinterpret_cast<const char *>(comment));
+            }
+            foundComment = true;
         }
     }
     xmlTextReaderClose(reader);

@@ -2,13 +2,13 @@
 #include "services/ZipSaver.h"
 #include <iostream>
 
-void GmlServices::PerformDivision(const std::string &inFile, std::vector<NamespacePrefix> &nsVec)
+void GmlServices::PerformDivision(const std::filesystem::path &inFile, std::vector<NamespacePrefix> &nsVec)
 {
     // JSON w formie stringa
     std::string jsonText = R"(
     {
         "gml_preambule": {
-            "gml_version": 1.0,
+            "gml_version": "1.0",
             "gml_encoding": "UTF-8",
             "gml_standalone": "no"
         },
@@ -44,7 +44,6 @@ void GmlServices::PerformDivision(const std::string &inFile, std::vector<Namespa
         }
     })";
 
-    // Tworzymy tymczasowy plik JSON
     std::filesystem::path tmpJsonPath = std::filesystem::temp_directory_path() / "temp_config.json";
     std::ofstream ofs(tmpJsonPath);
     if (!ofs)
@@ -54,7 +53,6 @@ void GmlServices::PerformDivision(const std::string &inFile, std::vector<Namespa
     ofs << jsonText;
     ofs.close();
 
-    // Tworzymy konfigurację z pliku
     auto cfg = std::make_unique<XmlConfig>(tmpJsonPath);
     std::unique_ptr<Object> obj = std::make_unique<Object>();
     GmlImport::Import(inFile, obj);
@@ -73,13 +71,13 @@ void GmlServices::PerformDivision(const std::string &inFile, std::vector<Namespa
     GmlDivide::Divide(cfg, obj, nsVec, objVec);
     for (auto &o : objVec)
     {
+        o.get()->setComment(obj.get()->getComment());
         GmlExport::Export(cfg, o);
     }
 
     std::filesystem::remove(tmpJsonPath);
     std::vector<std::string> zipFileVec;
 
-    // lambda
     auto fillZipVec = [&zipFileVec](const auto &objects)
     {
         for (const auto &obj : objects)
@@ -89,7 +87,7 @@ void GmlServices::PerformDivision(const std::string &inFile, std::vector<Namespa
     };
 
     fillZipVec(objVec);
-    ZipSaver::SaveToZip(obj.get()->getFilePath().stem().string(), zipFileVec);
+    ZipSaver::SaveToZip(obj.get()->getFilePath().stem().u8string(), obj.get()->getFilePath().parent_path(), zipFileVec);
 }
 
 std::map<std::string, std::string> GmlServices::GetRootInfoMap(const Object *obj)

@@ -1,7 +1,7 @@
 {
     "gml_preambule":
     {
-        "gml_version": 1.0,
+        "gml_version": "1.0",
         "gml_encoding": "UTF-8",
         "gml_standalone": "no"
     },

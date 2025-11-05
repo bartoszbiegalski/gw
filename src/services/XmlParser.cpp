@@ -5,7 +5,7 @@
 void XmlParser::SetContent(const std::unique_ptr<XmlConfig> &cfg, std::unique_ptr<Object> &obj)
 {
     xmlInitParser();
-    xmlDocPtr doc = xmlReadFile(obj->getFilePath().string().c_str(), nullptr, 0);
+    xmlDocPtr doc = xmlReadFile(obj->getFilePath().u8string().c_str(), nullptr, 0);
 
     if (!doc)
     {
@@ -32,6 +32,13 @@ void XmlParser::SetContent(const std::unique_ptr<XmlConfig> &cfg, std::unique_pt
                     if (prefix != "")
                     {
                         std::string id = reinterpret_cast<const char *>(childChild->properties->children->content);
+                        if (childChild->ns)
+                        {
+                            xmlNsPtr mainNs = xmlSearchNs(doc, childChild, childChild->ns->prefix);
+                            if (mainNs)
+                                xmlSetNs(childChild, mainNs);
+                        }
+
                         gmlStorage.add(prefix, id, GmlNodePtr(childChild, XmlNodeDeleter{}));
                     }
                 }

@@ -19,6 +19,8 @@ public:
     const FilePath getFilePath() const { return this->filePath; }
     void setFilePath(const FilePath &filePath) { this->filePath = filePath; }
 
+    const std::string getComment() const { return this->comment; }
+    void setComment(const std::string &comment) { this->comment = comment; }
     NamespaceMap &getNamespaceMap() { return this->namespaceMap; }
     const NamespaceMap &getNamespaceMap() const { return this->namespaceMap; }
 
@@ -43,6 +45,8 @@ private:
 
     FileName fileName;
     FilePath filePath;
+
+    std::string comment = "";
 
     NamespaceMap namespaceMap;
     GmlStorage gmlStorage;
