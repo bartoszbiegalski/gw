@@ -2,7 +2,7 @@
 #include "services/ZipSaver.h"
 #include <iostream>
 
-void GmlServices::PerformDivision(const std::filesystem::path &inFile, std::vector<NamespacePrefix> &nsVec)
+void GmlServices::PerformDivision(const std::filesystem::path &inFile, std::vector<NamespacePrefix> &nsVec, bool isZip)
 {
     // JSON w formie stringa
     std::string jsonText = R"(
@@ -71,23 +71,29 @@ void GmlServices::PerformDivision(const std::filesystem::path &inFile, std::vect
     GmlDivide::Divide(cfg, obj, nsVec, objVec);
     for (auto &o : objVec)
     {
-        o.get()->setComment(obj.get()->getComment());
         GmlExport::Export(cfg, o);
     }
 
     std::filesystem::remove(tmpJsonPath);
-    std::vector<std::string> zipFileVec;
 
-    auto fillZipVec = [&zipFileVec](const auto &objects)
+    if (isZip)
     {
-        for (const auto &obj : objects)
+        std::vector<std::string> zipFileVec;
+        auto fillZipVec = [&zipFileVec](const auto &objects)
         {
-            zipFileVec.push_back(obj->getFileName());
-        }
-    };
+            for (const auto &obj : objects)
+            {
+                zipFileVec.push_back(obj->getFileName());
+            }
+        };
+        fillZipVec(objVec);
+        ZipSaver::SaveToZip(obj.get()->getFilePath().stem().u8string(), obj.get()->getFilePath().parent_path(), zipFileVec);
 
-    fillZipVec(objVec);
-    ZipSaver::SaveToZip(obj.get()->getFilePath().stem().u8string(), obj.get()->getFilePath().parent_path(), zipFileVec);
+        for (const auto &obj : objVec)
+        {
+            std::filesystem::remove(obj->getFilePath());
+        }
+    }
 }
 
 std::map<std::string, std::string> GmlServices::GetRootInfoMap(const Object *obj)

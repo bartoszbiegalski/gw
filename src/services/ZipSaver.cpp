@@ -17,7 +17,8 @@ void ZipSaver::SaveToZip(const std::string &folderName, const std::filesystem::p
 
     for (const auto &fileName : fileVector)
     {
-        zip_source_t *zs = zip_source_file(za, fileName.c_str(), 0, 0);
+        auto savePath = std::filesystem::path(folderPath) / fileName;
+        zip_source_t *zs = zip_source_file(za, savePath.string().c_str(), 0, 0);
         if (!zs)
         {
             std::cerr << "Error creating zip source for " << fileName << ": " << zip_strerror(za) << "\n";
@@ -36,9 +37,11 @@ void ZipSaver::SaveToZip(const std::string &folderName, const std::filesystem::p
     if (zip_close(za) < 0)
     {
         std::cerr << "Error closing zip: " << zip_strerror(za) << "\n";
-    }
-    else
-    {
-        std::cout << "ZIP created at: " << zipPath.generic_u8string() << "\n";
+
+        int zip_err_code = 0;
+        int sys_err_code = 0;
+        zip_error_get(za, &zip_err_code, &sys_err_code);
+        std::cerr << "libzip error code: " << zip_err_code
+                  << ", system error code: " << sys_err_code << "\n";
     }
 }

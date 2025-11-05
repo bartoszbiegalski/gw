@@ -23,6 +23,7 @@ void GmlDivide::Divide(const std::unique_ptr<XmlConfig> &cfg, std::unique_ptr<Ob
             const std::string newFileName = obj->getFilePath().stem().u8string() + fileSuffix + extension;
             newObj->setFileName(newFileName);
             newObj->setFilePath((obj->getFilePath().parent_path() / newFileName).u8string());
+            newObj->setComment(obj.get()->getComment());
             newObj->setNamespaceMap(obj->getNamespaceMap());
             newObj->setGmlStorage(gmlStorage);
 

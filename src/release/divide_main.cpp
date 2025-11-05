@@ -1,7 +1,7 @@
 // divide.exe
 // Program made for C-GEO purposes, creates exe
 // Only on Windows!
-// <file_name> <ns_1> <ns_2> ..
+// <file_name> <-z?> <ns_1> <ns_2> ..
 #ifdef _WIN32
 // main.cpp
 #include <windows.h>
@@ -41,8 +41,23 @@ int main()
         return -1;
     }
 
-    std::filesystem::path filePath(wargv[1]);
-
+    // if 'z' was given in wargs, create zip
+    std::string zipOpt = wstring_to_utf8(wargv[1]);
+    int argC{0};
+    bool isZip = false;
+    std::filesystem::path filePath;
+    if (zipOpt == "-z" || zipOpt == "-Z")
+    {
+        filePath = std::filesystem::path(wargv[2]);
+        argC = 3;
+        isZip = true;
+    }
+    else
+    {
+        filePath = std::filesystem::path(wargv[1]);
+        argC = 2;
+        isZip = false;
+    }
     HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 
     if (!std::filesystem::exists(filePath))
@@ -58,12 +73,12 @@ int main()
     DWORD written;
 
     std::vector<std::string> nsVect;
-    for (int i = 2; i < argc; ++i)
+    for (int i = argC; i < argc; ++i)
     {
         nsVect.push_back(wstring_to_utf8(wargv[i]));
     }
 
-    GmlServices::PerformDivision(filePath, nsVect);
+    GmlServices::PerformDivision(filePath, nsVect, isZip);
     LocalFree(wargv);
     return 0;
 }
