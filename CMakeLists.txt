@@ -3,63 +3,40 @@ project(gw VERSION 0.3 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wpedantic -Wconversion -O3")
 
-add_definitions(-DLIBXML_STATIC)
-add_definitions(-DLIBZIP_NO_CRYPTO)
-
-# -------------------------------
-# libxml2
-# -------------------------------
-if(MINGW)
-    # Cross-kompilacja Windows z Linuxa (MXE)
-    set(LIBXML2_INCLUDE_DIR "/home/bartek/mxe/usr/x86_64-w64-mingw32.static/include/libxml2")
-    set(LIBXML2_LIBRARIES "/home/bartek/mxe/usr/x86_64-w64-mingw32.static/lib/libxml2.a")
-    set(ZLIB_LIB "/home/bartek/mxe/usr/x86_64-w64-mingw32.static/lib/libz.a")
-
-    set(BZIP2_LIB "/home/bartek/mxe/usr/x86_64-w64-mingw32.static/lib/libbz2.a")
-    set(ICONV_LIB "/home/bartek/mxe/usr/x86_64-w64-mingw32.static/lib/libiconv.a")
-    set(BCRYPT_LIB "bcrypt")
-
-elseif(WIN32)
-    # Windows natywnie (Visual Studio)
-    set(LIBXML2_INCLUDE_DIR "C:/libxml-2.0/include")
-    set(LIBXML2_LIBRARIES "C:/Libraries/libxml2/lib/libxml2.lib")
+# compile options
+if(MSVC)
+    add_compile_options(/W4 /permissive-)
 else()
-    # Linux
-    find_package(PkgConfig REQUIRED)
+    add_compile_options(-Wall -Wextra -Wpedantic -Wconversion -O3)
+endif()
+
+add_definitions(-DLIBXML_STATIC -DLIBZIP_NO_CRYPTO)
+
+# vcpkg
+if(NOT DEFINED CMAKE_TOOLCHAIN_FILE AND DEFINED ENV{VCPKG_ROOT})
+    set(CMAKE_TOOLCHAIN_FILE "$ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
+        CACHE STRING "Vcpkg toolchain file")
+    message(STATUS "Using vcpkg toolchain: ${CMAKE_TOOLCHAIN_FILE}")
+endif()
+
+# libxml2, libzip
+
+if(MSVC)
+    find_package(LibXml2 CONFIG REQUIRED)
+    find_package(libzip CONFIG REQUIRED)
+    set(LIBXML2_TARGET libxml2::libxml2)
+    set(LIBZIP_TARGET libzip::libzip)
+else()
+    find_package(PkgConfig REQUIRED)    
     pkg_check_modules(LIBXML2 REQUIRED libxml-2.0)
-    set(LIBXML2_INCLUDE_DIR ${LIBXML2_INCLUDE_DIRS})
-    set(LIBXML2_LIBRARIES ${LIBXML2_LIBRARIES})
-endif()
-
-# -------------------------------
-# libzip i zlib (zamiast minizip)
-# -------------------------------
-if(MINGW)
-    # Cross-kompilacja Windows z Linuxa (MXE)
-    set(LIBZIP_INCLUDE_DIR "/home/bartek/mxe/usr/x86_64-w64-mingw32.static/include/libzip")
-    set(LIBZIP_LIB "/home/bartek/mxe/usr/x86_64-w64-mingw32.static/lib/libzip.a")
-    set(ZLIB_LIB "/home/bartek/mxe/usr/x86_64-w64-mingw32.static/lib/libz.a")
-    set(ICONV_LIB "/home/bartek/mxe/usr/x86_64-w64-mingw32.static/lib/libiconv.a")
-    set(BCRYPT_LIB "bcrypt")
-elseif(WIN32)
-    set(LIBZIP_INCLUDE_DIR "C:/Libraries/libzip/include")
-    set(LIBZIP_LIB "C:/Libraries/libzip/lib/libzip.lib")
-    set(ZLIB_LIB "C:/Libraries/zlib/lib/zlib.lib")
-else()
-    # Linux
-    find_package(PkgConfig REQUIRED)
     pkg_check_modules(LIBZIP REQUIRED libzip)
-    set(LIBZIP_INCLUDE_DIR ${LIBZIP_INCLUDE_DIRS})
-    set(LIBZIP_LIB ${LIBZIP_LIBRARIES})
-    set(ZLIB_LIB z)
+
+    set(LIBXML2_TARGET ${LIBXML2_LIBRARIES})
+    set(LIBZIP_TARGET  ${LIBZIP_LIBRARIES})
 endif()
 
-
-# -------------------------------
 # Pliki projektu
-# -------------------------------
 file(GLOB_RECURSE GW_LIBRARY_HEADERS "include/*.h")
 file(GLOB_RECURSE GW_LIBRARY_SOURCES
     "src/core/*.cpp"
@@ -69,42 +46,22 @@ file(GLOB_RECURSE GW_LIBRARY_SOURCES
     "src/utils/*.cpp"
 )
 
-# -------------------------------
-# Biblioteka statyczna gw_lib
-# -------------------------------
+# static library gw_lib
 add_library(gw_lib STATIC ${GW_LIBRARY_HEADERS} ${GW_LIBRARY_SOURCES})
+
 target_include_directories(gw_lib PUBLIC
-    ${LIBXML2_INCLUDE_DIR}
-    ${LIBZIP_INCLUDE_DIR}         
-    ${CMAKE_CURRENT_BINARY_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/include
-)
-target_link_libraries(gw_lib PUBLIC
-    ${LIBZIP_LIB}
-    ${ZLIB_LIB}
-    ${LIBXML2_LIBRARIES}
+    ${CMAKE_CURRENT_BINARY_DIR}
 )
 
-if(MINGW)
-    target_link_libraries(gw_lib PUBLIC
-        ${LIBZIP_LIB}
-        ${LIBXML2_LIBRARIES}  # najpierw libxml2
-        ${ZLIB_LIB}            # potem zlib
-        ${BZIP2_LIB}
-        ${ICONV_LIB}
-        ${BCRYPT_LIB}
-    )
+if(MSVC)
+    target_link_libraries(gw_lib PUBLIC ${LIBXML2_TARGET} ${LIBZIP_TARGET})
 else()
-    target_link_libraries(gw_lib PUBLIC
-        ${LIBZIP_LIB}
-        ${ZLIB_LIB}
-        ${LIBXML2_LIBRARIES}
-    )
+    target_include_directories(gw_lib PUBLIC ${LIBXML2_INCLUDE_DIRS} ${LIBZIP_INCLUDE_DIRS})
+    target_link_libraries(gw_lib PUBLIC ${LIBXML2_TARGET} ${LIBZIP_TARGET})
 endif()
 
-# -------------------------------
-# Wykonywalne
-# -------------------------------
+# .exe
 add_executable(gw src/release/main.cpp)
 target_link_libraries(gw PRIVATE gw_lib)
 
@@ -119,7 +76,6 @@ if(MINGW)
         LINK_FLAGS "-Wl,--subsystem,console"
     )
 endif()
-
 
 # -------------------------------
 # DLL
