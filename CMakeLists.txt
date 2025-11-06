@@ -65,13 +65,22 @@ endif()
 add_executable(gw src/release/main.cpp)
 target_link_libraries(gw PRIVATE gw_lib)
 
+add_executable(merge src/release/merge_main.cpp)
+target_link_libraries(merge PRIVATE gw_lib)
+
 if(WIN32)
     add_executable(divide src/release/divide_main.cpp)
     target_link_libraries(divide PRIVATE gw_lib)
+
+    
 endif()
 
 if(MINGW)
     set_target_properties(divide PROPERTIES 
+        COMPILE_FLAGS "-municode"
+        LINK_FLAGS "-Wl,--subsystem,console"
+    )
+    set_target_properties(merge PROPERTIES 
         COMPILE_FLAGS "-municode"
         LINK_FLAGS "-Wl,--subsystem,console"
     )

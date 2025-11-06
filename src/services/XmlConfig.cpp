@@ -7,6 +7,11 @@ XmlConfig::XmlConfig(const FilePath &filePath)
         f >> data_;
 }
 
+XmlConfig::XmlConfig(const nlohmann::json newData)
+{
+    this->data_ = newData;
+}
+
 std::string XmlConfig::get(const std::string &key, const std::string &def) const
 {
     const nlohmann::json *current = &data_;

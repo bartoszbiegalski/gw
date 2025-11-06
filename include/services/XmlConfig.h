@@ -9,7 +9,9 @@
 class XmlConfig : public Config
 {
 public:
-    explicit XmlConfig(const FilePath &filePath);
+    XmlConfig(const FilePath &filePath);
+
+    XmlConfig(const nlohmann::json newData);
 
     std::string get(const std::string &key, const std::string &def) const override;
 
