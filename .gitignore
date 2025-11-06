@@ -14,3 +14,7 @@ CMakeCache.txt
 CMakeFiles/
 Makefile
 *.vcxproj*
+
+#VSCode
+
+.vscode/
