@@ -26,6 +26,4 @@ private:
     static int getNamespaceElementAmount(const Object *obj, const NamespacePrefix &prefix);
 
     static NamespaceData getNamespaceDataFromPrefix(const Object *obj, const NamespacePrefix &prefix);
-
-    // static std::vector<Entry> getClassVector(const Object *obj, const NamespacePrefix &prefix, const std::string className);
 };

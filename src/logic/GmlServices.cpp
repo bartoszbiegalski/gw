@@ -174,25 +174,25 @@ std::map<std::string, int> GmlServices::GetClassNames(const Object *obj, const N
 
 std::map<GmlId, GmlNodePtr> GmlServices::GetClassMap(const Object *obj, const NamespacePrefix &prefix, const std::string className)
 {
-    // auto entryMap = std::map<GmlId, GmlNodePtr>();
-    // if (obj->getGmlStorage().getGmlMap().find(prefix) == obj->getGmlStorage().getGmlMap().end())
-    // {
-    //     return entryVector;
-    // }
-    // else
-    // {
-    //     for (auto &[prefix, vector] : obj->getGmlStorage().getGmlMap().at(prefix))
-    //     {
-    //         auto it = vector.get();
-    //         while (it != nullptr && it->type != XML_TEXT_NODE)
-    //         {
-    //             if (reinterpret_cast<const char *>(it->name) == className)
-    //             {
-    //                 entryVector.emplace(prefix, vector);
-    //             }
-    //             it = it->next;
-    //         }
-    //     }
-    // }
-    // return entryVector;
+    auto entryMap = std::map<GmlId, GmlNodePtr>();
+    if (obj->getGmlStorage().getGmlMap().find(prefix) == obj->getGmlStorage().getGmlMap().end())
+    {
+        return entryMap;
+    }
+    else
+    {
+        for (auto &[prefix, gmlSharedPtr] : obj->getGmlStorage().getGmlMap().at(prefix))
+        {
+            auto it = gmlSharedPtr.get();
+            while (it != nullptr && it->type != XML_TEXT_NODE)
+            {
+                if (reinterpret_cast<const char *>(it->name) == className)
+                {
+                    entryMap.emplace(prefix, gmlSharedPtr);
+                }
+                it = it->next;
+            }
+        }
+    }
+    return entryMap;
 }
