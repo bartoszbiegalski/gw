@@ -33,5 +33,9 @@ int main(int argc, char *argv[])
     GmlImport::Import(filePath, obj);
     NamespaceTool::Process(cfg, obj);
     XmlParser::SetContent(cfg, obj);
+    for (auto &i : obj.get()->getGmlStorage().getGmlMap())
+    {
+        std::cout << i.first << " " << i.second.size() << "\n";
+    }
     return 0;
 }

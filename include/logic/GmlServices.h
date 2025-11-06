@@ -18,7 +18,7 @@ public:
     static std::map<std::string, std::string> GetRootInfoMap(const Object *obj);
     static std::map<std::string, std::string> GetNamespaceNodeInfoMap(const Object *obj, const NamespacePrefix &prefix);
     static std::map<std::string, int> GetClassNames(const Object *obj, const NamespacePrefix &prefix);
-    static std::vector<Entry> GetClassVector(const Object *obj, const NamespacePrefix &prefix, const std::string className);
+    static std::map<GmlId, GmlNodePtr> GetClassMap(const Object *obj, const NamespacePrefix &prefix, const std::string className);
 
 private:
     static int getElementAmount(const Object *obj);

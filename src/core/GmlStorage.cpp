@@ -2,17 +2,17 @@
 
 void GmlStorage::add(const NamespacePrefix &ns, const GmlId &id, GmlNodePtr node)
 {
-    gmlMap[ns].emplace_back(id, std::move(node));
+    gmlMap[ns].emplace(id, std::move(node));
 }
 
 std::optional<xmlNode *> GmlStorage::findById(const GmlId &id) const
 {
-    for (const auto &[ns, vec] : gmlMap)
+    for (const auto &[ns, map] : gmlMap)
     {
-        auto it = std::find_if(vec.begin(), vec.end(),
-                               [&id](const Entry &e)
-                               { return e.first == id; });
-        if (it != vec.end())
+        auto it = std::find_if(map.begin(), map.end(),
+                               [&id](auto const &pair)
+                               { return pair.first == id; });
+        if (it != map.end())
             return it->second.get();
     }
     return std::nullopt;
@@ -38,15 +38,19 @@ bool GmlStorage::hasNamespace(const NamespacePrefix &prefix)
 
 bool GmlStorage::removeById(const GmlId &id)
 {
-    for (auto &[ns, vec] : gmlMap)
+    for (auto &[ns, map] : gmlMap)
     {
-        auto it = std::remove_if(vec.begin(), vec.end(),
-                                 [&id](const Entry &e)
-                                 { return e.first == id; });
-        if (it != vec.end())
+        for (auto it = map.begin(); it != map.end();)
         {
-            vec.erase(it, vec.end());
-            return true;
+            if (it->first == id)
+            {
+                it = map.erase(it);
+                return true;
+            }
+            else
+            {
+                ++it;
+            }
         }
     }
     return false;

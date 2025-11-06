@@ -43,8 +43,8 @@ struct XmlNodeDeleter
 
 using GmlNodePtr = std::shared_ptr<xmlNode>;
 using NamespaceMap = std::map<NamespacePrefix, NamespaceData>;
-using Entry = std::pair<GmlId, GmlNodePtr>;
-using GmlMap = std::map<NamespacePrefix, std::vector<Entry>>;
+// using Entry = std::pair<GmlId, GmlNodePtr>;
+using GmlMap = std::map<NamespacePrefix, std::map<GmlId, GmlNodePtr>>;
 using XsdValidityMap = std::map<NamespacePrefix, bool>;
 
 using XmlSchemaParserCtxtPtr = std::unique_ptr<_xmlSchemaParserCtxt, decltype(&xmlSchemaFreeParserCtxt)>;

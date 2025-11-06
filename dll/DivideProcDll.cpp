@@ -36,7 +36,7 @@ extern "C"
         std::wstring wsIn(inFile);
         std::string fileIn(wsIn.begin(), wsIn.end());
 
-        GmlServices::PerformDivision(fileIn, nsVect);
+        GmlServices::PerformDivision(fileIn, nsVect, false);
         return 0;
     }
 
@@ -60,7 +60,7 @@ extern "C"
         }
 
         std::string fileIn(inFile);
-        GmlServices::PerformDivision(fileIn, nsVect);
+        GmlServices::PerformDivision(fileIn, nsVect, false);
         return 0;
     }
 }
