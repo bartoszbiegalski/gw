@@ -4,6 +4,7 @@
 #include "core/Object.h"
 #include "io/GmlImport.h"
 #include "io/GmlExport.h"
+#include "release/static_config.h"
 #include "utils/string_operations.h"
 #include "utils/tree_operations.h"
 #include "services/XmlConfig.h"

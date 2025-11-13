@@ -4,56 +4,7 @@
 
 void GmlServices::PerformDivision(const std::filesystem::path &inFile, std::vector<NamespacePrefix> &nsVec, bool isZip)
 {
-    // JSON w formie stringa
-    std::string jsonText = R"(
-    {
-        "gml_preambule": {
-            "gml_version": "1.0",
-            "gml_encoding": "UTF-8",
-            "gml_standalone": "no"
-        },
-
-        "gml_extension": ".gml",
-        "gml_prefix": "gml",
-        "gml_separator": ":",
-
-        "id_attribute": "gml:id",
-        "id_value": "ID-",
-
-        "gml_structure": {        
-            "root": "FeatureCollection",
-            "child": "featureMember",       
-            "required_attributes": ["gml:id", "xmlns:gml", "xmlns:xsi", "xmlns:xlink", "xsi:schemaLocation"],
-            "optional_attributes": ["xmlns:gco", "xmlns:gmd", "xmlns:gsr", "xmlns:gss", "xmlns:gts", "xmlns:ot", "xmlns:ges", "xmlns:egb"]
-        },
-
-        "namespace_prefix": "xmlns",
-        "schema_location_attribute": "xsi:schemaLocation",
-
-        "xsd": {
-            "xsd_files": {
-                "ot": ["BDOT500.XSD", "BDOT500-1.3.XSD"],
-                "egb": ["EGIB.XSD"],
-                "ges": ["GESUT.XSD"]
-            },
-            "xsd_extensions": {
-                "ot": "-BDOT500",
-                "egb": "-EGiB",
-                "ges": "-GESUT"
-            }
-        }
-    })";
-
-    std::filesystem::path tmpJsonPath = std::filesystem::temp_directory_path() / "temp_config.json";
-    std::ofstream ofs(tmpJsonPath);
-    if (!ofs)
-    {
-        return;
-    }
-    ofs << jsonText;
-    ofs.close();
-
-    auto cfg = std::make_unique<XmlConfig>(tmpJsonPath);
+    auto cfg = std::make_unique<XmlConfig>(static_config::staticData);
     std::unique_ptr<Object> obj = std::make_unique<Object>();
     GmlImport::Import(inFile, obj);
     NamespaceTool::Process(cfg, obj);
@@ -73,8 +24,6 @@ void GmlServices::PerformDivision(const std::filesystem::path &inFile, std::vect
     {
         GmlExport::Export(cfg, o);
     }
-
-    std::filesystem::remove(tmpJsonPath);
 
     if (isZip)
     {

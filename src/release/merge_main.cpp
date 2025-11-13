@@ -7,7 +7,6 @@
 #include <io/GmlImport.h>
 #include <io/GmlExport.h>
 #include "logic/GmlMerge.h"
-#include "logic/GmlServices.h"
 #include "release/static_config.h"
 #include <services/XmlConfig.h>
 #include "services/XmlParser.h"

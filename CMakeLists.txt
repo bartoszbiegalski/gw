@@ -3,6 +3,7 @@ project(gw VERSION 0.3 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # compile options
 if(MSVC)
@@ -48,6 +49,7 @@ file(GLOB_RECURSE GW_LIBRARY_SOURCES
 
 # static library gw_lib
 add_library(gw_lib STATIC ${GW_LIBRARY_HEADERS} ${GW_LIBRARY_SOURCES})
+add_subdirectory(tests)
 
 target_include_directories(gw_lib PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/include
@@ -71,8 +73,6 @@ target_link_libraries(merge PRIVATE gw_lib)
 if(WIN32)
     add_executable(divide src/release/divide_main.cpp)
     target_link_libraries(divide PRIVATE gw_lib)
-
-    
 endif()
 
 if(MINGW)
@@ -86,9 +86,7 @@ if(MINGW)
     )
 endif()
 
-# -------------------------------
 # DLL
-# -------------------------------
 file(GLOB DLL_SOURCES "dll/*.cpp")
 add_library(my_dll SHARED ${DLL_SOURCES})
 target_include_directories(my_dll PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
@@ -112,3 +110,5 @@ foreach(dll_src ${DLL_SOURCES})
         target_compile_definitions(${dll_name} PRIVATE MYDLL_EXPORTS)
     endif()
 endforeach()
+
+# test
