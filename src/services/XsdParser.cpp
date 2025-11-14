@@ -48,11 +48,12 @@ void XsdParser::Parse(std::unique_ptr<XmlConfig> &cfg, std::unique_ptr<Object> &
             int result = xmlSchemaValidateDoc(validCtxt.get(), tempDoc);
             if (result != 0)
             {
-                std::cout << "node niepoprawny\n";
+                throw XsdParseException(obj.get()->getFilePath().string());
+                // std::cout << "node niepoprawny\n";
             }
             else
             {
-                std::cout << "node poprawny\n";
+                // std::cout << "node poprawny\n";
             }
             xmlFreeDoc(tempDoc);
         }

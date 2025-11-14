@@ -38,8 +38,12 @@ else()
 endif()
 
 # Pliki projektu
-file(GLOB_RECURSE GW_LIBRARY_HEADERS "include/*.h")
+file(GLOB_RECURSE GW_LIBRARY_HEADERS 
+    "benchmark/benchmark.h"
+    "include/*.h"
+)
 file(GLOB_RECURSE GW_LIBRARY_SOURCES
+    "benchmark/benchmark.cpp"
     "src/core/*.cpp"
     "src/io/*.cpp"
     "src/logic/*.cpp"
@@ -52,23 +56,49 @@ add_library(gw_lib STATIC ${GW_LIBRARY_HEADERS} ${GW_LIBRARY_SOURCES})
 add_subdirectory(tests)
 
 target_include_directories(gw_lib PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/benchmark
     ${CMAKE_CURRENT_SOURCE_DIR}/include
     ${CMAKE_CURRENT_BINARY_DIR}
 )
+
+# external 
+if(WIN32)
+    #costam
+    target_include_directories(gw_lib PUBLIC 
+        ${CMAKE_SOURCE_DIR}/external/cppuprofile/lib
+    )
+else()
+    target_include_directories(gw_lib PUBLIC 
+        ${CMAKE_SOURCE_DIR}/external/cppuprofile/lib
+    )
+endif()
 
 if(MSVC)
     target_link_libraries(gw_lib PUBLIC ${LIBXML2_TARGET} ${LIBZIP_TARGET})
 else()
     target_include_directories(gw_lib PUBLIC ${LIBXML2_INCLUDE_DIRS} ${LIBZIP_INCLUDE_DIRS})
-    target_link_libraries(gw_lib PUBLIC ${LIBXML2_TARGET} ${LIBZIP_TARGET})
+    target_link_libraries(gw_lib PUBLIC 
+        ${LIBXML2_TARGET}
+        ${LIBZIP_TARGET}
+        ${CMAKE_SOURCE_DIR}/external/cppuprofile/lib/libcppuprofile.so
+    )
 endif()
 
-# .exe
-add_executable(gw src/release/main.cpp)
-target_link_libraries(gw PRIVATE gw_lib)
+# benchmarks
+add_executable(bench_divide  src/release/divide_benchmark.cpp)
+target_link_libraries(bench_divide PRIVATE gw_lib)
 
-add_executable(merge src/release/merge_main.cpp)
-target_link_libraries(merge PRIVATE gw_lib)
+add_executable(bench_export  src/release/export_benchmark.cpp)
+target_link_libraries(bench_export PRIVATE gw_lib)
+
+add_executable(bench_import  src/release/import_benchmark.cpp)
+target_link_libraries(bench_import PRIVATE gw_lib)
+
+add_executable(bench_merge   src/release/merge_benchmark.cpp)
+target_link_libraries(bench_merge PRIVATE gw_lib)
+
+add_executable(bench_parse_xsd src/release/parse_xsd_benchmark.cpp)
+target_link_libraries(bench_parse_xsd PRIVATE gw_lib)
 
 if(WIN32)
     add_executable(divide src/release/divide_main.cpp)

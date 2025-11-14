@@ -3,7 +3,7 @@
 
 namespace static_config
 {
-    nlohmann::json staticData = {
+    inline static nlohmann::json staticData = {
         {"gml_preambule", {{"gml_version", "1.0"}, {"gml_encoding", "UTF-8"}, {"gml_standalone", "no"}}},
         {"gml_extension", ".gml"},
         {"gml_prefix", "gml"},
