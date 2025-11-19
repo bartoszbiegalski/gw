@@ -61,6 +61,10 @@ if(WIN32)
     target_link_libraries(divide PRIVATE gw_lib)
 endif()
 
+add_executable(merge src/release/merge_main.cpp)
+target_link_libraries(merge PRIVATE gw_lib)
+
+
 file(GLOB DLL_SOURCES "dll/*.cpp")
 add_library(my_dll SHARED ${DLL_SOURCES})
 target_include_directories(my_dll PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
