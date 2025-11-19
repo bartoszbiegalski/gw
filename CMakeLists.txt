@@ -66,18 +66,23 @@ target_include_directories(gw_lib PUBLIC
     ${CMAKE_CURRENT_BINARY_DIR}
 )
 
-target_link_libraries(gw_lib PUBLIC 
-    ${LIBXML2_TARGET}
-    ${LIBZIP_TARGET}
-    cppuprofile
+if(MSVC)
+    target_link_libraries(gw_lib PUBLIC 
+    ${LIBXML2_INCLUDE_DIRS}
+    ${LIBZIP_INCLUDE_DIRS}
 )
-
-if(NOT WIN32)
+else()
     target_include_directories(gw_lib PUBLIC
         ${LIBXML2_INCLUDE_DIRS}
         ${LIBZIP_INCLUDE_DIRS}
     )
+    target_link_libraries(gw_lib PUBLIC
+        ${LIBXML2_TARGET}
+        ${LIBZIP_TARGET}
+        cppuprofile
+    )
 endif()
+
 
 # benchmarks
 add_executable(bench_divide  src/release/divide_benchmark.cpp)
