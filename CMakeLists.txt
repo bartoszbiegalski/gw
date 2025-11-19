@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # compile options
-if(MSVC)
+if(WIN32)
     add_compile_options(/W4 /permissive-)
 else()
     add_compile_options(-Wall -Wextra -Wpedantic -Wconversion -O3)
@@ -14,16 +14,21 @@ endif()
 
 add_definitions(-DLIBXML_STATIC -DLIBZIP_NO_CRYPTO)
 
-# vcpkg
-if(NOT DEFINED CMAKE_TOOLCHAIN_FILE AND DEFINED ENV{VCPKG_ROOT})
-    set(CMAKE_TOOLCHAIN_FILE "$ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
-        CACHE STRING "Vcpkg toolchain file")
-    message(STATUS "Using vcpkg toolchain: ${CMAKE_TOOLCHAIN_FILE}")
+include(FetchContent)
+FetchContent_Declare(
+    cppuprofile
+    GIT_REPOSITORY https://github.com/Orange-OpenSource/cppuprofile.git
+    GIT_TAG master
+)
+
+FetchContent_MakeAvailable(cppuprofile)
+if(TARGET cppuprofile)
+    target_compile_options(cppuprofile PRIVATE -Wno-error)
 endif()
 
 # libxml2, libzip
 
-if(MSVC)
+if(WIN32)
     find_package(LibXml2 CONFIG REQUIRED)
     find_package(libzip CONFIG REQUIRED)
     set(LIBXML2_TARGET libxml2::libxml2)
@@ -61,26 +66,16 @@ target_include_directories(gw_lib PUBLIC
     ${CMAKE_CURRENT_BINARY_DIR}
 )
 
-# external 
-if(WIN32)
-    #costam
-    target_include_directories(gw_lib PUBLIC 
-        ${CMAKE_SOURCE_DIR}/external/cppuprofile/lib
-    )
-else()
-    target_include_directories(gw_lib PUBLIC 
-        ${CMAKE_SOURCE_DIR}/external/cppuprofile/lib
-    )
-endif()
+target_link_libraries(gw_lib PUBLIC 
+    ${LIBXML2_TARGET}
+    ${LIBZIP_TARGET}
+    cppuprofile
+)
 
-if(MSVC)
-    target_link_libraries(gw_lib PUBLIC ${LIBXML2_TARGET} ${LIBZIP_TARGET})
-else()
-    target_include_directories(gw_lib PUBLIC ${LIBXML2_INCLUDE_DIRS} ${LIBZIP_INCLUDE_DIRS})
-    target_link_libraries(gw_lib PUBLIC 
-        ${LIBXML2_TARGET}
-        ${LIBZIP_TARGET}
-        ${CMAKE_SOURCE_DIR}/external/cppuprofile/lib/libcppuprofile.so
+if(NOT WIN32)
+    target_include_directories(gw_lib PUBLIC
+        ${LIBXML2_INCLUDE_DIRS}
+        ${LIBZIP_INCLUDE_DIRS}
     )
 endif()
 

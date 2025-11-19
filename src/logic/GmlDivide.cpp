@@ -1,14 +1,14 @@
 #include "logic/GmlDivide.h"
 #include <iostream>
 
-void GmlDivide::Divide(const std::unique_ptr<XmlConfig> &cfg, std::unique_ptr<Object> &obj, const std::vector<NamespacePrefix> vNamespaces, std::vector<std::unique_ptr<Object>> &dividedObjects)
+void GmlDivide::Divide(const std::unique_ptr<XmlConfig> &cfg, std::unique_ptr<GmlObject> &obj, const std::vector<NamespacePrefix> vNamespaces, std::vector<std::unique_ptr<GmlObject>> &dividedObjects)
 {
     std::string extension = cfg.get()->get("gml_extension", "");
     for (auto ns : vNamespaces)
     {
         if (obj->hasNamespace(ns))
         {
-            auto newObj = std::make_unique<Object>();
+            auto newObj = std::make_unique<GmlObject>();
             std::string fileSuffix = cfg.get()->get("xsd.xsd_extensions." + ns, "");
             if (fileSuffix == "")
             {

@@ -4,7 +4,7 @@
 #include <fstream>
 #include <iostream>
 
-void GmlExport::Export(const std::unique_ptr<XmlConfig> &cfg, const std::unique_ptr<Object> &obj)
+void GmlExport::Export(const std::unique_ptr<XmlConfig> &cfg, const std::unique_ptr<GmlObject> &obj)
 {
     int idNum = 1;
     xmlBufferPtr buf = xmlBufferCreate();

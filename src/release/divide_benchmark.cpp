@@ -11,7 +11,7 @@ int main(int argc, char *argv[])
     }
     std::filesystem::path filePath(argv[1]);
     auto cfg = std::make_unique<XmlConfig>(static_config::staticData);
-    std::unique_ptr<Object> obj = std::make_unique<Object>();
+    std::unique_ptr<GmlObject> obj = std::make_unique<GmlObject>();
     GmlImport::Import(filePath, obj);
     NamespaceTool::Process(cfg, obj);
     XmlParser::SetContent(cfg, obj);
@@ -20,10 +20,6 @@ int main(int argc, char *argv[])
     for (auto const &pair : obj.get()->getGmlStorage().getGmlMap())
     {
         nsVector.push_back(pair.first);
-    }
-    for (auto const &it : nsVector)
-    {
-        std::cout << it << "\n";
     }
 
     gml_benchmark::divide_benchmark(obj, nsVector, divideBenchmarkPath);

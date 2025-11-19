@@ -5,11 +5,11 @@
 void GmlServices::PerformDivision(const std::filesystem::path &inFile, std::vector<NamespacePrefix> &nsVec)
 {
     auto cfg = std::make_unique<XmlConfig>(static_config::staticData);
-    std::unique_ptr<Object> obj = std::make_unique<Object>();
+    std::unique_ptr<GmlObject> obj = std::make_unique<GmlObject>();
     GmlImport::Import(inFile, obj);
     NamespaceTool::Process(cfg, obj);
     XmlParser::SetContent(cfg, obj);
-    auto objVec = std::vector<std::unique_ptr<Object>>();
+    auto objVec = std::vector<std::unique_ptr<GmlObject>>();
 
     if (nsVec.size() < 1)
     {
@@ -45,7 +45,7 @@ void GmlServices::PerformDivision(const std::filesystem::path &inFile, std::vect
     // }
 }
 
-std::map<std::string, std::string> GmlServices::GetRootInfoMap(const Object *obj)
+std::map<std::string, std::string> GmlServices::GetRootInfoMap(const GmlObject *obj)
 {
     auto rootInfoMap = std::map<std::string, std::string>();
     rootInfoMap.insert(std::make_pair("Elementy:", std::to_string(getElementAmount(obj))));
@@ -57,7 +57,7 @@ std::map<std::string, std::string> GmlServices::GetRootInfoMap(const Object *obj
     return rootInfoMap;
 }
 
-std::map<std::string, std::string> GmlServices::GetNamespaceNodeInfoMap(const Object *obj, const NamespacePrefix &prefix)
+std::map<std::string, std::string> GmlServices::GetNamespaceNodeInfoMap(const GmlObject *obj, const NamespacePrefix &prefix)
 {
     auto namespaceNodeMap = std::map<std::string, std::string>();
     namespaceNodeMap.insert(std::make_pair("Elementy: ", std::to_string(getNamespaceElementAmount(obj, prefix))));
@@ -68,7 +68,7 @@ std::map<std::string, std::string> GmlServices::GetNamespaceNodeInfoMap(const Ob
     return namespaceNodeMap;
 }
 
-int GmlServices::getElementAmount(const Object *obj)
+int GmlServices::getElementAmount(const GmlObject *obj)
 {
     return std::accumulate(obj->getGmlStorage().getGmlMap().begin(),
                            obj->getGmlStorage().getGmlMap().end(), 0,
@@ -78,7 +78,7 @@ int GmlServices::getElementAmount(const Object *obj)
                            });
 }
 
-int GmlServices::getNamespaceElementAmount(const Object *obj, const NamespacePrefix &prefix)
+int GmlServices::getNamespaceElementAmount(const GmlObject *obj, const NamespacePrefix &prefix)
 {
     if (obj->getGmlStorage().getGmlMap().find(prefix) == obj->getGmlStorage().getGmlMap().end())
         return 0;
@@ -86,7 +86,7 @@ int GmlServices::getNamespaceElementAmount(const Object *obj, const NamespacePre
         return obj->getGmlStorage().getGmlMap().at(prefix).size();
 }
 
-NamespaceData GmlServices::getNamespaceDataFromPrefix(const Object *obj, const NamespacePrefix &prefix)
+NamespaceData GmlServices::getNamespaceDataFromPrefix(const GmlObject *obj, const NamespacePrefix &prefix)
 {
     if (obj->getNamespaceMap().find(prefix) == obj->getNamespaceMap().end())
         return NamespaceData{};
@@ -94,7 +94,7 @@ NamespaceData GmlServices::getNamespaceDataFromPrefix(const Object *obj, const N
         return obj->getNamespaceMap().at(prefix);
 }
 
-std::map<std::string, int> GmlServices::GetClassNames(const Object *obj, const NamespacePrefix &prefix)
+std::map<std::string, int> GmlServices::GetClassNames(const GmlObject *obj, const NamespacePrefix &prefix)
 {
     std::map<std::string, int> classNameMap;
 
@@ -121,7 +121,7 @@ std::map<std::string, int> GmlServices::GetClassNames(const Object *obj, const N
     return classNameMap;
 }
 
-std::map<GmlId, GmlNodePtr> GmlServices::GetClassMap(const Object *obj, const NamespacePrefix &prefix, const std::string className)
+std::map<GmlId, GmlNodePtr> GmlServices::GetClassMap(const GmlObject *obj, const NamespacePrefix &prefix, const std::string className)
 {
     auto entryMap = std::map<GmlId, GmlNodePtr>();
     if (obj->getGmlStorage().getGmlMap().find(prefix) == obj->getGmlStorage().getGmlMap().end())

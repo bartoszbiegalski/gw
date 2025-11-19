@@ -15,7 +15,7 @@ int main(int argc, char *argv[])
     }
     std::filesystem::path filePath(argv[1]);
     auto cfg = std::make_unique<XmlConfig>(static_config::staticData);
-    std::unique_ptr<Object> obj = std::make_unique<Object>();
+    std::unique_ptr<GmlObject> obj = std::make_unique<GmlObject>();
     GmlImport::Import(filePath, obj);
     NamespaceTool::Process(cfg, obj);
     XmlParser::SetContent(cfg, obj);

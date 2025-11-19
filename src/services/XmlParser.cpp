@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-void XmlParser::SetContent(const std::unique_ptr<XmlConfig> &cfg, std::unique_ptr<Object> &obj)
+void XmlParser::SetContent(const std::unique_ptr<XmlConfig> &cfg, std::unique_ptr<GmlObject> &obj)
 {
     xmlInitParser();
     xmlDocPtr doc = xmlReadFile(obj->getFilePath().u8string().c_str(), nullptr, 0);

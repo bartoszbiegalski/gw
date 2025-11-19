@@ -11,7 +11,7 @@ namespace gml_benchmark
         uprofile::startCPUUsageMonitoring(100);
         uprofile::startSystemMemoryMonitoring(100);
         auto cfg = std::make_unique<XmlConfig>(static_config::staticData);
-        std::unique_ptr<Object> obj = std::make_unique<Object>();
+        std::unique_ptr<GmlObject> obj = std::make_unique<GmlObject>();
         GmlImport::Import(filePath, obj);
         NamespaceTool::Process(cfg, obj);
         uprofile::timeEnd("file_import");
@@ -23,7 +23,7 @@ namespace gml_benchmark
         uprofile::stop();
     }
 
-    void parse_xsd_benchmark(std::unique_ptr<Object> &obj, const std::string &benchmarkFilePath)
+    void parse_xsd_benchmark(std::unique_ptr<GmlObject> &obj, const std::string &benchmarkFilePath)
     {
         auto cfg = std::make_unique<XmlConfig>(static_config::staticData);
 
@@ -37,9 +37,9 @@ namespace gml_benchmark
         uprofile::stop();
     }
 
-    void divide_benchmark(std::unique_ptr<Object> &obj, std::vector<NamespacePrefix> &nsVec, const std::string &benchmarkFilePath)
+    void divide_benchmark(std::unique_ptr<GmlObject> &obj, std::vector<NamespacePrefix> &nsVec, const std::string &benchmarkFilePath)
     {
-        auto objVec = std::vector<std::unique_ptr<Object>>();
+        auto objVec = std::vector<std::unique_ptr<GmlObject>>();
         auto cfg = std::make_unique<XmlConfig>(static_config::staticData);
         if (nsVec.size() < 1)
         {
@@ -58,9 +58,9 @@ namespace gml_benchmark
         uprofile::stop();
     }
 
-    void merge_benchmark(const std::vector<std::unique_ptr<Object>> &baseObjects, std::unique_ptr<Object> &mergedObject, const std::string &benchmarkFilePath)
+    void merge_benchmark(const std::vector<std::unique_ptr<GmlObject>> &baseObjects, std::unique_ptr<GmlObject> &mergedObject, const std::string &benchmarkFilePath)
     {
-        auto objVec = std::vector<std::unique_ptr<Object>>();
+        auto objVec = std::vector<std::unique_ptr<GmlObject>>();
         auto cfg = std::make_unique<XmlConfig>(static_config::staticData);
         uprofile::start(benchmarkFilePath.c_str());
         uprofile::startCPUUsageMonitoring(100);
@@ -74,7 +74,7 @@ namespace gml_benchmark
         uprofile::stop();
     }
 
-    void export_benchmark(std::unique_ptr<Object> &obj, const std::string &benchmarkFilePath)
+    void export_benchmark(std::unique_ptr<GmlObject> &obj, const std::string &benchmarkFilePath)
     {
         auto cfg = std::make_unique<XmlConfig>(static_config::staticData);
         uprofile::start(benchmarkFilePath.c_str());

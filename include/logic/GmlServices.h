@@ -1,7 +1,7 @@
 #pragma once
 
 #include "core/types.h"
-#include "core/Object.h"
+#include "core/GmlObject.h"
 #include "io/GmlImport.h"
 #include "io/GmlExport.h"
 #include "release/static_config.h"
@@ -16,15 +16,15 @@ class GmlServices
 public:
     static void PerformDivision(const std::filesystem::path &inFile, std::vector<NamespacePrefix> &nsVec);
 
-    static std::map<std::string, std::string> GetRootInfoMap(const Object *obj);
-    static std::map<std::string, std::string> GetNamespaceNodeInfoMap(const Object *obj, const NamespacePrefix &prefix);
-    static std::map<std::string, int> GetClassNames(const Object *obj, const NamespacePrefix &prefix);
-    static std::map<GmlId, GmlNodePtr> GetClassMap(const Object *obj, const NamespacePrefix &prefix, const std::string className);
+    static std::map<std::string, std::string> GetRootInfoMap(const GmlObject *obj);
+    static std::map<std::string, std::string> GetNamespaceNodeInfoMap(const GmlObject *obj, const NamespacePrefix &prefix);
+    static std::map<std::string, int> GetClassNames(const GmlObject *obj, const NamespacePrefix &prefix);
+    static std::map<GmlId, GmlNodePtr> GetClassMap(const GmlObject *obj, const NamespacePrefix &prefix, const std::string className);
 
 private:
-    static int getElementAmount(const Object *obj);
+    static int getElementAmount(const GmlObject *obj);
 
-    static int getNamespaceElementAmount(const Object *obj, const NamespacePrefix &prefix);
+    static int getNamespaceElementAmount(const GmlObject *obj, const NamespacePrefix &prefix);
 
-    static NamespaceData getNamespaceDataFromPrefix(const Object *obj, const NamespacePrefix &prefix);
+    static NamespaceData getNamespaceDataFromPrefix(const GmlObject *obj, const NamespacePrefix &prefix);
 };

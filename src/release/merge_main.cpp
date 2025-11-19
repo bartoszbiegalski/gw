@@ -2,7 +2,7 @@
 #include <libxml/parser.h>
 #include <libxml/tree.h>
 
-#include <core/Object.h>
+#include <core/GmlObject.h>
 #include <io/GmlCreate.h>
 #include <io/GmlImport.h>
 #include <io/GmlExport.h>
@@ -25,7 +25,7 @@ int main(int argc, char *argv[])
     auto cfg = std::make_unique<XmlConfig>(static_config::staticData);
 
     GmlCreate::Create(cfg, path.parent_path(), path.filename());
-    std::unique_ptr<Object> destObj = std::make_unique<Object>();
+    std::unique_ptr<GmlObject> destObj = std::make_unique<GmlObject>();
     GmlImport::Import(path, destObj);
 
     if (argc < 3)
@@ -39,7 +39,7 @@ int main(int argc, char *argv[])
     for (int i = 2; i < argc; i++)
     {
         std::cout << argv[i] << '\n';
-        auto newObj = std::make_unique<Object>();
+        auto newObj = std::make_unique<GmlObject>();
         auto newObjPath = std::filesystem::path(argv[i]);
 
         GmlImport::Import(newObjPath, newObj);

@@ -1,4 +1,4 @@
-#include "core/Object.h"
+#include "../../include/core/GmlObject.h"
 #include "core/types.h"
 
 #include "exceptions/Exceptions.h"
@@ -8,7 +8,7 @@
 
 #include <iostream>
 
-std::map<std::string, std::string> NamespaceTool::GetAttributesMap(const std::unique_ptr<XmlConfig> &cfg, const std::unique_ptr<Object> &obj)
+std::map<std::string, std::string> NamespaceTool::GetAttributesMap(const std::unique_ptr<XmlConfig> &cfg, const std::unique_ptr<GmlObject> &obj)
 {
     xmlTextReaderPtr reader = xmlReaderForFile(obj->getFilePath().u8string().c_str(), nullptr, 0);
     if (!reader)
@@ -143,7 +143,7 @@ NamespaceMap NamespaceTool::CreateNamespaceMap(const std::unique_ptr<XmlConfig> 
     return nsMap;
 }
 
-std::vector<std::pair<std::string, std::string>> NamespaceTool::GetXsdVector(const std::unique_ptr<Object> &obj)
+std::vector<std::pair<std::string, std::string>> NamespaceTool::GetXsdVector(const std::unique_ptr<GmlObject> &obj)
 {
     auto xsdFileVector = std::vector<std::pair<std::string, std::string>>();
     for (const auto &it : obj.get()->getNamespaceMap())
@@ -156,7 +156,7 @@ std::vector<std::pair<std::string, std::string>> NamespaceTool::GetXsdVector(con
     return xsdFileVector;
 }
 
-void NamespaceTool::Process(const std::unique_ptr<XmlConfig> &cfg, std::unique_ptr<Object> &obj)
+void NamespaceTool::Process(const std::unique_ptr<XmlConfig> &cfg, std::unique_ptr<GmlObject> &obj)
 {
     auto attributesMap = GetAttributesMap(cfg, obj);
 

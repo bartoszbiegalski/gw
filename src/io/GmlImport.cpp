@@ -4,7 +4,7 @@
 #include <fstream>
 #include <iostream>
 
-void GmlImport::Import(const FilePath &filePath, std::unique_ptr<Object> &obj)
+void GmlImport::Import(const FilePath &filePath, std::unique_ptr<GmlObject> &obj)
 {
     if (!std::filesystem::exists(filePath) || !std::filesystem::is_regular_file(filePath))
     {

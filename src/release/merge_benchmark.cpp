@@ -14,14 +14,14 @@ int main(int argc, char *argv[])
     std::filesystem::path filePath(argv[1]);
     auto cfg = std::make_unique<XmlConfig>(static_config::staticData);
     GmlCreate::Create(cfg, filePath.parent_path(), filePath.filename());
-    auto destObj = std::make_unique<Object>();
-    auto baseObjects = std::vector<std::unique_ptr<Object>>();
+    auto destObj = std::make_unique<GmlObject>();
+    auto baseObjects = std::vector<std::unique_ptr<GmlObject>>();
     GmlImport::Import(filePath, destObj);
 
     for (int i = 2; i < argc; i++)
     {
         std::cout << argv[i] << '\n';
-        auto newObj = std::make_unique<Object>();
+        auto newObj = std::make_unique<GmlObject>();
         auto newObjPath = std::filesystem::path(argv[i]);
 
         GmlImport::Import(newObjPath, newObj);

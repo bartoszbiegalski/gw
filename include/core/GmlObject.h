@@ -7,11 +7,11 @@
 #include "core/types.h"
 #include "core/GmlStorage.h"
 
-class Object
+class GmlObject
 {
 public:
-    Object();
-    ~Object() = default;
+    GmlObject();
+    ~GmlObject() = default;
 
     const FileName getFileName() const { return this->fileName; }
     void setFileName(const FileName &fileName) { this->fileName = fileName; }

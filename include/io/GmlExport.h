@@ -1,6 +1,6 @@
 #pragma once
 
-#include "core/Object.h"
+#include "core/GmlObject.h"
 #include "core/types.h"
 #include "services/XmlConfig.h"
 #include "utils/NamespaceTool.h"
@@ -12,5 +12,5 @@ class GmlExport
 public:
     GmlExport() = delete;
 
-    static void Export(const std::unique_ptr<XmlConfig> &cfg, const std::unique_ptr<Object> &obj);
+    static void Export(const std::unique_ptr<XmlConfig> &cfg, const std::unique_ptr<GmlObject> &obj);
 };

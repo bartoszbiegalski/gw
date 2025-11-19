@@ -1,7 +1,7 @@
 #pragma once
 
 #include "core/types.h"
-#include "core/Object.h"
+#include "core/GmlObject.h"
 #include "services/XmlConfig.h"
 
 class GmlCreate

@@ -4,6 +4,6 @@
  * @brief Definitions of Object class
  */
 
-#include "core/Object.h"
+#include "core/GmlObject.h"
 
-Object::Object() {}
+GmlObject::GmlObject() {}

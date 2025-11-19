@@ -25,7 +25,7 @@ XmlSchemaValidCtxtPtr XsdParser::getValidCtxt(const std::string &xsdPath)
     return validCtxt;
 }
 
-void XsdParser::Parse(std::unique_ptr<XmlConfig> &cfg, std::unique_ptr<Object> &obj)
+void XsdParser::Parse(std::unique_ptr<XmlConfig> &cfg, std::unique_ptr<GmlObject> &obj)
 {
     auto doc = xmlReadFile(obj.get()->getFilePath().string().c_str(), nullptr, 0);
     if (!doc)

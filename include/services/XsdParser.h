@@ -1,6 +1,6 @@
 #pragma once
 
-#include "core/Object.h"
+#include "core/GmlObject.h"
 #include "core/types.h"
 #include "exceptions/Exceptions.h"
 #include "services/XmlConfig.h"
@@ -12,7 +12,7 @@ public:
     XsdParser() = delete;
     ~XsdParser() = delete;
 
-    static void Parse(std::unique_ptr<XmlConfig> &cfg, std::unique_ptr<Object> &obj);
+    static void Parse(std::unique_ptr<XmlConfig> &cfg, std::unique_ptr<GmlObject> &obj);
 
 private:
     static XmlSchemaValidCtxtPtr getValidCtxt(const std::string &xsdPath);

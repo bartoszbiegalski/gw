@@ -1,6 +1,6 @@
 #pragma once
 #include "core/types.h"
-#include "core/Object.h"
+#include "../include/core/GmlObject.h"
 #include "io/GmlImport.h"
 #include "io/GmlExport.h"
 #include "release/static_config.h"
@@ -20,13 +20,13 @@ namespace gml_benchmark
 {
     void import_benchmark(const std::filesystem::path &filePath, const std::string &benchmarkFilePath);
 
-    void parse_xsd_benchmark(std::unique_ptr<Object> &obj, const std::string &benchmarkFilePath);
+    void parse_xsd_benchmark(std::unique_ptr<GmlObject> &obj, const std::string &benchmarkFilePath);
 
-    void divide_benchmark(std::unique_ptr<Object> &obj, std::vector<NamespacePrefix> &nsVec, const std::string &benchmarkFilePath);
+    void divide_benchmark(std::unique_ptr<GmlObject> &obj, std::vector<NamespacePrefix> &nsVec, const std::string &benchmarkFilePath);
 
-    void merge_benchmark(const std::vector<std::unique_ptr<Object>> &baseObjects, std::unique_ptr<Object> &mergedObject, const std::string &benchmarkFilePath);
+    void merge_benchmark(const std::vector<std::unique_ptr<GmlObject>> &baseObjects, std::unique_ptr<GmlObject> &mergedObject, const std::string &benchmarkFilePath);
 
-    void export_benchmark(std::unique_ptr<Object> &obj, const std::string &benchmarkFilePath);
+    void export_benchmark(std::unique_ptr<GmlObject> &obj, const std::string &benchmarkFilePath);
 
     // void get_attribute_benchmark(const std::unique_ptr<Object> &obj, const std::string id)
     // {
