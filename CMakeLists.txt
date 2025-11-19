@@ -15,7 +15,7 @@ FetchContent_Declare(
     GIT_REPOSITORY https://github.com/Orange-OpenSource/cppuprofile.git
     GIT_TAG master
 )
-
+set(FETCHCONTENT_UPSTREAM_MINIMUM_CMAKE_VERSION 3.16)
 FetchContent_MakeAvailable(cppuprofile)
 if(TARGET cppuprofile)
     target_compile_options(cppuprofile PRIVATE -Wno-error)
