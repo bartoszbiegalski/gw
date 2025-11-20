@@ -20,11 +20,10 @@ std::map<std::string, std::string> NamespaceTool::GetAttributesMap(const std::un
     std::string cfgSeparator = cfg.get()->get("gml_separator", ":");
     auto foundAttributesMap = std::map<std::string, std::string>();
 
-    bool foundComment, foundRootAttributes = false;
-
+    bool foundRootAttributes = false;
     while (xmlTextReaderRead(reader) == 1)
     {
-        if (foundRootAttributes == true && foundComment == true)
+        if (foundRootAttributes == true)
             break;
 
         if (xmlTextReaderNodeType(reader) == XML_READER_TYPE_ELEMENT)
@@ -49,7 +48,6 @@ std::map<std::string, std::string> NamespaceTool::GetAttributesMap(const std::un
             {
                 obj.get()->setComment(reinterpret_cast<const char *>(comment));
             }
-            foundComment = true;
         }
     }
     xmlTextReaderClose(reader);
