@@ -82,5 +82,25 @@ int main()
     LocalFree(wargv);
     return 0;
 }
+#else
+#include "logic/GmlServices.h"
+#include <iostream>
+
+int main(int argc, char *argv[])
+{
+    if (argc < 2)
+    {
+        std::cerr << "Usage: " << argv[0] << " <filePath> <ns_1> ...\n";
+        return 1;
+    }
+    std::filesystem::path filePath(argv[1]);
+    auto nsVector = std::vector<std::string>();
+    for (int i = 2; i < argc; i++)
+    {
+        nsVector.push_back(argv[i]);
+    }
+
+    GmlServices::PerformDivision(filePath, nsVector);
+}
 
 #endif // _WIN32

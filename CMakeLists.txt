@@ -56,10 +56,8 @@ target_link_libraries(bench_merge PRIVATE gw_lib)
 add_executable(bench_parse_xsd src/release/parse_xsd_benchmark.cpp)
 target_link_libraries(bench_parse_xsd PRIVATE gw_lib)
 
-if(WIN32)
-    add_executable(divide src/release/divide_main.cpp)
-    target_link_libraries(divide PRIVATE gw_lib)
-endif()
+add_executable(divide src/release/divide_main.cpp)
+target_link_libraries(divide PRIVATE gw_lib)
 
 add_executable(merge src/release/merge_main.cpp)
 target_link_libraries(merge PRIVATE gw_lib)

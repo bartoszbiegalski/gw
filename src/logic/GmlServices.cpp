@@ -18,10 +18,10 @@ void GmlServices::PerformDivision(const std::filesystem::path &inFile, std::vect
             nsVec.push_back(i.first);
         }
     }
-
     GmlDivide::Divide(cfg, obj, nsVec, objVec);
     for (auto &o : objVec)
     {
+        std::cout << o.get()->getFileName() << '\n';
         GmlExport::Export(cfg, o);
     }
 

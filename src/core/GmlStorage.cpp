@@ -33,7 +33,8 @@ std::vector<xmlNode *> GmlStorage::findInNamespace(const NamespacePrefix &ns) co
 
 bool GmlStorage::hasNamespace(const NamespacePrefix &prefix)
 {
-    return gmlMap.at(prefix).empty() ? false : true;
+    return gmlMap.find(prefix) == gmlMap.end() ? false : true;
+    //    return gmlMap.at(prefix).empty() ? false : true;
 };
 
 bool GmlStorage::removeById(const GmlId &id)
