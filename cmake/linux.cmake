@@ -12,5 +12,5 @@ target_include_directories(gw_lib PUBLIC
 target_link_libraries(gw_lib PUBLIC
     ${LIBXML2_LIBRARIES}
     ${LIBZIP_LIBRARIES}
-    cppuprofile
+    #cppuprofile
 )

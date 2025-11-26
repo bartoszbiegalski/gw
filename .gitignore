@@ -17,5 +17,6 @@ Makefile
 *.vcxproj*
 
 #VSCode
+/dll
 
 .vscode/

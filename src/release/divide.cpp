@@ -100,7 +100,7 @@ int main(int argc, char *argv[])
         nsVector.push_back(argv[i]);
     }
 
-    GmlServices::PerformDivision(filePath, nsVector);
+    GmlServices::PerformDivision(filePath, nsVector, false);
 }
 
 #endif // _WIN32
