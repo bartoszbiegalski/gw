@@ -56,10 +56,10 @@ add_subdirectory(tests)
 # add_executable(bench_parse_xsd src/release/parse_xsd_benchmark.cpp)
 # target_link_libraries(bench_parse_xsd PRIVATE gw_lib)
 
-add_executable(divide src/release/divide_main.cpp)
+add_executable(divide src/release/divide.cpp)
 target_link_libraries(divide PRIVATE gw_lib)
 
-add_executable(merge src/release/merge_main.cpp)
+add_executable(merge src/release/merge.cpp)
 target_link_libraries(merge PRIVATE gw_lib)
 
 file(GLOB DLL_SOURCES "dll/*.cpp")

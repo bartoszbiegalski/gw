@@ -2,6 +2,7 @@
 
 #include "core/types.h"
 #include "core/GmlObject.h"
+#include "io/GmlCreate.h"
 #include "io/GmlImport.h"
 #include "io/GmlExport.h"
 #include "release/static_config.h"
@@ -10,11 +11,13 @@
 #include "services/XmlConfig.h"
 #include "services/XmlParser.h"
 #include "logic/GmlDivide.h"
+#include "logic/GmlMerge.h"
 
 class GmlServices
 {
 public:
     static void PerformDivision(const std::filesystem::path &inFile, std::vector<NamespacePrefix> &nsVec, bool isZip);
+    static void PerformMerge(const FilePath &inFile, std::vector<FilePath> &filePathVec);
 
     static std::map<std::string, std::string> GetRootInfoMap(const GmlObject *obj);
     static std::map<std::string, std::string> GetNamespaceNodeInfoMap(const GmlObject *obj, const NamespacePrefix &prefix);
@@ -23,8 +26,6 @@ public:
 
 private:
     static int getElementAmount(const GmlObject *obj);
-
     static int getNamespaceElementAmount(const GmlObject *obj, const NamespacePrefix &prefix);
-
     static NamespaceData getNamespaceDataFromPrefix(const GmlObject *obj, const NamespacePrefix &prefix);
 };

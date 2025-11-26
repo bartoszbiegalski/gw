@@ -52,7 +52,7 @@ nlohmann::json XmlConfig::get_json(const std::string &key) const
         }
         else
         {
-            return nlohmann::json{}; // pusta mapa
+            return nlohmann::json{};
         }
     }
 

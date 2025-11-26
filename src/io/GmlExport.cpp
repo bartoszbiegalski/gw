@@ -46,6 +46,8 @@ void GmlExport::Export(const std::unique_ptr<XmlConfig> &cfg, const std::unique_
     string_operations::set_schema_location_string(namespaceList, schemaLocationValue);
 
     xmlNewProp(root, BAD_CAST schemaLocationAttr.c_str(), BAD_CAST schemaLocationValue.c_str());
+    // do tego przydaloby sie miec parametr w configu "czy chcesz zmieniac gml:id", moze jeszcze "na jaka nazwe zmieniac"
+    // wtedy w zaleznosci od configu aktualizujemy badz nie
 
     for (const auto &child : obj.get()->getGmlStorage().getGmlMap())
     {

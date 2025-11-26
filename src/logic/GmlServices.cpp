@@ -45,14 +45,35 @@ void GmlServices::PerformDivision(const std::filesystem::path &inFile, std::vect
     }
 }
 
+void GmlServices::PerformMerge(const FilePath &inFile, std::vector<FilePath> &filePathVec)
+{
+    auto cfg = std::make_unique<XmlConfig>(static_config::staticData);
+
+    GmlCreate::Create(cfg, inFile.parent_path(), inFile.filename().string());
+    std::unique_ptr<GmlObject> destObj = std::make_unique<GmlObject>();
+    GmlImport::Import(inFile, destObj);
+
+    for (auto sourceFilePath : filePathVec)
+    {
+        auto newObj = std::make_unique<GmlObject>();
+
+        GmlImport::Import(sourceFilePath, newObj);
+        NamespaceTool::Process(cfg, newObj);
+        XmlParser::SetContent(cfg, newObj);
+
+        GmlMerge::MergeOne(cfg, newObj, destObj);
+    }
+
+    GmlExport::Export(cfg, destObj);
+}
+
 std::map<std::string, std::string> GmlServices::GetRootInfoMap(const GmlObject *obj)
 {
     auto rootInfoMap = std::map<std::string, std::string>();
-    rootInfoMap.insert(std::make_pair("Elementy:", std::to_string(getElementAmount(obj))));
     std::string valityString = obj->getXmlValidity() == true ? "tak " : "nie";
-    rootInfoMap.insert(std::make_pair("Czy poprawny XML: ", valityString));
 
-    // returnMap.insert(std::make_pair("Czy poprawny pod wzgledem xml: ", TODO: tu jakas funkcja)); cos chcemy z ta walidacja
+    rootInfoMap.insert(std::make_pair("Elementy:", std::to_string(getElementAmount(obj))));
+    rootInfoMap.insert(std::make_pair("Czy poprawny XML: ", valityString));
 
     return rootInfoMap;
 }
@@ -60,9 +81,10 @@ std::map<std::string, std::string> GmlServices::GetRootInfoMap(const GmlObject *
 std::map<std::string, std::string> GmlServices::GetNamespaceNodeInfoMap(const GmlObject *obj, const NamespacePrefix &prefix)
 {
     auto namespaceNodeMap = std::map<std::string, std::string>();
+    std::string valityString = obj->getGmlStorage().getXsdValidity(prefix) == true ? "tak " : "nie";
+
     namespaceNodeMap.insert(std::make_pair("Elementy: ", std::to_string(getNamespaceElementAmount(obj, prefix))));
     namespaceNodeMap.insert(std::make_pair("Plik XSD: ", getNamespaceDataFromPrefix(obj, prefix).NamespaceUrl));
-    std::string valityString = obj->getGmlStorage().getXsdValidity(prefix) == true ? "tak " : "nie";
     namespaceNodeMap.insert(std::make_pair("Czy poprawny XSD: ", valityString));
 
     return namespaceNodeMap;
@@ -96,7 +118,7 @@ NamespaceData GmlServices::getNamespaceDataFromPrefix(const GmlObject *obj, cons
 
 std::map<std::string, int> GmlServices::GetClassNames(const GmlObject *obj, const NamespacePrefix &prefix)
 {
-    std::map<std::string, int> classNameMap;
+    std::map<std::string, int> classNameMap{};
 
     const auto &gmlMap = obj->getGmlStorage().getGmlMap();
     auto found = gmlMap.find(prefix);

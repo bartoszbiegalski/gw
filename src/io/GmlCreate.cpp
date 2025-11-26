@@ -24,7 +24,6 @@ void GmlCreate::Create(const std::unique_ptr<XmlConfig> &cfg, const FilePath &fi
 
     std::filesystem::path savePath = filePath / fileName;
     xmlSaveFormatFileEnc(savePath.u8string().c_str(), doc, enconding.c_str(), 1);
-#
 
     xmlFreeDoc(doc);
     xmlBufferFree(buf);
