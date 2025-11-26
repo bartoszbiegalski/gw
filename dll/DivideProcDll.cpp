@@ -1,6 +1,5 @@
 // DivideProcDll.cpp
 
-#ifdef _WIN32
 #include <windows.h>
 #include <vector>
 #include <string>
@@ -8,15 +7,14 @@
 
 extern "C"
 {
-    /// UTF-16
-    typedef void(_stdcall *TProgressW)(const wchar_t *message, void *user);
-    /// ANSI
-    typedef void(_stdcall *TProgressA)(const char *message, void *user);
+    /// UTF-16 callback
+    typedef void(_stdcall *TProgressW)(int percent, const wchar_t *message, void *user);
+    /// ANSI callback
+    typedef void(_stdcall *TProgressA)(int percent, const char *message, void *user);
 
-    __declspec(dllexport) int __stdcall DivideGmlW(
-        const wchar_t *inFile,
-        TProgressW progress,
-        void *userData)
+    __declspec(dllexport) int __stdcall DivideGmlW(const wchar_t* inFile,
+                                                    TProgressW progress,
+                                                    void* userData)
     {
         if (!inFile)
             return -1;
@@ -35,15 +33,17 @@ extern "C"
 
         std::wstring wsIn(inFile);
         std::string fileIn(wsIn.begin(), wsIn.end());
-
-        GmlServices::PerformDivision(fileIn, nsVect, false);
+        wchar_t msg[128];
+        int i = 100;
+        wsprintfW(msg, L"Cos tam robie na %d procent", i);
+        progress(i, msg, userData);
+        //GmlServices::PerformDivision(fileIn, nsVect);
         return 0;
     }
 
-    __declspec(dllexport) int __stdcall DivideGmlA(
-        const char *inFile,
-        TProgressA progress,
-        void *userData)
+    __declspec(dllexport) int __stdcall DivideGmlA(const char *inFile,
+                                                    TProgressA progress,
+                                                    void *userData)
     {
         if (!inFile)
             return -1;
@@ -60,9 +60,11 @@ extern "C"
         }
 
         std::string fileIn(inFile);
-        GmlServices::PerformDivision(fileIn, nsVect, false);
+        char msg[128];
+        int i = 100;
+        wsprintfA(msg, "Przetwarzanie... %d%%", i);
+        progress(i, msg, userData);
+        //GmlServices::PerformDivision(fileIn, nsVect);
         return 0;
     }
 }
-
-#endif

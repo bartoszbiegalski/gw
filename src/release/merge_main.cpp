@@ -24,7 +24,7 @@ int main(int argc, char *argv[])
     auto path = std::filesystem::path(argv[1]);
     auto cfg = std::make_unique<XmlConfig>(static_config::staticData);
 
-    GmlCreate::Create(cfg, path.parent_path(), path.filename());
+    GmlCreate::Create(cfg, path.parent_path(), path.filename().string());
     std::unique_ptr<GmlObject> destObj = std::make_unique<GmlObject>();
     GmlImport::Import(path, destObj);
 

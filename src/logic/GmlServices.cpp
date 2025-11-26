@@ -2,7 +2,7 @@
 #include "services/ZipSaver.h"
 #include <iostream>
 
-void GmlServices::PerformDivision(const std::filesystem::path &inFile, std::vector<NamespacePrefix> &nsVec)
+void GmlServices::PerformDivision(const std::filesystem::path &inFile, std::vector<NamespacePrefix> &nsVec, bool isZip)
 {
     auto cfg = std::make_unique<XmlConfig>(static_config::staticData);
     std::unique_ptr<GmlObject> obj = std::make_unique<GmlObject>();
@@ -25,24 +25,24 @@ void GmlServices::PerformDivision(const std::filesystem::path &inFile, std::vect
         GmlExport::Export(cfg, o);
     }
 
-    // if (isZip)
-    // {
-    //     std::vector<std::string> zipFileVec;
-    //     auto fillZipVec = [&zipFileVec](const auto &objects)
-    //     {
-    //         for (const auto &obj : objects)
-    //         {
-    //             zipFileVec.push_back(obj->getFileName());
-    //         }
-    //     };
-    //     fillZipVec(objVec);
-    //     ZipSaver::SaveToZip(obj.get()->getFilePath().stem().u8string(), obj.get()->getFilePath().parent_path(), zipFileVec);
+    if (isZip)
+    {
+        std::vector<std::string> zipFileVec;
+        auto fillZipVec = [&zipFileVec](const auto &objects)
+        {
+            for (const auto &obj : objects)
+            {
+                zipFileVec.push_back(obj->getFileName());
+            }
+        };
+        fillZipVec(objVec);
+        ZipSaver::SaveToZip(obj.get()->getFilePath().stem().u8string(), obj.get()->getFilePath().parent_path(), zipFileVec);
 
-    //     for (const auto &obj : objVec)
-    //     {
-    //         std::filesystem::remove(obj->getFilePath());
-    //     }
-    // }
+        for (const auto &obj : objVec)
+        {
+            std::filesystem::remove(obj->getFilePath());
+        }
+    }
 }
 
 std::map<std::string, std::string> GmlServices::GetRootInfoMap(const GmlObject *obj)

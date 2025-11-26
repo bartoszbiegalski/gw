@@ -1,16 +1,18 @@
-if(MSVC)
-    add_compile_options(/W4 /permissive-)
-    target_link_libraries(gw_lib PUBLIC ${LIBXML2_INCLUDE_DIRS} ${LIBZIP_INCLUDE_DIRS})
-endif()
+find_package(PkgConfig REQUIRED)
+find_package(ZLIB REQUIRED)
+pkg_check_modules(LIBXML2 REQUIRED libxml-2.0)
+pkg_check_modules(LIBZIP REQUIRED libzip)
 
-find_package(LibXml2 CONFIG REQUIRED)
-find_package(libzip CONFIG REQUIRED)
+target_include_directories(gw_lib PUBLIC
+    ${LIBXML2_INCLUDE_DIRS}
+    ${LIBZIP_INCLUDE_DIRS}
+)
 
-if(TARGET LibXml2::LibXml2)
-    target_link_libraries(gw_lib PUBLIC LibXml2::LibXml2 libzip::libzip cppuprofile)
-else()
-    target_link_libraries(gw_lib PUBLIC ${LIBXML2_LIBRARIES} ${LIBZIP_LIBRARIES} cppuprofile)
-endif()
-
-target_compile_definitions(gw_lib PUBLIC -D_WIN32_WINNT=0x0601)
-target_compile_definitions(my_dll PRIVATE MYDLL_EXPORTS)
+target_link_libraries(gw_lib PUBLIC
+    ${LIBXML2_LIBRARIES}
+    ${LIBZIP_LIBRARIES}
+    -lz
+    -liconv
+    -lbcrypt
+   # cppuprofile
+)

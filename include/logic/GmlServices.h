@@ -14,7 +14,7 @@
 class GmlServices
 {
 public:
-    static void PerformDivision(const std::filesystem::path &inFile, std::vector<NamespacePrefix> &nsVec);
+    static void PerformDivision(const std::filesystem::path &inFile, std::vector<NamespacePrefix> &nsVec, bool isZip);
 
     static std::map<std::string, std::string> GetRootInfoMap(const GmlObject *obj);
     static std::map<std::string, std::string> GetNamespaceNodeInfoMap(const GmlObject *obj, const NamespacePrefix &prefix);

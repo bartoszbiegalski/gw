@@ -2,8 +2,7 @@
 
 #Build folder
 /build/
-/build-windows/
-
+/build32
 #Binaries
 *.o
 *.obj
