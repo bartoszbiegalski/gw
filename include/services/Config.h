@@ -1,7 +1,7 @@
 #pragma once
 
 #include "core/types.h"
-#include "external/json.hpp"
+#include "external/nlohmann/json.hpp"
 
 class Config
 {

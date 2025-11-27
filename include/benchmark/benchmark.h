@@ -1,6 +1,6 @@
 #pragma once
 #include "core/types.h"
-#include "../include/core/GmlObject.h"
+#include "core/GmlObject.h"
 #include "io/GmlImport.h"
 #include "io/GmlExport.h"
 #include "release/static_config.h"
@@ -11,6 +11,7 @@
 #include "services/XsdParser.h"
 #include "logic/GmlDivide.h"
 #include "logic/GmlMerge.h"
+
 #include "uprofile.h"
 
 // Benchmark.cpp

@@ -1,5 +1,5 @@
 #include <iostream>
-#include "benchmark.h"
+#include "benchmark/benchmark.h"
 
 int main(int argc, char *argv[])
 {
@@ -23,4 +23,6 @@ int main(int argc, char *argv[])
     }
 
     gml_benchmark::divide_benchmark(obj, nsVector, divideBenchmarkPath);
+    std::cout << "WORKING DIR: " << std::filesystem::current_path() << "\n";
+    std::cout << "Saving to: " << divideBenchmarkPath << std::endl;
 }

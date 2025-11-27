@@ -1,5 +1,5 @@
 #include "core/types.h"
-#include "external/json.hpp"
+#include "external/nlohmann/json.hpp"
 
 namespace static_config
 {

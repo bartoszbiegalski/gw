@@ -4,6 +4,7 @@
  */
 
 #include <libxml/xmlreader.h>
+#include <libxml/xmlwriter.h>
 
 #include <string>
 #include <fstream>

@@ -1,4 +1,4 @@
-#include "benchmark.h"
+#include "benchmark/benchmark.h"
 
 // Benchmark.cpp
 // Defines different types of benchmarks
@@ -48,7 +48,7 @@ namespace gml_benchmark
                 nsVec.push_back(i.first);
             }
         }
-        uprofile::start(benchmarkFilePath.c_str());
+        uprofile::start("divide_benchmark.csv");
         uprofile::startCPUUsageMonitoring(100);
         uprofile::startSystemMemoryMonitoring(100);
         uprofile::timeBegin("gml_divide");

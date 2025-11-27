@@ -1,6 +1,6 @@
 #include <iostream>
 #include "io/GmlCreate.h"
-#include "benchmark.h"
+#include "benchmark/benchmark.h"
 
 int main(int argc, char *argv[])
 {

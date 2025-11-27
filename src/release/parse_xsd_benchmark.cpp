@@ -1,5 +1,5 @@
 #include <iostream>
-#include "benchmark.h"
+#include "benchmark/benchmark.h"
 
 int main(int argc, char *argv[])
 {
