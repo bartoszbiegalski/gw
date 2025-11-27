@@ -31,6 +31,8 @@ file(GLOB_RECURSE GW_LIBRARY_SOURCES
     "src/utils/*.cpp"
 )
 add_library(gw_lib STATIC ${GW_LIBRARY_SOURCES})
+target_compile_definitions(gw_lib PUBLIC ZIP_STATIC)
+target_compile_definitions(gw_lib PUBLIC LIBXML_STATIC)
 
 target_include_directories(gw_lib PUBLIC
     #${CMAKE_CURRENT_SOURCE_DIR}/benchmark
