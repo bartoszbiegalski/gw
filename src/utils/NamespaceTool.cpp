@@ -169,3 +169,40 @@ void NamespaceTool::Process(const std::unique_ptr<XmlConfig> &cfg, std::unique_p
         obj->setNamespaceMap(std::move(nsMap));
     }
 }
+
+xmlDocPtr NamespaceTool::CreateXmlDoc(const std::unique_ptr<XmlConfig> &cfg, const std::unique_ptr<GmlObject> &obj)
+{
+    std::string gmlVersion{cfg->get("gml_preambule.gml_version", "")};
+    std::string encoding{cfg->get("gml_preambule.gml_encoding", "")};
+    std::string gmlPrefix{cfg->get("gml_prefix", "gml")};
+    std::string sep{cfg->get("gml_separator", ":")};
+    std::string nsPrefix{cfg->get("namespace_prefix", "xmlns")};
+
+    std::string rootName{gmlPrefix + sep + cfg->get("gml_structure.root", "")};
+    std::string idAttr{cfg->get("id_attribute", "")};
+    std::string idValue{cfg->get("id_value", "")};
+
+    std::string schemaLocationAttribute{cfg->get("schema_location_attribute", "")};
+
+    xmlDocPtr xmlDoc = xmlNewDoc(BAD_CAST gmlVersion.c_str());
+    xmlNodePtr root = xmlNewNode(NULL, BAD_CAST rootName.c_str());
+    // id
+    xmlNewProp(root, BAD_CAST idAttr.c_str(), BAD_CAST(idValue + "1").c_str());
+    std::list<std::string> schemaLocationList{};
+    MapToNamespaceList(obj.get()->getNamespaceMap(), schemaLocationList);
+    std::string schemaLocationString{};
+    for (auto schemaKey : schemaLocationList)
+    {
+        schemaLocationString += schemaKey + " ";
+    }
+
+    for (auto i : obj.get()->getNamespaceMap())
+    {
+        xmlNewNs(root, BAD_CAST i.second.NamespaceUri.c_str(), BAD_CAST i.first.c_str());
+    }
+    xmlNewProp(root, BAD_CAST schemaLocationAttribute.c_str(), BAD_CAST schemaLocationString.c_str());
+
+    xmlDocSetRootElement(xmlDoc, root);
+
+    return xmlDoc;
+}

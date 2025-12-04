@@ -5,12 +5,12 @@
 int main(int argc, char *argv[])
 {
 
-    if (argc < 3)
+    if (argc < 4)
     {
-        std::cerr << "Usage: " << argv[0] << " <destPath> <sourcePath_1> <sourcePath_2> <...>\n";
+        std::cerr << "Usage: " << argv[0] << " <destPath> <benchmarkName> <sourcePath_1> <sourcePath_2> <...>\n";
         return 1;
     }
-    auto mergeBenchmarkPath = std::filesystem::path("merge_benchmark.csv");
+    auto mergeBenchmarkPath = std::filesystem::path("merge_benchmark_" + std::string(argv[2]) + ".csv");
     std::filesystem::path filePath(argv[1]);
     auto cfg = std::make_unique<XmlConfig>(static_config::staticData);
     GmlCreate::Create(cfg, filePath.parent_path(), filePath.filename());
@@ -18,7 +18,7 @@ int main(int argc, char *argv[])
     auto baseObjects = std::vector<std::unique_ptr<GmlObject>>();
     GmlImport::Import(filePath, destObj);
 
-    for (int i = 2; i < argc; i++)
+    for (int i = 3; i < argc; i++)
     {
         std::cout << argv[i] << '\n';
         auto newObj = std::make_unique<GmlObject>();

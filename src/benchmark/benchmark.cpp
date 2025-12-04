@@ -1,5 +1,5 @@
 #include "benchmark/benchmark.h"
-
+#include <iostream>
 // Benchmark.cpp
 // Defines different types of benchmarks
 
@@ -12,6 +12,7 @@ namespace gml_benchmark
         uprofile::startSystemMemoryMonitoring(100);
         auto cfg = std::make_unique<XmlConfig>(static_config::staticData);
         std::unique_ptr<GmlObject> obj = std::make_unique<GmlObject>();
+        std::cout << filePath << "\n";
         GmlImport::Import(filePath, obj);
         NamespaceTool::Process(cfg, obj);
         uprofile::timeEnd("file_import");
@@ -48,7 +49,7 @@ namespace gml_benchmark
                 nsVec.push_back(i.first);
             }
         }
-        uprofile::start("divide_benchmark.csv");
+        uprofile::start(benchmarkFilePath.c_str());
         uprofile::startCPUUsageMonitoring(100);
         uprofile::startSystemMemoryMonitoring(100);
         uprofile::timeBegin("gml_divide");

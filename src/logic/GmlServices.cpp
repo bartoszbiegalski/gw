@@ -67,6 +67,53 @@ void GmlServices::PerformMerge(const FilePath &inFile, std::vector<FilePath> &fi
     GmlExport::Export(cfg, destObj);
 }
 
+GmlNodePtr GmlServices::GetElementWithKey(const std::unique_ptr<GmlObject> &obj, const GmlId gmlId, std::list<std::string> &nearestKeys)
+{
+    std::map<std::string, int> nearestKeysMap{};
+    for (auto nsMap : obj.get()->getGmlStorage().getGmlMap())
+    {
+        if (nsMap.second.find(gmlId) != nsMap.second.end())
+        {
+            return nsMap.second.at(gmlId);
+        }
+        else
+        {
+            for (auto id : nsMap.second)
+            {
+                if (nearestKeysMap.empty() == true)
+                {
+                    nearestKeysMap.emplace(id.first, string_operations::levenstein_distance(id.first, gmlId));
+                }
+                else if (nearestKeysMap.begin()->second > string_operations::levenstein_distance(id.first, gmlId)) // new nearest Id
+                {
+                    nearestKeysMap.clear();
+                    nearestKeysMap.emplace(id.first, string_operations::levenstein_distance(id.first, gmlId));
+                }
+                else if (nearestKeysMap.begin()->second >= string_operations::levenstein_distance(id.first, gmlId)) // push back
+                {
+                    nearestKeysMap.emplace(id.first, string_operations::levenstein_distance(id.first, gmlId));
+                }
+            }
+        }
+    }
+    for (const auto &[key, dist] : nearestKeysMap)
+    {
+        nearestKeys.push_back(key);
+    }
+    return nullptr;
+}
+
+GmlNodePtr GmlServices::GetElementWithKeyAndNs(const std::unique_ptr<GmlObject> &obj, const GmlId gmlId, const std::string &nsPrefix, std::list<std::string> &nearestKeys)
+{
+    // if (obj.get()->getGmlStorage().getGmlMap().find(nsPrefix) != obj.get()->getGmlStorage().getGmlMap().end())
+    // {
+    //     return obj.get()->getGmlStorage().getGmlMap().at()
+    // }
+
+    // std::string resultKey{};
+    // auto objMap = obj.get()->getGmlStorage().getGmlMap();
+}
+
 std::map<std::string, std::string> GmlServices::GetRootInfoMap(const GmlObject *obj)
 {
     auto rootInfoMap = std::map<std::string, std::string>();

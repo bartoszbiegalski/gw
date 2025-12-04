@@ -3,13 +3,13 @@
 
 int main(int argc, char *argv[])
 {
-    auto divideBenchmarkPath = std::filesystem::path("divide_benchmark.csv");
-    if (argc < 2)
+    if (argc < 3)
     {
-        std::cerr << "Usage: " << argv[0] << " <filePath> \n";
+        std::cerr << "Usage: " << argv[0] << " <filePath> <benchmarkName\n";
         return 1;
     }
     std::filesystem::path filePath(argv[1]);
+    auto divideBenchmarkPath = std::filesystem::path("divide_benchmark_" + std::string(argv[2]) + ".csv");
     auto cfg = std::make_unique<XmlConfig>(static_config::staticData);
     std::unique_ptr<GmlObject> obj = std::make_unique<GmlObject>();
     GmlImport::Import(filePath, obj);

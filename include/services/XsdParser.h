@@ -16,4 +16,5 @@ public:
 
 private:
     static XmlSchemaValidCtxtPtr getValidCtxt(const std::string &xsdPath);
+    static xmlParserInputPtr myResolver(const std::filesystem::path url, xmlParserCtxtPtr ctxt);
 };

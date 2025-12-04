@@ -12,9 +12,9 @@ extern "C"
     /// ANSI callback
     typedef void(_stdcall *TProgressA)(int percent, const char *message, void *user);
 
-    __declspec(dllexport) int __stdcall DivideGmlW(const wchar_t* inFile,
-                                                    TProgressW progress,
-                                                    void* userData)
+    __declspec(dllexport) int __stdcall DivideGmlW(const wchar_t *inFile,
+                                                   TProgressW progress,
+                                                   void *userData)
     {
         if (!inFile)
             return -1;
@@ -37,13 +37,13 @@ extern "C"
         int i = 100;
         wsprintfW(msg, L"Cos tam robie na %d procent", i);
         progress(i, msg, userData);
-        //GmlServices::PerformDivision(fileIn, nsVect);
+        // GmlServices::PerformDivision(fileIn, nsVect);
         return 0;
     }
 
     __declspec(dllexport) int __stdcall DivideGmlA(const char *inFile,
-                                                    TProgressA progress,
-                                                    void *userData)
+                                                   TProgressA progress,
+                                                   void *userData)
     {
         if (!inFile)
             return -1;
@@ -64,7 +64,7 @@ extern "C"
         int i = 100;
         wsprintfA(msg, "Przetwarzanie... %d%%", i);
         progress(i, msg, userData);
-        //GmlServices::PerformDivision(fileIn, nsVect);
+        // GmlServices::PerformDivision(fileIn, nsVect);
         return 0;
     }
 }

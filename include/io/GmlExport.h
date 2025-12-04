@@ -13,4 +13,7 @@ public:
     GmlExport() = delete;
 
     static void Export(const std::unique_ptr<XmlConfig> &cfg, const std::unique_ptr<GmlObject> &obj);
+
+private:
+    static void writeNode(xmlTextWriterPtr writer, xmlNodePtr node, bool isRoot);
 };

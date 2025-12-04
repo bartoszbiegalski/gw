@@ -10,9 +10,12 @@ namespace string_operations
 
     std::list<std::string> get_schema_locaton_list(std::string &schemaLocationStream);
 
+    int levenstein_distance(const std::string &s1, const std::string &s2);
+
     bool validate_schemaLocation_stream(const std::string &schemaLocationStream);
 
     void set_schema_location_list(const std::string &schemaLocationStream, std::list<std::string> &schemaLocationList);
 
     void set_schema_location_string(const std::list<std::string> &schemaLocationList, std::string &schemaLocationStream);
+
 }

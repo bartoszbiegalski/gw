@@ -18,6 +18,8 @@ class GmlServices
 public:
     static void PerformDivision(const std::filesystem::path &inFile, std::vector<NamespacePrefix> &nsVec, bool isZip);
     static void PerformMerge(const FilePath &inFile, std::vector<FilePath> &filePathVec);
+    static GmlNodePtr GetElementWithKey(const std::unique_ptr<GmlObject> &obj, const GmlId gmlId, std::list<std::string> &nearestKeys);
+    static GmlNodePtr GetElementWithKeyAndNs(const std::unique_ptr<GmlObject> &obj, const GmlId gmlId, const std::string &nsPrefix, std::list<std::string> &nearestKeys);
 
     static std::map<std::string, std::string> GetRootInfoMap(const GmlObject *obj);
     static std::map<std::string, std::string> GetNamespaceNodeInfoMap(const GmlObject *obj, const NamespacePrefix &prefix);

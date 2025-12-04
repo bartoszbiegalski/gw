@@ -18,6 +18,8 @@ public:
     static void MapToNamespaceList(const NamespaceMap &nsMap, std::list<std::string> &namespaceUrlList);
     static std::vector<std::pair<std::string, std::string>> GetXsdVector(const std::unique_ptr<GmlObject> &obj);
 
+    static xmlDocPtr CreateXmlDoc(const std::unique_ptr<XmlConfig> &cfg, const std::unique_ptr<GmlObject> &obj);
+
 private:
     static std::map<std::string, std::string> GetAttributesMap(const std::unique_ptr<XmlConfig> &cfg, const std::unique_ptr<GmlObject> &obj);
 

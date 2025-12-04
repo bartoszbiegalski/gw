@@ -67,6 +67,16 @@ target_link_libraries(divide PRIVATE gw_lib)
 add_executable(merge src/release/merge.cpp)
 target_link_libraries(merge PRIVATE gw_lib)
 
+add_executable(parse src/release/parse.cpp)
+target_link_libraries(parse PRIVATE gw_lib)
+
+add_executable(get_key src/release/get_key.cpp)
+target_link_libraries(get_key PRIVATE gw_lib)
+
+add_executable(gmlWorker src/release/text_main.cpp)
+target_link_libraries(gmlWorker PRIVATE gw_lib)
+
+
 # file(GLOB DLL_SOURCES "dll/*.cpp")
 # add_library(my_dll SHARED ${DLL_SOURCES})
 # target_include_directories(my_dll PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)

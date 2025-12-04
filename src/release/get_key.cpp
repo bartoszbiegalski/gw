@@ -21,11 +21,11 @@ int main(int argc, char *argv[])
 {
     if (argc < 3)
     {
-        std::cerr << "Usage: " << argv[0] << " <filePath1> <filePath2>\n";
+        std::cerr << "Usage: " << argv[0] << " <filePath1> <key>\n";
         return 1;
     }
     std::filesystem::path filePath(argv[1]);
-    std::filesystem::path destPath(argv[2]);
+    std::string key(argv[2]);
 
     auto cfg = std::make_unique<XmlConfig>(static_config::staticData);
     std::unique_ptr<GmlObject> obj = std::make_unique<GmlObject>();
@@ -33,12 +33,24 @@ int main(int argc, char *argv[])
     GmlImport::Import(filePath, obj);
     NamespaceTool::Process(cfg, obj);
     XmlParser::SetContent(cfg, obj);
+
     for (auto &i : obj.get()->getGmlStorage().getGmlMap())
     {
         std::cout << i.first << " " << i.second.size() << "\n";
     }
+    std::list<std::string> nearestKeys{};
+    auto keyElement = GmlServices::GetElementWithKey(obj, key, nearestKeys);
+    if (keyElement != nullptr)
+    {
+        std::cout << key << " " << keyElement.get()->name << "\n";
+    }
+    else
+    {
+        for (auto i : nearestKeys)
+        {
+            std::cout << i << "\n";
+        }
+    }
 
-    obj.get()->setFilePath(destPath);
-    GmlExport::Export(cfg, obj);
     return 0;
 }
