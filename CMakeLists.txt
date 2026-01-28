@@ -54,6 +54,17 @@ target_link_libraries(divide PRIVATE gw_lib)
 add_executable(merge src/release/merge.cpp)
 target_link_libraries(merge PRIVATE gw_lib)
 
+file(GLOB DLL_SOURCES 
+    "dll/DivideProcDll.cpp"
+)
+add_library(DivideDll SHARED ${DLL_SOURCES})
+target_link_options(DivideDll PRIVATE
+    -static
+    -static-libstdc++
+    -static-libgcc
+)
+target_include_directories(DivideDll PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
+target_link_libraries(DivideDll PRIVATE gw_lib iconv xml2 zip)
 add_executable(parse src/release/parse.cpp)
 target_link_libraries(parse PRIVATE gw_lib)
 
