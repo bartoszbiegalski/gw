@@ -8,29 +8,16 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 # wspólne definicje
 add_definitions(-DLIBXML_STATIC -DLIBZIP_NO_CRYPTO)
 
-# FetchContent cppuprofile
-# include(FetchContent)
-# FetchContent_Declare(
-#     cppuprofile
-#     GIT_REPOSITORY https://github.com/Orange-OpenSource/cppuprofile.git
-#     GIT_TAG master
-# )
-# set(FETCHCONTENT_UPSTREAM_MINIMUM_CMAKE_VERSION 3.16)
-# FetchContent_MakeAvailable(cppuprofile)
-# if(TARGET cppuprofile)
-#     target_compile_options(cppuprofile PRIVATE -Wno-error)
-# endif()
-
 # pliki projektu
 file(GLOB_RECURSE GW_LIBRARY_SOURCES
     "src/benchmark/benchmark.cpp"
     "src/core/*.cpp"
-    #"src/external/cppuprofile/*.cpp"
     "src/io/*.cpp"
     "src/logic/*.cpp"
     "src/services/*.cpp"
     "src/utils/*.cpp"
 )
+
 add_library(gw_lib STATIC ${GW_LIBRARY_SOURCES})
 target_compile_definitions(gw_lib PUBLIC ZIP_STATIC)
 target_compile_definitions(gw_lib PUBLIC LIBXML_STATIC)

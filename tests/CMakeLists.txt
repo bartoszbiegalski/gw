@@ -8,6 +8,7 @@ FetchContent_MakeAvailable(googletest)
 
 add_executable(gw_tests
     basic_test.cpp
+    divide_from_map_test.cpp
 )
 
 target_link_libraries(gw_tests PRIVATE gw_lib gtest_main)

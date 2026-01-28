@@ -67,6 +67,50 @@ void GmlServices::PerformMerge(const FilePath &inFile, std::vector<FilePath> &fi
     GmlExport::Export(cfg, destObj);
 }
 
+void GmlServices::DivideFromMap(const std::unique_ptr<GmlObject> &sourceObj, std::unique_ptr<GmlObject> &destObj, std::map<std::string, std::vector<std::string>> &classMap)
+{
+    const NamespaceMap &oldMap = sourceObj->getNamespaceMap();
+    for (const auto &[prefix, nsValue] : oldMap)
+    {
+        if (destObj->getNamespaceMap().find(prefix) ==
+            destObj->getNamespaceMap().end())
+        {
+            destObj->addToNamespaceMap(prefix, nsValue);
+        }
+    }
+
+    auto &srcMap = sourceObj->getGmlStorage().getGmlMap();
+    auto &destMap = destObj->getGmlStorage().getGmlMap();
+
+    for (const auto &[prefix, classNameVec] : classMap)
+    {
+        auto srcIt = srcMap.find(prefix);
+        if (srcIt == srcMap.end())
+            continue;
+
+        auto classNameCountMap =
+            GmlServices::GetClassNames(sourceObj.get(), prefix);
+
+        // for (auto i : classNameCountMap)
+        // {
+        //     std::cout << i.first << "\n";
+        // }
+
+        for (const auto &className : classNameVec)
+        {
+            if (classNameCountMap.find(className) == classNameCountMap.end())
+                continue;
+
+            auto classMapForPrefix =
+                GmlServices::GetClassMap(sourceObj.get(), prefix, className);
+
+            destMap[prefix].insert(
+                classMapForPrefix.begin(),
+                classMapForPrefix.end());
+        }
+    }
+}
+
 GmlNodePtr GmlServices::GetElementWithKey(const std::unique_ptr<GmlObject> &obj, const GmlId gmlId, std::list<std::string> &nearestKeys)
 {
     std::map<std::string, int> nearestKeysMap{};
@@ -101,17 +145,6 @@ GmlNodePtr GmlServices::GetElementWithKey(const std::unique_ptr<GmlObject> &obj,
         nearestKeys.push_back(key);
     }
     return nullptr;
-}
-
-GmlNodePtr GmlServices::GetElementWithKeyAndNs(const std::unique_ptr<GmlObject> &obj, const GmlId gmlId, const std::string &nsPrefix, std::list<std::string> &nearestKeys)
-{
-    // if (obj.get()->getGmlStorage().getGmlMap().find(nsPrefix) != obj.get()->getGmlStorage().getGmlMap().end())
-    // {
-    //     return obj.get()->getGmlStorage().getGmlMap().at()
-    // }
-
-    // std::string resultKey{};
-    // auto objMap = obj.get()->getGmlStorage().getGmlMap();
 }
 
 std::map<std::string, std::string> GmlServices::GetRootInfoMap(const GmlObject *obj)
@@ -161,6 +194,12 @@ NamespaceData GmlServices::getNamespaceDataFromPrefix(const GmlObject *obj, cons
         return NamespaceData{};
     else
         return obj->getNamespaceMap().at(prefix);
+}
+
+GmlMap GmlServices::GetGmlMap(const GmlObject *obj, const NamespacePrefix &prefix)
+{
+    const auto &gmlMap = obj->getGmlStorage().getGmlMap();
+    return gmlMap;
 }
 
 std::map<std::string, int> GmlServices::GetClassNames(const GmlObject *obj, const NamespacePrefix &prefix)
