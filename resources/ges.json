@@ -1,0 +1,228 @@
+{
+   "GES_IdentyfikatorIIP" : [
+      {
+         "referencesTo" : [],
+         "substitutionGroup" : "gml:AbstractObject",
+         "type" : "GES_IdentyfikatorIIPType"
+      }
+   ],
+   "GES_UrzadzeniaSiecTelekomunikacyjna" : [
+      {
+         "substitutionGroup" : "GES_UrzadzenieZwiazaneZPrzewodami",
+         "type" : "GES_UrzadzeniaSiecTelekomunikacyjnaType",
+         "referencesTo" : [
+            "rzednaObiektu"
+         ]
+      }
+   ],
+   "PrezentacjaGraficzna" : [
+      {
+         "substitutionGroup" : "gml:AbstractFeature",
+         "type" : "PrezentacjaGraficznaType",
+         "referencesTo" : [
+            "obiektPrzedstawiany"
+         ]
+      }
+   ],
+   "Etykieta" : [
+      {
+         "type" : "EtykietaType",
+         "substitutionGroup" : "gml:AbstractObject",
+         "referencesTo" : []
+      }
+   ],
+   "GES_Rzedna" : [
+      {
+         "type" : "GES_RzednaType",
+         "substitutionGroup" : "GES_OgolnyObiekt",
+         "referencesTo" : []
+      }
+   ],
+   "GES_PrzewodSpecjalny" : [
+      {
+         "substitutionGroup" : "GES_Przewod",
+         "type" : "GES_PrzewodSpecjalnyType",
+         "referencesTo" : [
+            "rzednaObiektu"
+         ]
+      }
+   ],
+   "GES_UrzadzeniaTowarzyszczaceLiniowe" : [
+      {
+         "substitutionGroup" : "GES_ObiektGESUT",
+         "type" : "GES_UrzadzeniaTowarzyszczaceLinioweType",
+         "referencesTo" : [
+            "rzednaObiektu"
+         ]
+      }
+   ],
+   "GES_UrzadzeniaSiecElektroenergetyczna" : [
+      {
+         "referencesTo" : [
+            "rzednaObiektu"
+         ],
+         "substitutionGroup" : "GES_UrzadzenieZwiazaneZPrzewodami",
+         "type" : "GES_UrzadzeniaSiecElektroenergetycznaType"
+      }
+   ],
+   "GES_OgolnyObiekt" : [
+      {
+         "substitutionGroup" : "gml:AbstractFeature",
+         "type" : "GES_OgolnyObiektType",
+         "referencesTo" : []
+      }
+   ],
+   "GES_Przewod" : [
+      {
+         "type" : "GES_PrzewodType",
+         "substitutionGroup" : "GES_ObiektGESUT",
+         "referencesTo" : [
+            "rzednaObiektu"
+         ]
+      }
+   ],
+   "GES_PrzewodNiezidentyfikowany" : [
+      {
+         "referencesTo" : [
+            "rzednaObiektu"
+         ],
+         "type" : "GES_PrzewodNiezidentyfikowanyType",
+         "substitutionGroup" : "GES_Przewod"
+      }
+   ],
+   "GES_UrzadzenieNiezidentyfikowane" : [
+      {
+         "referencesTo" : [
+            "rzednaObiektu"
+         ],
+         "type" : "GES_UrzadzenieNiezidentyfikowaneType",
+         "substitutionGroup" : "GES_UrzadzenieZwiazaneZPrzewodami"
+      }
+   ],
+   "GES_UrzadzeniaSiecKanalizacyjna" : [
+      {
+         "referencesTo" : [
+            "rzednaObiektu"
+         ],
+         "type" : "GES_UrzadzeniaSiecKanalizacyjnaType",
+         "substitutionGroup" : "GES_UrzadzenieZwiazaneZPrzewodami"
+      }
+   ],
+   "GES_UrzadzeniaSiecCieplownicza" : [
+      {
+         "substitutionGroup" : "GES_UrzadzenieZwiazaneZPrzewodami",
+         "type" : "GES_UrzadzeniaSiecCieplowniczaType",
+         "referencesTo" : [
+            "rzednaObiektu"
+         ]
+      }
+   ],
+   "GES_UrzadzenieZwiazaneZPrzewodami" : [
+      {
+         "referencesTo" : [
+            "rzednaObiektu"
+         ],
+         "substitutionGroup" : "GES_ObiektGESUT",
+         "type" : "GES_UrzadzenieZwiazaneZPrzewodamiType"
+      }
+   ],
+   "GES_UrzadzeniaTechniczneSieciSpecjalnej" : [
+      {
+         "referencesTo" : [
+            "rzednaObiektu"
+         ],
+         "type" : "GES_UrzadzeniaTechniczneSieciSpecjalnejType",
+         "substitutionGroup" : "GES_UrzadzenieZwiazaneZPrzewodami"
+      }
+   ],
+   "GES_PrzewodTelekomunikacyjny" : [
+      {
+         "referencesTo" : [
+            "rzednaObiektu"
+         ],
+         "type" : "GES_PrzewodTelekomunikacyjnyType",
+         "substitutionGroup" : "GES_Przewod"
+      }
+   ],
+   "GES_PrzewodKanalizacyjny" : [
+      {
+         "type" : "GES_PrzewodKanalizacyjnyType",
+         "substitutionGroup" : "GES_Przewod",
+         "referencesTo" : [
+            "rzednaObiektu"
+         ]
+      }
+   ],
+   "GES_UrzadzeniaSiecGazowa" : [
+      {
+         "referencesTo" : [
+            "rzednaObiektu"
+         ],
+         "type" : "GES_UrzadzeniaSiecGazowaType",
+         "substitutionGroup" : "GES_UrzadzenieZwiazaneZPrzewodami"
+      }
+   ],
+   "GES_PrzewodWodociagowy" : [
+      {
+         "referencesTo" : [
+            "rzednaObiektu"
+         ],
+         "substitutionGroup" : "GES_Przewod",
+         "type" : "GES_PrzewodWodociagowyType"
+      }
+   ],
+   "GES_PrzewodGazowy" : [
+      {
+         "referencesTo" : [
+            "rzednaObiektu"
+         ],
+         "type" : "GES_PrzewodGazowyType",
+         "substitutionGroup" : "GES_Przewod"
+      }
+   ],
+   "GES_ObiektGESUT" : [
+      {
+         "type" : "GES_ObiektGESUTType",
+         "substitutionGroup" : "GES_OgolnyObiekt",
+         "referencesTo" : [
+            "rzednaObiektu"
+         ]
+      }
+   ],
+   "GES_UrzadzeniaSiecWodociagowa" : [
+      {
+         "substitutionGroup" : "GES_UrzadzenieZwiazaneZPrzewodami",
+         "type" : "GES_UrzadzeniaSiecWodociagowaType",
+         "referencesTo" : [
+            "rzednaObiektu"
+         ]
+      }
+   ],
+   "GES_InneUrzadzeniaTowarzyszace" : [
+      {
+         "substitutionGroup" : "GES_ObiektGESUT",
+         "type" : "GES_InneUrzadzeniaTowarzyszaceType",
+         "referencesTo" : [
+            "rzednaObiektu"
+         ]
+      }
+   ],
+   "GES_PrzewodCieplowniczy" : [
+      {
+         "substitutionGroup" : "GES_Przewod",
+         "type" : "GES_PrzewodCieplowniczyType",
+         "referencesTo" : [
+            "rzednaObiektu"
+         ]
+      }
+   ],
+   "GES_PrzewodElektroenergetyczny" : [
+      {
+         "referencesTo" : [
+            "rzednaObiektu"
+         ],
+         "type" : "GES_PrzewodElektroenergetycznyType",
+         "substitutionGroup" : "GES_Przewod"
+      }
+   ]
+}

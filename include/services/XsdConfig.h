@@ -9,7 +9,9 @@
 class XsdConfig : public Config
 {
 public:
-    explicit XsdConfig(const FilePath &filePath);
+    XsdConfig(const FilePath &filePath);
 
     std::string get(const std::string &key, const std::string &def) const override;
+
+    nlohmann::json get_json(const std::string &key) const override;
 };

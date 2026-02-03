@@ -32,7 +32,7 @@ std::string taskTable[7] = {
 
 void mainLoop()
 {
-    auto cfg = std::make_unique<XmlConfig>(static_config::staticData);
+    auto cfg = std::make_unique<XmlConfig>(static_config::staticGmlData);
     std::map<std::string, std::unique_ptr<GmlObject>> loadedObjects = {};
     std::string errorLine{};
     while (true)

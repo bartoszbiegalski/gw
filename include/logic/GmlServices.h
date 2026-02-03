@@ -9,6 +9,7 @@
 #include "utils/string_operations.h"
 #include "utils/tree_operations.h"
 #include "services/XmlConfig.h"
+#include "services/XsdConfig.h"
 #include "services/XmlParser.h"
 #include "logic/GmlDivide.h"
 #include "logic/GmlMerge.h"
@@ -27,9 +28,11 @@ public:
     static std::map<std::string, int> GetClassNames(const GmlObject *obj, const NamespacePrefix &prefix);
     static GmlMap GetGmlMap(const GmlObject *obj, const NamespacePrefix &prefix);
     static std::map<GmlId, GmlNodePtr> GetClassMap(const GmlObject *obj, const NamespacePrefix &prefix, const std::string className);
+    static std::vector<GmlId> GetReferences(const std::unique_ptr<GmlObject> &sourceObject, const std::map<std::string, std::vector<std::string>> &classMap);
 
 private:
     static int getElementAmount(const GmlObject *obj);
     static int getNamespaceElementAmount(const GmlObject *obj, const NamespacePrefix &prefix);
     static NamespaceData getNamespaceDataFromPrefix(const GmlObject *obj, const NamespacePrefix &prefix);
+    static std::vector<std::string> getReferenceInfo(const std::string &prefix, const std::string &className);
 };

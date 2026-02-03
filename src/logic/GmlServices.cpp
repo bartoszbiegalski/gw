@@ -4,7 +4,7 @@
 
 void GmlServices::PerformDivision(const std::filesystem::path &inFile, std::vector<NamespacePrefix> &nsVec, bool isZip)
 {
-    auto cfg = std::make_unique<XmlConfig>(static_config::staticData);
+    auto cfg = std::make_unique<XmlConfig>(static_config::staticGmlData);
     std::unique_ptr<GmlObject> obj = std::make_unique<GmlObject>();
     GmlImport::Import(inFile, obj);
     NamespaceTool::Process(cfg, obj);
@@ -47,7 +47,7 @@ void GmlServices::PerformDivision(const std::filesystem::path &inFile, std::vect
 
 void GmlServices::PerformMerge(const FilePath &inFile, std::vector<FilePath> &filePathVec)
 {
-    auto cfg = std::make_unique<XmlConfig>(static_config::staticData);
+    auto cfg = std::make_unique<XmlConfig>(static_config::staticGmlData);
 
     GmlCreate::Create(cfg, inFile.parent_path(), inFile.filename().string());
     std::unique_ptr<GmlObject> destObj = std::make_unique<GmlObject>();
@@ -90,11 +90,6 @@ void GmlServices::DivideFromMap(const std::unique_ptr<GmlObject> &sourceObj, std
 
         auto classNameCountMap =
             GmlServices::GetClassNames(sourceObj.get(), prefix);
-
-        // for (auto i : classNameCountMap)
-        // {
-        //     std::cout << i.first << "\n";
-        // }
 
         for (const auto &className : classNameVec)
         {
@@ -202,6 +197,12 @@ GmlMap GmlServices::GetGmlMap(const GmlObject *obj, const NamespacePrefix &prefi
     return gmlMap;
 }
 
+std::vector<std::string> GmlServices::getReferenceInfo(const std::string &prefix, const std::string &className)
+{
+    std::vector<std::string> referenceElements;
+    return referenceElements;
+}
+
 std::map<std::string, int> GmlServices::GetClassNames(const GmlObject *obj, const NamespacePrefix &prefix)
 {
     std::map<std::string, int> classNameMap{};
@@ -252,4 +253,38 @@ std::map<GmlId, GmlNodePtr> GmlServices::GetClassMap(const GmlObject *obj, const
         }
     }
     return entryMap;
+}
+
+std::vector<GmlId> GmlServices::GetReferences(const std::unique_ptr<GmlObject> &sourceObject, const std::map<std::string, std::vector<std::string>> &classMap)
+{
+    auto xmlCfg = std::make_unique<XmlConfig>(static_config::staticGmlData);
+    std::string referenceAttr = xmlCfg.get()->get("reference_attr", "href");
+    auto idVector = std::vector<GmlId>();
+    for (auto &[prefix, classVector] : classMap)
+    {
+        std::string referenceFile = xmlCfg.get()->get("xsd.reference_files." + prefix, "");
+        auto refConfig = std::make_unique<XsdConfig>(FilePath{"resources"} / referenceFile);
+        for (auto &className : classVector)
+        {
+            auto refVec = refConfig.get()->get_json(className);
+            std::vector<std::string> refs;
+            for (const auto &obj : refVec)
+            {
+                if (obj.contains("referencesTo"))
+                {
+                    refs = obj["referencesTo"].get<std::vector<std::string>>();
+                }
+            }
+            auto gmlMap = GmlServices::GetClassMap(sourceObject.get(), prefix, className);
+
+            for (auto &[id, ptr] : gmlMap)
+            {
+                for (auto referenceElement : refs)
+                {
+                    tree_operations::traverse_gml_id(ptr.get(), referenceElement, referenceAttr, idVector, prefix);
+                }
+            }
+        }
+    }
+    return idVector;
 }

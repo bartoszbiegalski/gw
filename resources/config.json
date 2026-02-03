@@ -13,6 +13,8 @@
     "id_attribute": "gml:id",
     "id_value": "ID-",
 
+    "reference_attr": "href",
+    
     "gml_structure":
     {        
         "root": "FeatureCollection",
@@ -38,6 +40,12 @@
             "ot": "-BDOT500",
             "egb": "-EGiB",
             "ges": "-GESUT"
-        }    
+        },
+        "reference_files":
+        {
+            "ot": "ot.json",
+            "egb": "egb.json",
+            "ges": "ges.json"
+        } 
     }
 }

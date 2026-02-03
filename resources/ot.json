@@ -1,0 +1,113 @@
+{
+   "OT_SportIRekreacja" : [
+      {
+         "referencesTo" : [],
+         "type" : "OT_SportIRekreacjaType",
+         "substitutionGroup" : "OT_ObiektBDOT500"
+      }
+   ],
+   "OT_BudynekNiewykazanyWEGIB" : [
+      {
+         "substitutionGroup" : "OT_ObiektBDOT500",
+         "referencesTo" : [],
+         "type" : "OT_BudynekNiewykazanyWEGIBType"
+      }
+   ],
+   "Etykieta" : [
+      {
+         "referencesTo" : [],
+         "type" : "EtykietaType",
+         "substitutionGroup" : "gml:AbstractObject"
+      }
+   ],
+   "OT_ObiektBDOT500" : [
+      {
+         "substitutionGroup" : "gml:AbstractFeature",
+         "referencesTo" : [],
+         "type" : "OT_ObiektBDOT500Type"
+      }
+   ],
+   "OT_Wody" : [
+      {
+         "substitutionGroup" : "OT_ObiektBDOT500",
+         "referencesTo" : [],
+         "type" : "OT_WodyType"
+      }
+   ],
+   "OT_Budowle" : [
+      {
+         "substitutionGroup" : "OT_ObiektBDOT500",
+         "type" : "OT_BudowleType",
+         "referencesTo" : []
+      }
+   ],
+   "OT_Rzedna" : [
+      {
+         "referencesTo" : [],
+         "type" : "OT_RzednaType",
+         "substitutionGroup" : "OT_ObiektBDOT500"
+      }
+   ],
+   "OT_IdentyfikatorIIP" : [
+      {
+         "substitutionGroup" : "gml:AbstractObject",
+         "referencesTo" : [],
+         "type" : "OT_IdentyfikatorIIPType"
+      }
+   ],
+   "OT_BlokBudynku" : [
+      {
+         "substitutionGroup" : "OT_ObiektBDOT500",
+         "type" : "OT_BlokBudynkuType",
+         "referencesTo" : [
+            "blokZBudynkiem"
+         ]
+      }
+   ],
+   "OT_ZagospodarowanieTerenu" : [
+      {
+         "referencesTo" : [],
+         "type" : "OT_ZagospodarowanieTerenuType",
+         "substitutionGroup" : "OT_ObiektBDOT500"
+      }
+   ],
+   "OT_Komunikacja" : [
+      {
+         "substitutionGroup" : "OT_ObiektBDOT500",
+         "type" : "OT_KomunikacjaType",
+         "referencesTo" : []
+      }
+   ],
+   "PrezentacjaGraficzna" : [
+      {
+         "referencesTo" : [
+            "obiektPrzedstawiany"
+         ],
+         "type" : "PrezentacjaGraficznaType",
+         "substitutionGroup" : "gml:AbstractFeature"
+      }
+   ],
+   "OT_ObiektTrwaleZwiazanyZBudynkami" : [
+      {
+         "referencesTo" : [
+            "budynekZObiektami"
+         ],
+         "type" : "OT_ObiektTrwaleZwiazanyZBudynkamiType",
+         "substitutionGroup" : "OT_ObiektBDOT500"
+      }
+   ],
+   "OT_Skarpa" : [
+      {
+         "type" : "OT_SkarpaType",
+         "referencesTo" : [],
+         "substitutionGroup" : "OT_ObiektBDOT500"
+      }
+   ],
+   "OT_Ogrodzenia" : [
+      {
+         "referencesTo" : [],
+         "type" : "OT_OgrodzeniaType",
+         "substitutionGroup" : "OT_ObiektBDOT500"
+      }
+   ]
+}

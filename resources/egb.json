@@ -1,0 +1,414 @@
+{
+   "EGB_JednostkaRejestrowaBudynkow" : [
+      {
+         "referencesTo" : [
+            "JRGZwiazanaZJRB",
+            "lokalizacjaJRB",
+            "dokument2",
+            "operatTechniczny2",
+            "podstawaUtworzeniaWersjiObiektu",
+            "podstawaUsunieciaObiektu"
+         ],
+         "substitutionGroup" : "EGB_JednostkaRejestrowa",
+         "type" : "EGB_JednostkaRejestrowaBudynkowType"
+      }
+   ],
+   "EGB_IdentyfikatorIIP" : [
+      {
+         "substitutionGroup" : "gml:AbstractObject",
+         "type" : "EGB_IdentyfikatorIIPType",
+         "referencesTo" : []
+      }
+   ],
+   "EGB_JednostkaEwidencyjna" : [
+      {
+         "substitutionGroup" : "EGB_OgolnyObiekt",
+         "type" : "EGB_JednostkaEwidencyjnaType",
+         "referencesTo" : [
+            "punktGranicyJednEwid",
+            "dokument2",
+            "operatTechniczny2",
+            "podstawaUtworzeniaWersjiObiektu",
+            "podstawaUsunieciaObiektu"
+         ]
+      }
+   ],
+   "EGB_LokalSamodzielny" : [
+      {
+         "substitutionGroup" : "EGB_OgolnyObiekt",
+         "type" : "EGB_LokalSamodzielnyType",
+         "referencesTo" : [
+            "pomPrzynalezne",
+            "JRdlaLokalu",
+            "budynekZWyodrebnionymLokalem",
+            "adresLokalu",
+            "dokument2",
+            "operatTechniczny2",
+            "podstawaUtworzeniaWersjiObiektu",
+            "podstawaUsunieciaObiektu"
+         ]
+      }
+   ],
+   "EGB_OsobaFizyczna" : [
+      {
+         "referencesTo" : [
+            "adresZameldowania",
+            "adresStalegoPobytu",
+            "dokument2",
+            "operatTechniczny2",
+            "podstawaUtworzeniaWersjiObiektu",
+            "podstawaUsunieciaObiektu"
+         ],
+         "substitutionGroup" : "EGB_Podmiot",
+         "type" : "EGB_OsobaFizycznaType"
+      }
+   ],
+   "EGB_UdzialWeWlasnosci" : [
+      {
+         "referencesTo" : [
+            "podmiotUdzialuWlasnosci",
+            "przedmiotUdzialuWlasnosci",
+            "udzialWNieruchomosciWspolnej",
+            "dokument2",
+            "operatTechniczny2",
+            "podstawaUtworzeniaWersjiObiektu",
+            "podstawaUsunieciaObiektu"
+         ],
+         "substitutionGroup" : "EGB_OgolnyObiekt",
+         "type" : "EGB_UdzialWeWlasnosciType"
+      }
+   ],
+   "EGB_ObiektTrwaleZwiazanyZBudynkiem" : [
+      {
+         "type" : "EGB_ObiektTrwaleZwiazanyZBudynkiemType",
+         "substitutionGroup" : "EGB_OgolnyObiekt",
+         "referencesTo" : [
+            "budynekZElementamiZwiazanymi",
+            "dokument2",
+            "operatTechniczny2",
+            "podstawaUtworzeniaWersjiObiektu",
+            "podstawaUsunieciaObiektu"
+         ]
+      }
+   ],
+   "EGB_Zmiana" : [
+      {
+         "referencesTo" : [
+            "dokument1",
+            "operatTechniczny1"
+         ],
+         "type" : "EGB_ZmianaType",
+         "substitutionGroup" : "gml:AbstractFeature"
+      }
+   ],
+   "EGB_AdresPodmiotu" : [
+      {
+         "referencesTo" : [
+            "dokument2",
+            "operatTechniczny2",
+            "podstawaUtworzeniaWersjiObiektu",
+            "podstawaUsunieciaObiektu"
+         ],
+         "type" : "EGB_AdresPodmiotuType",
+         "substitutionGroup" : "EGB_OgolnyObiekt"
+      }
+   ],
+   "PrezentacjaGraficzna" : [
+      {
+         "referencesTo" : [
+            "obiektPrzedstawiany"
+         ],
+         "type" : "PrezentacjaGraficznaType",
+         "substitutionGroup" : "gml:AbstractFeature"
+      }
+   ],
+   "EGB_PunktGraniczny" : [
+      {
+         "substitutionGroup" : "EGB_OgolnyObiekt",
+         "type" : "EGB_PunktGranicznyType",
+         "referencesTo" : [
+            "dokument2",
+            "operatTechniczny2",
+            "podstawaUtworzeniaWersjiObiektu",
+            "podstawaUsunieciaObiektu"
+         ]
+      }
+   ],
+   "EGB_WspolnotaGruntowa" : [
+      {
+         "referencesTo" : [
+            "spolkaZarzadajaca",
+            "podmiotUprawniony",
+            "malzenstwoUprawnione",
+            "osobaFizycznaUprawniona",
+            "dokument2",
+            "operatTechniczny2",
+            "podstawaUtworzeniaWersjiObiektu",
+            "podstawaUsunieciaObiektu"
+         ],
+         "type" : "EGB_WspolnotaGruntowaType",
+         "substitutionGroup" : "EGB_Podmiot"
+      }
+   ],
+   "EGB_JednostkaRejestrowaGruntow" : [
+      {
+         "substitutionGroup" : "EGB_JednostkaRejestrowa",
+         "type" : "EGB_JednostkaRejestrowaGruntowType",
+         "referencesTo" : [
+            "lokalizacjaJRG",
+            "dokument2",
+            "operatTechniczny2",
+            "podstawaUtworzeniaWersjiObiektu",
+            "podstawaUsunieciaObiektu"
+         ]
+      }
+   ],
+   "EGB_PomieszczeniePrzynalezneDoLokalu" : [
+      {
+         "substitutionGroup" : "EGB_OgolnyObiekt",
+         "type" : "EGB_PomieszczeniePrzynalezneDoLokaluType",
+         "referencesTo" : [
+            "budynekZPomieszczeniemPrzynaleznym",
+            "dokument2",
+            "operatTechniczny2",
+            "podstawaUtworzeniaWersjiObiektu",
+            "podstawaUsunieciaObiektu"
+         ]
+      }
+   ],
+   "EGB_Dokument" : [
+      {
+         "substitutionGroup" : "gml:AbstractFeature",
+         "type" : "EGB_DokumentType",
+         "referencesTo" : [
+            "zalacznikDokumentu"
+         ]
+      }
+   ],
+   "Etykieta" : [
+      {
+         "type" : "EtykietaType",
+         "substitutionGroup" : "gml:AbstractObject",
+         "referencesTo" : []
+      }
+   ],
+   "EGB_KonturKlasyfikacyjny" : [
+      {
+         "substitutionGroup" : "EGB_OgolnyObiekt",
+         "type" : "EGB_KonturKlasyfikacyjnyType",
+         "referencesTo" : [
+            "lokalizacjaKonturu",
+            "dokument2",
+            "operatTechniczny2",
+            "podstawaUtworzeniaWersjiObiektu",
+            "podstawaUsunieciaObiektu"
+         ]
+      }
+   ],
+   "EGB_Instytucja" : [
+      {
+         "referencesTo" : [
+            "czlonekZarzaduWspolnoty",
+            "adresSiedziby",
+            "dokument2",
+            "operatTechniczny2",
+            "podstawaUtworzeniaWersjiObiektu",
+            "podstawaUsunieciaObiektu"
+         ],
+         "type" : "EGB_InstytucjaType",
+         "substitutionGroup" : "EGB_Podmiot"
+      }
+   ],
+   "EGB_DzialkaEwidencyjna" : [
+      {
+         "referencesTo" : [
+            "JRG2",
+            "adresDzialki",
+            "punktGranicyDzialki",
+            "lokalizacjaDzialki",
+            "dokument2",
+            "operatTechniczny2",
+            "podstawaUtworzeniaWersjiObiektu",
+            "podstawaUsunieciaObiektu"
+         ],
+         "type" : "EGB_DzialkaEwidencyjnaType",
+         "substitutionGroup" : "EGB_OgolnyObiekt"
+      }
+   ],
+   "EGB_BlokBudynku" : [
+      {
+         "type" : "EGB_BlokBudynkuType",
+         "substitutionGroup" : "EGB_OgolnyObiekt",
+         "referencesTo" : [
+            "budynekZBlokiemBud",
+            "dokument2",
+            "operatTechniczny2",
+            "podstawaUtworzeniaWersjiObiektu",
+            "podstawaUsunieciaObiektu"
+         ]
+      }
+   ],
+   "EGB_UdzialWeWladaniu" : [
+      {
+         "referencesTo" : [
+            "podmiotUdzialuWeWladaniu",
+            "przedmiotUdzialuWladania",
+            "dokument2",
+            "operatTechniczny2",
+            "podstawaUtworzeniaWersjiObiektu",
+            "podstawaUsunieciaObiektu"
+         ],
+         "substitutionGroup" : "EGB_OgolnyObiekt",
+         "type" : "EGB_UdzialWeWladaniuType"
+      }
+   ],
+   "EGB_AdresNieruchomosci" : [
+      {
+         "referencesTo" : [
+            "dokument2",
+            "operatTechniczny2",
+            "podstawaUtworzeniaWersjiObiektu",
+            "podstawaUsunieciaObiektu"
+         ],
+         "type" : "EGB_AdresNieruchomosciType",
+         "substitutionGroup" : "EGB_OgolnyObiekt"
+      }
+   ],
+   "EGB_JednostkaRejestrowa" : [
+      {
+         "type" : "EGB_JednostkaRejestrowaType",
+         "substitutionGroup" : "EGB_OgolnyObiekt",
+         "referencesTo" : [
+            "dokument2",
+            "operatTechniczny2",
+            "podstawaUtworzeniaWersjiObiektu",
+            "podstawaUsunieciaObiektu"
+         ]
+      }
+   ],
+   "EGB_Budynek" : [
+      {
+         "referencesTo" : [
+            "dzialkaZabudowana",
+            "adresBudynku",
+            "JRBdlaBudynku",
+            "dokument2",
+            "operatTechniczny2",
+            "podstawaUtworzeniaWersjiObiektu",
+            "podstawaUsunieciaObiektu"
+         ],
+         "substitutionGroup" : "EGB_OgolnyObiekt",
+         "type" : "EGB_BudynekType"
+      }
+   ],
+   "EGB_OperatTechniczny" : [
+      {
+         "substitutionGroup" : "gml:AbstractFeature",
+         "type" : "EGB_OperatTechnicznyType",
+         "referencesTo" : []
+      }
+   ],
+   "EGB_ObrebEwidencyjny" : [
+      {
+         "type" : "EGB_ObrebEwidencyjnyType",
+         "substitutionGroup" : "EGB_OgolnyObiekt",
+         "referencesTo" : [
+            "punktGranicyObrebu",
+            "lokalizacjaObrebu",
+            "dokument2",
+            "operatTechniczny2",
+            "podstawaUtworzeniaWersjiObiektu",
+            "podstawaUsunieciaObiektu"
+         ]
+      }
+   ],
+   "EGB_JednostkaRejestrowaLokali" : [
+      {
+         "substitutionGroup" : "EGB_JednostkaRejestrowa",
+         "type" : "EGB_JednostkaRejestrowaLokaliType",
+         "referencesTo" : [
+            "JRGZwiazanaZJRL",
+            "czescWspolnaDlaLokalu",
+            "lokalizacjaJRL",
+            "dokument2",
+            "operatTechniczny2",
+            "podstawaUtworzeniaWersjiObiektu",
+            "podstawaUsunieciaObiektu"
+         ]
+      }
+   ],
+   "EGB_KonturUzytkuGruntowego" : [
+      {
+         "type" : "EGB_KonturUzytkuGruntowegoType",
+         "substitutionGroup" : "EGB_OgolnyObiekt",
+         "referencesTo" : [
+            "lokalizacjaUzytku",
+            "dokument2",
+            "operatTechniczny2",
+            "podstawaUtworzeniaWersjiObiektu",
+            "podstawaUsunieciaObiektu"
+         ]
+      }
+   ],
+   "EGB_PodmiotGrupowy" : [
+      {
+         "referencesTo" : [
+            "instytucja",
+            "osobaFizyczna4",
+            "malzenstwo3",
+            "adresSiedziby",
+            "dokument2",
+            "operatTechniczny2",
+            "podstawaUtworzeniaWersjiObiektu",
+            "podstawaUsunieciaObiektu"
+         ],
+         "substitutionGroup" : "EGB_Podmiot",
+         "type" : "EGB_PodmiotGrupowyType"
+      }
+   ],
+   "EGB_Podmiot" : [
+      {
+         "substitutionGroup" : "EGB_OgolnyObiekt",
+         "type" : "EGB_PodmiotType",
+         "referencesTo" : [
+            "dokument2",
+            "operatTechniczny2",
+            "podstawaUtworzeniaWersjiObiektu",
+            "podstawaUsunieciaObiektu"
+         ]
+      }
+   ],
+   "EGB_OgolnyObiekt" : [
+      {
+         "referencesTo" : [
+            "dokument2",
+            "operatTechniczny2",
+            "podstawaUtworzeniaWersjiObiektu",
+            "podstawaUsunieciaObiektu"
+         ],
+         "type" : "EGB_OgolnyObiektType",
+         "substitutionGroup" : "gml:AbstractFeature"
+      }
+   ],
+   "EGB_Klasouzytek" : [
+      {
+         "type" : "EGB_KlasouzytekType",
+         "substitutionGroup" : "gml:AbstractObject",
+         "referencesTo" : []
+      }
+   ],
+   "EGB_Malzenstwo" : [
+      {
+         "type" : "EGB_MalzenstwoType",
+         "substitutionGroup" : "EGB_Podmiot",
+         "referencesTo" : [
+            "osobaFizyczna2",
+            "osobaFizyczna3",
+            "dokument2",
+            "operatTechniczny2",
+            "podstawaUtworzeniaWersjiObiektu",
+            "podstawaUsunieciaObiektu"
+         ]
+      }
+   ]
+}

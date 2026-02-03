@@ -12,7 +12,7 @@ int main(int argc, char *argv[])
     }
     auto mergeBenchmarkPath = std::filesystem::path("merge_benchmark_" + std::string(argv[2]) + ".csv");
     std::filesystem::path filePath(argv[1]);
-    auto cfg = std::make_unique<XmlConfig>(static_config::staticData);
+    auto cfg = std::make_unique<XmlConfig>(static_config::staticGmlData);
     GmlCreate::Create(cfg, filePath.parent_path(), filePath.filename());
     auto destObj = std::make_unique<GmlObject>();
     auto baseObjects = std::vector<std::unique_ptr<GmlObject>>();

@@ -10,7 +10,7 @@ int main(int argc, char *argv[])
     }
     std::filesystem::path filePath(argv[1]);
     auto divideBenchmarkPath = std::filesystem::path("divide_benchmark_" + std::string(argv[2]) + ".csv");
-    auto cfg = std::make_unique<XmlConfig>(static_config::staticData);
+    auto cfg = std::make_unique<XmlConfig>(static_config::staticGmlData);
     std::unique_ptr<GmlObject> obj = std::make_unique<GmlObject>();
     GmlImport::Import(filePath, obj);
     NamespaceTool::Process(cfg, obj);

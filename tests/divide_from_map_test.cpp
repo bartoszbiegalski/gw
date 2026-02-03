@@ -35,7 +35,7 @@ TEST_F(GmlDivideFromMapFixture, ImportFileNotFoundThrows)
     auto sourceObj = std::make_unique<GmlObject>();
     auto destObj = std::make_unique<GmlObject>();
 
-    auto cfg = std::make_unique<XmlConfig>(static_config::staticData);
+    auto cfg = std::make_unique<XmlConfig>(static_config::staticGmlData);
 
     std::map<std::string, std::vector<std::string>> classMap;
     classMap["ot"] = {"OT_Budowle", "OT_Komunikacja"};
