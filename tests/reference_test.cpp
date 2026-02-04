@@ -10,6 +10,7 @@
 #include "io/GmlImport.h"
 #include "io/GmlExport.h"
 #include "utils/tree_operations.h"
+#include "utils/gml_operations.h"
 
 // FileImport tests
 
@@ -72,7 +73,7 @@ TEST_F(ReferencesFixture, ReferencesFound)
         XmlParser::SetContent(cfg, sourceObj);
         for (auto className : classMap["egb"])
         {
-            auto elemMap = GmlServices::GetClassMap(sourceObj.get(), "egb", className);
+            auto elemMap = gml_operations::GetClassMap(sourceObj, "egb", className);
             for (auto &[first, second] : elemMap)
             {
                 for (auto ref : refs)
@@ -84,18 +85,62 @@ TEST_F(ReferencesFixture, ReferencesFound)
     });
 }
 
-TEST_F(ReferencesFixture, GetReferences)
+TEST_F(ReferencesFixture, GetReferencesTo)
 {
     auto sourceObj = std::make_unique<GmlObject>();
-    auto cfg = std::make_unique<XmlConfig>(static_config::staticGmlData);
+
+    auto &gml = GmlServices::Get();
+
+    auto gmlCfg = std::make_unique<XmlConfig>(FilePath{"resources/config.json"});
+    std::map<std::string, std::unique_ptr<XsdConfig>> xsdCfgs;
+
+    xsdCfgs["egb"] = std::make_unique<XsdConfig>(FilePath{"resources/egb.json"});
+    xsdCfgs["ot"] = std::make_unique<XsdConfig>(FilePath{"resources/ot.json"});
+
+    gml.Init(
+        std::move(gmlCfg),
+        std::move(xsdCfgs));
+
     std::map<std::string, std::vector<std::string>> classMap;
 
     EXPECT_NO_THROW({
-        GmlImport::Import(std::filesystem::temp_directory_path() / "source.gml", sourceObj);
-        NamespaceTool::Process(cfg, sourceObj);
-        XmlParser::SetContent(cfg, sourceObj);
+        gml.Get().PerformImport(std::filesystem::temp_directory_path() / "source.gml", sourceObj);
 
         classMap["egb"] = {"EGB_DzialkaEwidencyjna"};
-        std::cout << GmlServices::GetReferences(sourceObj, classMap).size() << "\n";
+        for (auto i : gml.Get().GetReferencesTo(sourceObj, classMap))
+        {
+        }
+    });
+}
+
+TEST_F(ReferencesFixture, GetReferencesFrom)
+{
+    auto sourceObj = std::make_unique<GmlObject>();
+    auto destObj = std::make_unique<GmlObject>();
+
+    auto &gml = GmlServices::Get();
+
+    auto gmlCfg = std::make_unique<XmlConfig>(FilePath{"resources/config.json"});
+    std::map<std::string, std::unique_ptr<XsdConfig>> xsdCfgs;
+
+    xsdCfgs["egb"] = std::make_unique<XsdConfig>(FilePath{"resources/egb.json"});
+    xsdCfgs["ot"] = std::make_unique<XsdConfig>(FilePath{"resources/ot.json"});
+
+    gml.Init(
+        std::move(gmlCfg),
+        std::move(xsdCfgs));
+
+    std::map<std::string, std::vector<std::string>> referencesTo;
+    std::map<std::string, std::vector<std::string>> referencesFrom;
+
+    EXPECT_NO_THROW({
+        gml.Get().PerformImport(std::filesystem::temp_directory_path() / "source.gml", sourceObj);
+
+        referencesTo["egb"] = {"EGB_DzialkaEwidencyjna"};
+        referencesFrom["egb"] = {"PrezentacjaGraficzna"};
+
+        auto x = gml.Get().GetReferencesTo(sourceObj, referencesFrom);
+        auto y = gml.Get().GetReferencesFrom(sourceObj, x);
+        std::cout << y["egb"].size() << "\n";
     });
 }

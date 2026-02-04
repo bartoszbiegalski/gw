@@ -8,7 +8,7 @@
 #include "io/GmlCreate.h"
 #include "io/GmlImport.h"
 #include "io/GmlExport.h"
-
+#include "utils/gml_operations.h"
 // FileImport tests
 
 class GmlDivideFromMapFixture : public ::testing::Test
@@ -35,7 +35,8 @@ TEST_F(GmlDivideFromMapFixture, ImportFileNotFoundThrows)
     auto sourceObj = std::make_unique<GmlObject>();
     auto destObj = std::make_unique<GmlObject>();
 
-    auto cfg = std::make_unique<XmlConfig>(static_config::staticGmlData);
+    auto cfg = std::make_unique<XmlConfig>(
+        FilePath{"resources/config.json"});
 
     std::map<std::string, std::vector<std::string>> classMap;
     classMap["ot"] = {"OT_Budowle", "OT_Komunikacja"};
@@ -47,7 +48,7 @@ TEST_F(GmlDivideFromMapFixture, ImportFileNotFoundThrows)
 
         GmlCreate::Create(cfg, std::filesystem::temp_directory_path(), "dest.gml");
         GmlImport::Import(std::filesystem::temp_directory_path() / "dest.gml", destObj);
-        GmlServices::DivideFromMap(sourceObj, destObj, classMap);
+        gml_operations::DivideFromMap(sourceObj, destObj, classMap);
 
         GmlExport::Export(cfg, destObj);
     });

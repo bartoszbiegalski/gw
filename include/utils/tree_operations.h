@@ -10,5 +10,4 @@ namespace tree_operations
 
     xmlNodePtr get_xmlNode_with_attr(xmlNodePtr nodePtr, const std::string &attr, const std::string &prefix = "/");
 
-    // GmlNodePtr &get_gml_node(const GmlNodePtr &gmlNodePtr, const std::list<std::string, std::string> attrList);
 }

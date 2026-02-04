@@ -40,12 +40,6 @@
             "ot": "-BDOT500",
             "egb": "-EGiB",
             "ges": "-GESUT"
-        },
-        "reference_files":
-        {
-            "ot": "ot.json",
-            "egb": "egb.json",
-            "ges": "ges.json"
-        } 
+        }
     }
 }

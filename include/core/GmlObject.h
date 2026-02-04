@@ -7,6 +7,7 @@
 #include "core/types.h"
 #include "core/GmlStorage.h"
 
+#include <numeric>
 class GmlObject
 {
 public:
@@ -31,6 +32,11 @@ public:
     const GmlStorage &getGmlStorage() const noexcept { return this->gmlStorage; }
     void setGmlStorage(GmlStorage &gmlStorage) { this->gmlStorage = std::move(gmlStorage); }
     void addToGmlStorage(const NamespacePrefix &prefix, const GmlId &gmlId, GmlNodePtr nodePtr) { this->gmlStorage.add(prefix, gmlId, std::move(nodePtr)); }
+
+    int getElementAmount();
+    int getNamespaceElementAmount(const NamespacePrefix &prefix);
+    std::map<std::string, int> GetClassNames(const NamespacePrefix &prefix);
+
     bool hasNamespace(const NamespacePrefix &prefix) { return this->gmlStorage.hasNamespace(prefix); }
 
     void setXmlValidity(bool isValid) { this->isXmlValid = isValid; }

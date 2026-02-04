@@ -22,30 +22,11 @@ void GmlReporter::printRaport(const std::unique_ptr<GmlObject> &obj)
         for (auto &[prefix, map] : obj.get()->getGmlStorage().getGmlMap())
         {
             std::cout << " - " << prefix << " - " << map.size() << std::endl;
-            auto classMap = GmlServices::GetClassNames(obj.get(), prefix);
+            auto classMap = obj.get()->GetClassNames(prefix);
             for (auto i : classMap)
             {
                 std::cout << i.first << " " << i.second << "\n";
             }
         }
-
-        // std::map<std::string, int> printMap;
-
-        // for (const auto &j : i.second)
-        // {
-        //     std::string key = reinterpret_cast<const char *>(j->name);
-        //     printMap[key]++;
-        // }
-
-        // if (i.second.size() > 0)
-        // {
-        //     std::cout << i.first << ": \n";
-
-        //     for (const auto &j : printMap)
-        //     {
-        //         std::cout << i.first << ":" << j.first << " - " << j.second << std::endl;
-        //     }
-        //     std::cout << "\n";
-        // }
     }
 }

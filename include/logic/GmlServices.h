@@ -8,6 +8,7 @@
 #include "release/static_config.h"
 #include "utils/string_operations.h"
 #include "utils/tree_operations.h"
+#include "utils/gml_operations.h"
 #include "services/XmlConfig.h"
 #include "services/XsdConfig.h"
 #include "services/XmlParser.h"
@@ -17,22 +18,27 @@
 class GmlServices
 {
 public:
-    static void PerformDivision(const std::filesystem::path &inFile, std::vector<NamespacePrefix> &nsVec, bool isZip);
-    static void PerformMerge(const FilePath &inFile, std::vector<FilePath> &filePathVec);
-    static void DivideFromMap(const std::unique_ptr<GmlObject> &sourceObj, std::unique_ptr<GmlObject> &destObj, std::map<std::string, std::vector<std::string>> &classMap);
-    static GmlNodePtr GetElementWithKey(const std::unique_ptr<GmlObject> &obj, const GmlId gmlId, std::list<std::string> &nearestKeys);
-    static GmlNodePtr GetElementWithKeyAndNs(const std::unique_ptr<GmlObject> &obj, const GmlId gmlId, const std::string &nsPrefix, std::list<std::string> &nearestKeys);
+    static GmlServices &Get();
 
-    static std::map<std::string, std::string> GetRootInfoMap(const GmlObject *obj);
-    static std::map<std::string, std::string> GetNamespaceNodeInfoMap(const GmlObject *obj, const NamespacePrefix &prefix);
-    static std::map<std::string, int> GetClassNames(const GmlObject *obj, const NamespacePrefix &prefix);
-    static GmlMap GetGmlMap(const GmlObject *obj, const NamespacePrefix &prefix);
-    static std::map<GmlId, GmlNodePtr> GetClassMap(const GmlObject *obj, const NamespacePrefix &prefix, const std::string className);
-    static std::vector<GmlId> GetReferences(const std::unique_ptr<GmlObject> &sourceObject, const std::map<std::string, std::vector<std::string>> &classMap);
+    void Init(std::unique_ptr<XmlConfig> gmlCfg, std::map<std::string, std::unique_ptr<XsdConfig>> xsdCfgs);
+
+    bool IsInitialized() const { return initialized; }
+
+    void PerformCreateGml(const std::filesystem::path &filePath);
+    void PerformImport(const std::filesystem::path &inFile, std::unique_ptr<GmlObject> &importedObject);
+    void PerformExport(const std::unique_ptr<GmlObject> &exportObject);
+
+    void PerformDivision(const std::filesystem::path &inFile, std::vector<NamespacePrefix> &nsVec, bool isZip);
+    void PerformMerge(const FilePath &inFile, std::vector<FilePath> &filePathVec);
+
+    std::map<std::string, std::map<GmlId, std::vector<GmlId>>> GetReferencesTo(const std::unique_ptr<GmlObject> &sourceObject, const std::map<std::string, std::vector<std::string>> &classMap);
+    std::map<std::string, std::vector<GmlId>> GetReferencesFrom(const std::unique_ptr<GmlObject> &sourceObject, std::map<std::string, std::map<GmlId, std::vector<GmlId>>> &referencesMap);
 
 private:
-    static int getElementAmount(const GmlObject *obj);
-    static int getNamespaceElementAmount(const GmlObject *obj, const NamespacePrefix &prefix);
-    static NamespaceData getNamespaceDataFromPrefix(const GmlObject *obj, const NamespacePrefix &prefix);
-    static std::vector<std::string> getReferenceInfo(const std::string &prefix, const std::string &className);
+    GmlServices() = default;
+
+    bool initialized = false;
+
+    std::unique_ptr<XmlConfig> gmlCfg;
+    std::map<std::string, std::unique_ptr<XsdConfig>> xsdCfgs;
 };

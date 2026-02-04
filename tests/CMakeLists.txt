@@ -6,6 +6,10 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(googletest)
 
+file(GLOB_RECURSE GW_TEST_SOURCES
+    "*.cpp"
+)
+
 add_executable(gw_tests
     basic_test.cpp
     divide_from_map_test.cpp
