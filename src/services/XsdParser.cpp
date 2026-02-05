@@ -36,7 +36,7 @@ void XsdParser::Parse(std::unique_ptr<XmlConfig> &cfg, std::unique_ptr<GmlObject
     for (const auto &[prefix, fileName] : xsdVec)
     {
         auto fullPath = std::filesystem::current_path() / fileName;
-        auto validCtxt = getValidCtxt(fullPath);
+        auto validCtxt = getValidCtxt(fullPath.string());
 
         for (const auto &[nodeId, nodePtr] : obj->getGmlStorage().getGmlMap().at(prefix))
         {
