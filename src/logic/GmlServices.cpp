@@ -149,3 +149,9 @@ std::map<std::string, std::vector<GmlId>> GmlServices::GetReferencesFrom(const s
     }
     return referencesFromMap;
 }
+
+std::map<std::string, std::vector<GmlId>> GmlServices::GetReferencesFromConfig(const std::unique_ptr<GmlObject> &sourceObject)
+{
+    auto referencesFromMap = gmlCfg.get()->get_json("xsd.references_from").get<std::map<std::string, std::vector<std::string>>>();
+    return referencesFromMap;
+}

@@ -113,7 +113,7 @@ TEST_F(ReferencesFixture, GetReferencesTo)
     });
 }
 
-TEST_F(ReferencesFixture, GetReferencesFrom)
+TEST_F(ReferencesFixture, GetReferencesFromXsd)
 {
     auto sourceObj = std::make_unique<GmlObject>();
     auto destObj = std::make_unique<GmlObject>();
@@ -130,17 +130,13 @@ TEST_F(ReferencesFixture, GetReferencesFrom)
         std::move(gmlCfg),
         std::move(xsdCfgs));
 
-    std::map<std::string, std::vector<std::string>> referencesTo;
     std::map<std::string, std::vector<std::string>> referencesFrom;
 
     EXPECT_NO_THROW({
         gml.Get().PerformImport(std::filesystem::temp_directory_path() / "source.gml", sourceObj);
 
-        referencesTo["egb"] = {"EGB_DzialkaEwidencyjna"};
-        referencesFrom["egb"] = {"PrezentacjaGraficzna"};
+        referencesFrom = gml.Get().GetReferencesFromConfig(sourceObj);
 
-        auto x = gml.Get().GetReferencesTo(sourceObj, referencesFrom);
-        auto y = gml.Get().GetReferencesFrom(sourceObj, x);
-        std::cout << y["egb"].size() << "\n";
+      
     });
 }
