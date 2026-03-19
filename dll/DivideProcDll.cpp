@@ -66,10 +66,10 @@ extern "C"
         }
         std::string inFileU8 = WideToUtf8(inFile);
         std::filesystem::path filePath(inFileU8);
-        auto cfg = std::make_unique<XmlConfig>(static_config::staticData);
+        auto cfg = std::make_unique<XmlConfig>(static_config::staticGmlData);
         try
         {
-            GmlServices::PerformDivision(filePath, nsVect, isZip);
+            //GmlServices::PerformDivision(filePath, nsVect, isZip);
         }
         catch (...)
         {

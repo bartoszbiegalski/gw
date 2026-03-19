@@ -17,30 +17,23 @@ file(GLOB_RECURSE GW_LIBRARY_SOURCES
     "src/utils/*.cpp"
 )
 
-add_library(gw_lib STATIC ${GW_LIBRARY_SOURCES})
-target_compile_definitions(gw_lib PUBLIC ZIP_STATIC)
-target_compile_definitions(gw_lib PUBLIC LIBXML_STATIC)
-
-target_include_directories(gw_lib PUBLIC
-    ${CMAKE_CURRENT_SOURCE_DIR}/include
-    ${CMAKE_CURRENT_BINARY_DIR}
+# dll
+file(GLOB DLL_SOURCES 
+    "dll/gw_dll.cpp"
 )
-
-add_subdirectory(tests)
-
-add_executable(gmlWorker src/release/text_main.cpp)
-target_link_libraries(gmlWorker PRIVATE gw_lib)
-
-
-# file(GLOB DLL_SOURCES "dll/*.cpp")
-# add_library(my_dll SHARED ${DLL_SOURCES})
-# target_include_directories(my_dll PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
-# target_link_libraries(my_dll PRIVATE gw_lib)
-
-enable_testing()
 
 if(WIN32)
     include(cmake/windows.cmake)
 elseif(UNIX)
     include(cmake/linux.cmake)
 endif()
+
+add_subdirectory(tests)
+
+enable_testing()
+
+add_executable(gmlWorker src/release/text_main.cpp)
+target_link_libraries(gmlWorker PRIVATE gw_lib)
+
+
+
