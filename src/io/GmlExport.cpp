@@ -69,7 +69,7 @@ void GmlExport::Export(const std::unique_ptr<XmlConfig> &cfg, const std::unique_
     xmlTextWriterSetIndent(writer, 0);
 
     xmlTextWriterStartDocument(writer, gmlVersion.c_str(), encoding.c_str(), nullptr);
-    xmlTextWriterWriteComment(writer, BAD_CAST obj->getComment().c_str());
+    //xmlTextWriterWriteComment(writer, BAD_CAST obj->getComment().c_str());
 
     // Tworzymy root
     xmlTextWriterStartElementNS(writer, nullptr, BAD_CAST rootName.c_str(), nullptr);

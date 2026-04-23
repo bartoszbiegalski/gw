@@ -71,7 +71,6 @@ std::vector<std::string> NamespaceTool::GetMissingAttributes(const std::unique_p
 
         if (it == attributesMap.end())
         {
-            std::cout << "Brak wymaganego atrybutu: " << attrName << "\n";
             missingAttributesVector.push_back(attrName);
         }
     }
@@ -160,8 +159,10 @@ void NamespaceTool::Process(const std::unique_ptr<XmlConfig> &cfg, std::unique_p
 
     if (GetMissingAttributes(cfg, attributesMap).empty() == false)
     {
-        // jakis error
-        std::cout << "kurcze niedobrze\n";
+        for (auto i : GetMissingAttributes(cfg, attributesMap))
+        {
+            throw MissingRequiredAttribute(i);
+        }
     }
     else
     {

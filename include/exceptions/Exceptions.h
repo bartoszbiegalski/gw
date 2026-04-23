@@ -50,10 +50,10 @@ public:
         : BaseException("Wrong class of root element; expected: " + msg) {}
 };
 
-class MissingRequiredttribute : public BaseException
+class MissingRequiredAttribute : public BaseException
 {
 public:
-    explicit MissingRequiredttribute(const std::string &msg)
+    explicit MissingRequiredAttribute(const std::string &msg)
         : BaseException("Missing required attribute: " + msg) {}
 };
 
