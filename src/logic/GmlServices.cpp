@@ -25,9 +25,16 @@ void GmlServices::PerformCreateGml(const std::filesystem::path &filePath)
 void GmlServices::PerformImport(const std::filesystem::path &inFile, std::unique_ptr<GmlObject> &importedObject)
 {
     importedObject = std::make_unique<GmlObject>();
-    GmlImport::Import(inFile, importedObject);
-    NamespaceTool::Process(gmlCfg, importedObject);
-    XmlParser::SetContent(gmlCfg, importedObject);
+    try
+    {
+        GmlImport::Import(inFile, importedObject);
+        NamespaceTool::Process(gmlCfg, importedObject);
+        XmlParser::SetContent(gmlCfg, importedObject);
+    }
+    catch(const BaseException& e)
+    {
+        throw e;
+    }    
 }
 void GmlServices::PerformExport(const std::unique_ptr<GmlObject> &exportObject)
 {
@@ -154,4 +161,39 @@ std::map<std::string, std::vector<GmlId>> GmlServices::GetReferencesFromConfig(c
 {
     auto referencesFromMap = gmlCfg.get()->get_json("xsd.references_from").get<std::map<std::string, std::vector<std::string>>>();
     return referencesFromMap;
+}
+
+std::map<std::string, std::vector<GmlId>> GmlServices::GetElementsFromClasses(const std::unique_ptr<GmlObject> &sourceObject, const std::map<std::string, std::vector<std::string>> &classes)
+{
+    std::map<std::string, std::vector<GmlId>> classIdMap;
+    for (auto &[prefix, classVec] : classes)
+    {
+        for (auto &[gmlId, gmlPtr] : sourceObject.get()->getGmlStorage().getGmlMap()[prefix])
+        {
+            for (auto className : classVec)
+            {
+            auto ptr = tree_operations::get_xmlNode_with_attr(gmlPtr.get(), className, prefix);
+            if (ptr != nullptr)
+            {
+                classIdMap[prefix].push_back(gmlId);
+            }
+           } 
+        }
+    }
+    return classIdMap;
+}
+
+std::map<std::string, std::vector<GmlId>> GmlServices::GetElementsFromQuery(const std::unique_ptr<GmlObject> &sourceObject, const std::string &query_type, const std::string &query_request)
+{
+    // std::map<std::string, std::vector<GmlId>> query_elements;
+    // auto query = gmlCfg.get()->get_json("gml_queries." + query_type + '.' + query_request);
+    // if (query_request == "egb-obreb")
+    // {
+    //     std::vector<std::string> classNames;
+    //     for (auto i : classMap)
+    //     {
+    //         classNames.push_back(i["className"].get<std::string>());
+    //     }
+    // }
+    // return query_elements;
 }

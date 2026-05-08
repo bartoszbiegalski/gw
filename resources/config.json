@@ -62,5 +62,24 @@
                 "PrezentacjaGraficzna"
             ]
         }
+    },
+    "gml_queries": {
+        "find_within_object": {
+            "egb-obreb": {
+                "namespace": "egb",
+                "classes": [
+                        {
+                        "className" :"EGB_JednostkaEwidencyjna",
+                        "idLabel": "idJednostkiEwid",
+                        "elementName": "nazwaWlasna"
+                        },
+                        {
+                        "className" :"EGB_ObrebEwidencyjny",
+                        "idLabel": "idObrebu",
+                        "elementName": "nazwaWlasna"
+                        }
+                ]
+            }
+        }
     }
 }

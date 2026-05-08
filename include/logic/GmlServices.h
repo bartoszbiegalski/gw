@@ -34,6 +34,10 @@ public:
     std::map<std::string, std::map<GmlId, std::vector<GmlId>>> GetReferencesTo(const std::unique_ptr<GmlObject> &sourceObject, const std::map<std::string, std::vector<std::string>> &classMap);
     std::map<std::string, std::vector<GmlId>> GetReferencesFrom(const std::unique_ptr<GmlObject> &sourceObject, std::map<std::string, std::map<GmlId, std::vector<GmlId>>> &referencesMap);
     std::map<std::string, std::vector<GmlId>> GetReferencesFromConfig(const std::unique_ptr<GmlObject> &sourceObject);
+
+    std::map<std::string, std::vector<GmlId>> GetElementsFromClasses(const std::unique_ptr<GmlObject> &sourceObject, const std::map<std::string, std::vector<std::string>> &classes);
+
+    std::map<std::string, std::vector<GmlId>> GetElementsFromQuery(const std::unique_ptr<GmlObject> &sourceObject, const std::string &query_type, const std::string &query_request);
 private:
     GmlServices() = default;
 
