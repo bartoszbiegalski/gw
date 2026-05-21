@@ -111,7 +111,6 @@ namespace tree_operations
                 {
                     if (prop->name && attr == reinterpret_cast<const char *>(prop->name))
                     {
-                        std::cout<<prop->name<<"\n";
                         foundXmlNodes.push_back(nodePtr);
                     }
                 }

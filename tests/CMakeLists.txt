@@ -12,9 +12,9 @@ file(GLOB_RECURSE GW_TEST_SOURCES
 
 add_executable(gw_tests
     basic_test.cpp
-    #divide_from_map_test.cpp
-    #reference_test.cpp
-    #query_test.cpp
+    divide_from_map_test.cpp
+    reference_test.cpp
+    query_test.cpp
     export_test.cpp
 )
 
