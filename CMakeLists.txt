@@ -5,8 +5,19 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+<<<<<<< Updated upstream
 # wspólne definicje
 add_definitions(-DLIBXML_STATIC -DLIBZIP_NO_CRYPTO)
+=======
+if(Win32)
+    set(LIBXML2_INCLUDE_DIR "C:/libxml-2.0/include")
+    set(LIBXML2_LIBRARIES "C:/libxml-2.0/lib/libxml2.lib")
+else()
+
+endif()
+
+add_definitions(-DLIBXML_STATIC)
+>>>>>>> Stashed changes
 
 # pliki projektu
 file(GLOB_RECURSE GW_LIBRARY_SOURCES
