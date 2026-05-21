@@ -100,4 +100,39 @@ namespace tree_operations
             traverse_gml_id(nodePtr->next, name, attr, foundId, prefix);
         }
     }
+
+    void get_xmlNodes_with_attr(xmlNodePtr nodePtr, std::vector<xmlNodePtr> &foundXmlNodes, const std::string &attr, const std::string &prefix)
+    {
+        if (nodePtr->type == XML_ELEMENT_NODE && nodePtr->properties != nullptr)
+        {
+            for (xmlAttrPtr prop = nodePtr->properties; prop != nullptr; prop = prop->next)
+            {
+                if (prefix == "")
+                {
+                    if (prop->name && attr == reinterpret_cast<const char *>(prop->name))
+                    {
+                        foundXmlNodes.push_back(nodePtr);
+                    }
+                }
+                else
+                {
+                    if (prop->name && prop->ns && attr == reinterpret_cast<const char *>(prop->name) && prefix == reinterpret_cast<const char *>(prop->ns->prefix))
+                    {
+                        foundXmlNodes.push_back(nodePtr);
+                    }
+                }
+            }
+        }
+        auto childPtr = nodePtr->children;
+        if (childPtr != nullptr)
+        {
+            get_xmlNodes_with_attr(childPtr, foundXmlNodes, attr, prefix);
+        }
+
+        auto nextPtr = nodePtr->next;
+        if (nextPtr != nullptr)
+        {
+            get_xmlNodes_with_attr(nextPtr, foundXmlNodes, attr, prefix);
+        }
+    }
 }

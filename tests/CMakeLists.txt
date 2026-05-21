@@ -15,6 +15,7 @@ add_executable(gw_tests
     divide_from_map_test.cpp
     reference_test.cpp
     query_test.cpp
+    export_test.cpp
 )
 
 target_link_libraries(gw_tests PRIVATE gw_lib gtest_main)
