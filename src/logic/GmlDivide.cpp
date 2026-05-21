@@ -1,12 +1,12 @@
 #include "logic/GmlDivide.h"
 #include <iostream>
 
-void GmlDivide::Divide(const std::unique_ptr<XmlConfig> &cfg, std::unique_ptr<GmlObject> &obj, const std::vector<NamespacePrefix> vNamespaces, std::vector<std::unique_ptr<GmlObject>> &dividedObjects)
+void GmlDivide::Divide(const std::unique_ptr<XmlConfig> &cfg, std::unique_ptr<GmlObject> &sourceObject, const std::vector<NamespacePrefix> vNamespaces, std::vector<std::unique_ptr<GmlObject>> &dividedObjects)
 {
     std::string extension = cfg.get()->get("gml_extension", "");
     for (auto ns : vNamespaces)
     {
-        if (obj->hasNamespace(ns))
+        if (sourceObject->hasNamespace(ns))
         {
             auto newObj = std::make_unique<GmlObject>();
             std::string fileSuffix = cfg.get()->get("xsd.xsd_extensions." + ns, "");
@@ -16,15 +16,15 @@ void GmlDivide::Divide(const std::unique_ptr<XmlConfig> &cfg, std::unique_ptr<Gm
             }
 
             GmlMap gmlMap;
-            gmlMap.emplace(ns, obj->getGmlStorage().getGmlMap().at(ns));
+            gmlMap.emplace(ns, sourceObject->getGmlStorage().getGmlMap().at(ns));
 
             GmlStorage gmlStorage;
             gmlStorage.setGmlMap(gmlMap);
-            const std::string newFileName = obj->getFilePath().stem().u8string() + fileSuffix + extension;
+            const std::string newFileName = sourceObject->getFilePath().stem().u8string() + fileSuffix + extension;
             newObj->setFileName(newFileName);
-            newObj->setFilePath((obj->getFilePath().parent_path() / newFileName).u8string());
-            newObj->setComment(obj.get()->getComment());
-            newObj->setNamespaceMap(obj->getNamespaceMap());
+            newObj->setFilePath((sourceObject->getFilePath().parent_path() / newFileName).u8string());
+            newObj->setComment(sourceObject.get()->getComment());
+            newObj->setNamespaceMap(sourceObject->getNamespaceMap());
             newObj->setGmlStorage(gmlStorage);
 
             // nadajemy nowe id od startu

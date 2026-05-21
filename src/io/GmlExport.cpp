@@ -108,16 +108,18 @@ void GmlExport::Export(const std::unique_ptr<XmlConfig> &cfg, const std::unique_
             xmlTextWriterWriteRaw(writer, BAD_CAST "\n  ");
 
             xmlNodePtr node = xmlObj.second.get();
-
+            std::cout<<node->name<<'\n';
             // zmiana gml:id
-            auto foundNode = tree_operations::get_xmlNode_with_attr(
-                node->children,
+            auto idNodesVector = std::vector<xmlNodePtr>();
+            tree_operations::get_xmlNodes_with_attr(
+                node->children, 
+                idNodesVector,
                 string_operations::get_suffix(idAttr, sep),
                 string_operations::get_prefix(idAttr, sep));
-            if (foundNode != nullptr)
+
+            for (auto foundNode : idNodesVector)
             {
                 xmlSetProp(foundNode, BAD_CAST "gml:id", BAD_CAST((idValue + std::to_string(idNum)).c_str()));
-
                 idNum++;
             }
 
@@ -127,7 +129,6 @@ void GmlExport::Export(const std::unique_ptr<XmlConfig> &cfg, const std::unique_
 
             xmlTextWriterEndElement(writer);
             xmlTextWriterWriteRaw(writer, BAD_CAST "\n  ");
-            idNum++;
         }
     }
 

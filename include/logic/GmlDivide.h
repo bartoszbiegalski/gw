@@ -8,5 +8,5 @@
 class GmlDivide
 {
 public:
-    static void Divide(const std::unique_ptr<XmlConfig> &cfg, std::unique_ptr<GmlObject> &obj, const std::vector<NamespacePrefix> vNamespaces, std::vector<std::unique_ptr<GmlObject>> &dividedObjects);
+    static void Divide(const std::unique_ptr<XmlConfig> &cfg, std::unique_ptr<GmlObject> &sourceObject, const std::vector<NamespacePrefix> vNamespaces, std::vector<std::unique_ptr<GmlObject>> &dividedObjects);
 };

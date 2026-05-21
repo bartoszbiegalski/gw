@@ -157,15 +157,15 @@ std::map<std::string, std::vector<GmlId>> GmlServices::GetReferencesFrom(const s
     return referencesFromMap;
 }
 
-std::map<std::string, std::vector<GmlId>> GmlServices::GetReferencesFromConfig(const std::unique_ptr<GmlObject> &sourceObject)
+std::map<NamespacePrefix, std::vector<GmlId>> GmlServices::GetReferencesFromConfig(const std::unique_ptr<GmlObject> &sourceObject)
 {
     auto referencesFromMap = gmlCfg.get()->get_json("xsd.references_from").get<std::map<std::string, std::vector<std::string>>>();
     return referencesFromMap;
 }
 
-std::map<std::string, std::vector<GmlId>> GmlServices::GetElementsFromClasses(const std::unique_ptr<GmlObject> &sourceObject, const std::map<std::string, std::vector<std::string>> &classes)
+std::map<NamespacePrefix, std::vector<GmlId>> GmlServices::GetElementsFromClasses(const std::unique_ptr<GmlObject> &sourceObject, const std::map<NamespacePrefix, std::vector<std::string>> &classes)
 {
-    std::map<std::string, std::vector<GmlId>> classIdMap;
+    std::map<NamespacePrefix, std::vector<GmlId>> classIdMap;
     for (auto &[prefix, classVec] : classes)
     {
         for (auto &[gmlId, gmlPtr] : sourceObject.get()->getGmlStorage().getGmlMap()[prefix])
@@ -183,9 +183,9 @@ std::map<std::string, std::vector<GmlId>> GmlServices::GetElementsFromClasses(co
     return classIdMap;
 }
 
-std::map<std::string, std::vector<GmlId>> GmlServices::GetElementsFromQuery(const std::unique_ptr<GmlObject> &sourceObject, const std::string &query_type, const std::string &query_request)
+std::map<NamespacePrefix, std::vector<GmlId>> GmlServices::GetElementsFromQuery(const std::unique_ptr<GmlObject> &sourceObject, const std::string &query_type, const std::string &query_request)
 {
-    // std::map<std::string, std::vector<GmlId>> query_elements;
+    std::map<NamespacePrefix, std::vector<GmlId>> query_elements;
     // auto query = gmlCfg.get()->get_json("gml_queries." + query_type + '.' + query_request);
     // if (query_request == "egb-obreb")
     // {
@@ -193,7 +193,8 @@ std::map<std::string, std::vector<GmlId>> GmlServices::GetElementsFromQuery(cons
     //     for (auto i : classMap)
     //     {
     //         classNames.push_back(i["className"].get<std::string>());
+    //         std::cout<<"lala\n";
     //     }
     // }
-    // return query_elements;
+    return query_elements;
 }
