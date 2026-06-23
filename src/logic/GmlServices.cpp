@@ -31,10 +31,10 @@ void GmlServices::PerformImport(const std::filesystem::path &inFile, std::unique
         NamespaceTool::Process(gmlCfg, importedObject);
         XmlParser::SetContent(gmlCfg, importedObject);
     }
-    catch(const BaseException& e)
+    catch (const BaseException &e)
     {
         throw e;
-    }    
+    }
 }
 void GmlServices::PerformExport(const std::unique_ptr<GmlObject> &exportObject)
 {
@@ -59,7 +59,6 @@ void GmlServices::PerformDivision(const std::filesystem::path &inFile, std::vect
     GmlDivide::Divide(gmlCfg, obj, nsVec, objVec);
     for (auto &o : objVec)
     {
-        std::cout << o.get()->getFileName() << '\n';
         GmlExport::Export(gmlCfg, o);
     }
 
@@ -82,6 +81,7 @@ void GmlServices::PerformDivision(const std::filesystem::path &inFile, std::vect
         }
     }
 }
+
 
 void GmlServices::PerformMerge(const FilePath &inFile, std::vector<FilePath> &filePathVec)
 {
@@ -163,7 +163,21 @@ std::map<NamespacePrefix, std::vector<GmlId>> GmlServices::GetReferencesFromConf
     return referencesFromMap;
 }
 
-std::map<NamespacePrefix, std::vector<GmlId>> GmlServices::GetElementsFromClasses(const std::unique_ptr<GmlObject> &sourceObject, const std::map<NamespacePrefix, std::vector<std::string>> &classes)
+std::map<NamespacePrefix, std::vector<GmlId>> GmlServices::GetElementsFromClass(const std::unique_ptr<GmlObject> &sourceObject, const NamespacePrefix &prefix, const ClassName &className)
+{
+    std::map<NamespacePrefix, std::vector<GmlId>> classIdMap;
+    for (auto &[gmlId, gmlPtr] : sourceObject.get()->getGmlStorage().getGmlMap()[prefix])
+    {
+        auto ptr = tree_operations::get_xmlNode_from_name(gmlPtr.get(), className, prefix);
+        if (ptr != nullptr)
+        {
+            classIdMap[prefix].push_back(gmlId);
+        }
+    }
+    return classIdMap;
+}
+
+std::map<NamespacePrefix, std::vector<GmlId>> GmlServices::GetElementsFromClasses(const std::unique_ptr<GmlObject> &sourceObject, const std::map<NamespacePrefix, std::vector<ClassName>> &classes)
 {
     std::map<NamespacePrefix, std::vector<GmlId>> classIdMap;
     for (auto &[prefix, classVec] : classes)
@@ -172,29 +186,61 @@ std::map<NamespacePrefix, std::vector<GmlId>> GmlServices::GetElementsFromClasse
         {
             for (auto className : classVec)
             {
-            auto ptr = tree_operations::get_xmlNode_with_attr(gmlPtr.get(), className, prefix);
-            if (ptr != nullptr)
-            {
-                classIdMap[prefix].push_back(gmlId);
+                auto ptr = tree_operations::get_xmlNode_from_name(gmlPtr.get(), className, prefix);
+                if (ptr != nullptr)
+                {
+                    classIdMap[prefix].push_back(gmlId);
+                }
             }
-           } 
         }
     }
     return classIdMap;
 }
 
-std::map<NamespacePrefix, std::vector<GmlId>> GmlServices::GetElementsFromQuery(const std::unique_ptr<GmlObject> &sourceObject, const std::string &query_type, const std::string &query_request)
+std::map<NamespacePrefix, std::set<GmlId>> GmlServices::GetElementsFromQuery(const std::unique_ptr<GmlObject> &sourceObject, const std::string &query_type, const std::string &query_request)
 {
-    std::map<NamespacePrefix, std::vector<GmlId>> query_elements;
-    // auto query = gmlCfg.get()->get_json("gml_queries." + query_type + '.' + query_request);
-    // if (query_request == "egb-obreb")
-    // {
-    //     std::vector<std::string> classNames;
-    //     for (auto i : classMap)
-    //     {
-    //         classNames.push_back(i["className"].get<std::string>());
-    //         std::cout<<"lala\n";
-    //     }
-    // }
+    std::map<NamespacePrefix, std::set<GmlId>> query_elements;
+    auto classMap = gmlCfg.get()->get_json(query_type + '.' + query_request);
+
+    std::string className = query_request;
+
+    std::string idLabel = classMap.at("idLabel").get<std::string>();
+    std::string elementName = classMap.at("elementName").get<std::string>();
+    std::string prefix = classMap.at("namespace").get<std::string>();
+
+    auto idMap = GetElementsFromClass(sourceObject, prefix, className);
+    for (auto &[pref, mp] : idMap)
+    {
+        for (auto elementId : mp)
+        {
+            auto idNode = tree_operations::get_xmlNode_from_name(sourceObject.get()->getGmlStorage().getGmlMap()[prefix][elementId].get(), idLabel, prefix);
+            auto elementNameNode = tree_operations::get_xmlNode_from_name(sourceObject.get()->getGmlStorage().getGmlMap()[prefix][elementId].get(), elementName, prefix);
+            if (idNode != nullptr && elementNameNode != nullptr)
+            {
+                std::string idLabelValue = reinterpret_cast<const char *>(idNode->children->content);
+                std::string elementNameValue = reinterpret_cast<const char *>(elementNameNode->children->content);
+                std::cout<<elementId<<" "<<idLabelValue<<" "<<elementNameValue<<"\n";
+
+                // iterate through all elements from egb and check, if any has element with name == elementNameNode->name and id == idNode->name
+
+                std::vector<xmlNodePtr> foundXmlNodes;
+                for (auto &[elId, elNode] : sourceObject.get()->getGmlStorage().getGmlMap()[prefix])
+                {
+                    if (tree_operations::check_xmlNodes_name_value_pattern(elNode.get(), "id", idLabelValue, prefix) == true)
+                    {
+                        foundXmlNodes.push_back(elNode.get());
+                    }
+                }
+                for (auto foundNode : foundXmlNodes)
+                {
+                    std::string id = reinterpret_cast<const char *>(foundNode->properties->children->content);
+                    if (!id.empty())
+                    {
+                        query_elements[prefix].insert(id);
+                    }
+                }
+            }
+        }
+    }
     return query_elements;
 }

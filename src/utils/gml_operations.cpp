@@ -98,7 +98,7 @@ namespace gml_operations
         }
         return nullptr;
     }
-    void DivideFromMap(const std::unique_ptr<GmlObject> &sourceObj, std::unique_ptr<GmlObject> &destObj, std::map<std::string, std::vector<std::string>> &classMap)
+    void DivideFromMap(const std::unique_ptr<GmlObject> &sourceObj, std::unique_ptr<GmlObject> &destObj, std::map<NamespacePrefix, std::vector<std::string>> &classMap)
     {
         const NamespaceMap &oldMap = sourceObj->getNamespaceMap();
         for (const auto &[prefix, nsValue] : oldMap)
@@ -133,5 +133,11 @@ namespace gml_operations
                     classMapForPrefix.end());
             }
         }
+    }
+
+    void CopyElementWithId(const std::unique_ptr<GmlObject> &sourceObj, std::unique_ptr<GmlObject> &destObj, NamespacePrefix prefix, GmlId id)
+    {
+        auto node = sourceObj.get()->getGmlStorage().getGmlMap()[prefix].at(id);
+        destObj.get()->getGmlStorage().getGmlMap()[prefix].emplace(id, node);
     }
 }

@@ -52,6 +52,96 @@ namespace tree_operations
         return nullptr;
     }
 
+    xmlNodePtr get_xmlNode_from_name(xmlNodePtr nodePtr, const std::string &name, const std::string &prefix)
+    {
+        if (nodePtr->type == XML_ELEMENT_NODE)
+        {
+            if (prefix == "")
+            {
+                if (name == reinterpret_cast<const char *>(nodePtr->name))
+                {
+                    return nodePtr;
+                }
+            }
+            else
+            {
+                if (name == reinterpret_cast<const char *>(nodePtr->name) && prefix == reinterpret_cast<const char *>(nodePtr->ns->prefix))
+                {
+                    return nodePtr;
+                }
+            }
+        }
+        auto childPtr = nodePtr->children;
+        if (childPtr != nullptr)
+        {
+            xmlNodePtr found = get_xmlNode_from_name(childPtr, name, prefix);
+            if (found)
+            {
+                return found;
+            }
+        }
+
+        auto nextPtr = nodePtr->next;
+        if (nextPtr != nullptr)
+        {
+            xmlNodePtr found = get_xmlNode_from_name(nextPtr, name, prefix);
+            if (found)
+            {
+                return found;
+            }
+        }
+
+        return nullptr;
+    }
+
+    bool check_xmlNodes_name_value_pattern(xmlNodePtr nodePtr, const std::string &namePattern, const std::string &valuePattern, const std::string &prefix)
+    {
+        bool result = false;
+        if (nodePtr->type == XML_ELEMENT_NODE)
+        {
+            std::string name = reinterpret_cast<const char *>(nodePtr->name);
+            if (name.find(namePattern) != std::string::npos)
+            {
+                if (nodePtr->children != nullptr)
+                {
+                    std::string value = reinterpret_cast<const char *>(nodePtr->children->content);
+                    if (prefix == "")
+                    {
+                        if (value.find(valuePattern) != std::string::npos)
+                        {
+                            return true;
+                        }
+                    }
+                    else
+                    {
+                        if (value.find(valuePattern) != std::string::npos && prefix == reinterpret_cast<const char *>(nodePtr->ns->prefix))
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        auto childPtr = nodePtr->children;
+        if (childPtr != nullptr)
+        {
+            if (check_xmlNodes_name_value_pattern(childPtr, namePattern, valuePattern, prefix))
+            {
+                return true;
+            }
+        }
+
+        auto nextPtr = nodePtr->next;
+        if (nextPtr != nullptr)
+        {
+            if (check_xmlNodes_name_value_pattern(nextPtr, namePattern, valuePattern, prefix))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
     void traverse_gml_id(xmlNodePtr nodePtr, const std::string &name, const std::string &attr, std::vector<GmlId> &foundId, const std::string &prefix)
     {
         if (!nodePtr)
@@ -73,13 +163,13 @@ namespace tree_operations
                 {
                     for (xmlAttr *attrNode = nodePtr->properties; attrNode; attrNode = attrNode->next)
                     {
-                        const char *name = reinterpret_cast<const char *>(attrNode->name);
+                        const char *attrName = reinterpret_cast<const char *>(attrNode->name);
                         xmlChar *value = xmlNodeListGetString(
                             nodePtr->doc,
                             attrNode->children,
                             1);
 
-                        if (value && attr == reinterpret_cast<const char *>(name))
+                        if (value && attr == reinterpret_cast<const char *>(attrName))
                         {
                             std::string val(reinterpret_cast<const char *>(value));
                             xmlFree(value);

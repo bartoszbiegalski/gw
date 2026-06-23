@@ -32,12 +32,14 @@ public:
     void PerformMerge(const FilePath &inFile, std::vector<FilePath> &filePathVec);
 
     std::map<NamespacePrefix, std::map<GmlId, std::vector<GmlId>>> GetReferencesTo(const std::unique_ptr<GmlObject> &sourceObject, const std::map<NamespacePrefix, std::vector<std::string>> &classMap);
-    std::map<NamespacePrefix, std::vector<GmlId>> GetReferencesFrom(const std::unique_ptr<GmlObject> &sourceObject, std::map<std::string, std::map<GmlId, std::vector<GmlId>>> &referencesMap);
+    std::map<NamespacePrefix, std::vector<GmlId>> GetReferencesFrom(const std::unique_ptr<GmlObject> &sourceObject, std::map<NamespacePrefix, std::map<GmlId, std::vector<GmlId>>> &referencesMap);
     std::map<NamespacePrefix, std::vector<GmlId>> GetReferencesFromConfig(const std::unique_ptr<GmlObject> &sourceObject);
 
-    std::map<NamespacePrefix, std::vector<GmlId>> GetElementsFromClasses(const std::unique_ptr<GmlObject> &sourceObject, const std::map<std::string, std::vector<std::string>> &classes);
+    std::map<NamespacePrefix, std::vector<GmlId>> GetElementsFromClass(const std::unique_ptr<GmlObject> &sourceObject, const NamespacePrefix &prefix, const ClassName &className);
+    std::map<NamespacePrefix, std::vector<GmlId>> GetElementsFromClasses(const std::unique_ptr<GmlObject> &sourceObject, const std::map<NamespacePrefix, std::vector<ClassName>> &classes);
 
-    std::map<NamespacePrefix, std::vector<GmlId>> GetElementsFromQuery(const std::unique_ptr<GmlObject> &sourceObject, const std::string &query_type, const std::string &query_request);
+    std::map<NamespacePrefix, std::set<GmlId>> GetElementsFromQuery(const std::unique_ptr<GmlObject> &sourceObject, const std::string &query_type, const std::string &query_request);
+
 private:
     GmlServices() = default;
 

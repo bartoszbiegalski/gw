@@ -6,6 +6,7 @@
 #include <libxml/xmlreader.h>
 #include <libxml/xmlwriter.h>
 
+#include <iostream>
 #include <string>
 #include <fstream>
 #include <filesystem>
@@ -16,6 +17,7 @@
 
 #include <list>
 #include <map>
+#include <set>
 #include <vector>
 #include <unordered_set>
 
@@ -23,6 +25,7 @@ using FileName = std::string;
 using FilePath = std::filesystem::path;
 
 using NamespacePrefix = std::string;
+using ClassName = std::string;
 using GmlId = std::string;
 
 // operator do stringa zeby wyciagal prefix lub suffix

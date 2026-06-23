@@ -13,7 +13,8 @@ namespace gml_operations
     std::map<std::string, std::string> GetRootInfoMap(const std::unique_ptr<GmlObject> &obj);
     std::map<std::string, std::string> GetNamespaceNodeInfoMap(const std::unique_ptr<GmlObject> &obj, const NamespacePrefix &prefix);
 
-    void DivideFromMap(const std::unique_ptr<GmlObject> &sourceObj, std::unique_ptr<GmlObject> &destObj, std::map<std::string, std::vector<std::string>> &classMap);
+    void DivideFromMap(const std::unique_ptr<GmlObject> &sourceObj, std::unique_ptr<GmlObject> &destObj, std::map<NamespacePrefix, std::vector<std::string>> &classMap);
+    void CopyElementWithId(const std::unique_ptr<GmlObject> &sourceObj, std::unique_ptr<GmlObject> &destObj, NamespacePrefix prefix, GmlId id);
 
     NamespaceData GetNamespaceDataFromPrefix(const std::unique_ptr<GmlObject> &obj, const NamespacePrefix &prefix);
     std::map<GmlId, GmlNodePtr> GetClassMap(const std::unique_ptr<GmlObject> &obj, const NamespacePrefix &prefix, const std::string className);
