@@ -32,32 +32,53 @@ void GmlDivide::Divide(const std::unique_ptr<XmlConfig> &cfg, std::unique_ptr<Gm
     }
 }
 
-void GmlDivide::DivideFromIdVector(const std::unique_ptr<XmlConfig> &cfg, std::unique_ptr<GmlObject> &sourceObject, const NamespacePrefix &prefix, const std::vector<GmlId> idVector, std::unique_ptr<GmlObject> &dividedObject)
+void GmlDivide::DivideJO(const std::unique_ptr<XmlConfig> &cfg, const GmlTreeModel &model, std::unique_ptr<GmlObject> &sourceObject, std::vector<std::unique_ptr<GmlObject>> &dividedObjects)
 {
     std::string extension = cfg.get()->get("gml_extension", "");
-    if (sourceObject->hasNamespace(prefix))
+    for (auto &[teryt, m] : model)
     {
         auto newObj = std::make_unique<GmlObject>();
-        std::string fileSuffix = cfg.get()->get("xsd.xsd_extensions." + prefix, "");
-        if (fileSuffix == "")
-        {
-            fileSuffix = '-' + prefix;
-        }
+        std::string fileName = teryt;
 
         GmlMap gmlMap;
-        gmlMap.emplace(prefix, sourceObject->getGmlStorage().getGmlMap().at(prefix));
+        for (auto &[className, vec] : m)
+        {
+            for (auto &[node, id] : vec)
+            {
+                gmlMap["egb"].emplace(id, std::make_shared<xmlNode>(*node));
+            }
+        }
 
         GmlStorage gmlStorage;
         gmlStorage.setGmlMap(gmlMap);
-        const std::string newFileName = sourceObject->getFilePath().stem().u8string() + fileSuffix + extension;
+        const std::string newFileName = fileName + extension;
         newObj->setFileName(newFileName);
         newObj->setFilePath((sourceObject->getFilePath().parent_path() / newFileName).u8string());
         newObj->setComment(sourceObject.get()->getComment());
         newObj->setNamespaceMap(sourceObject->getNamespaceMap());
         newObj->setGmlStorage(gmlStorage);
+
+        dividedObjects.push_back(std::move(newObj));
+    }
+}
+
+void GmlDivide::DivideFromIdVector(const std::unique_ptr<XmlConfig> &cfg, std::unique_ptr<GmlObject> &sourceObject, const std::string &fileSuffix, const std::vector<GmlId> idVector, std::unique_ptr<GmlObject> &dividedObject)
+{
+    std::string extension = cfg.get()->get("gml_extension", "");
+    for (auto &[prefix, _] : sourceObject.get()->getGmlStorage().getGmlMap())
+    {
+        GmlMap gmlMap;
+        GmlStorage gmlStorage;
+        gmlStorage.setGmlMap(gmlMap);
+        const std::string newFileName = sourceObject->getFilePath().stem().u8string() + fileSuffix + extension;
+        dividedObject->setFileName(newFileName);
+        dividedObject->setFilePath((sourceObject->getFilePath().parent_path() / newFileName).u8string());
+        dividedObject->setComment(sourceObject.get()->getComment());
+        dividedObject->setNamespaceMap(sourceObject->getNamespaceMap());
+        dividedObject->setGmlStorage(gmlStorage);
         for (auto id : idVector)
         {
-            gml_operations::CopyElementWithId(sourceObject, newObj, prefix, id);
+            gml_operations::CopyElementWithId(sourceObject, dividedObject, prefix, id);
         }
     }
 }

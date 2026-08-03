@@ -18,4 +18,5 @@ namespace string_operations
 
     void set_schema_location_string(const std::list<std::string> &schemaLocationList, std::string &schemaLocationStream);
 
+
 }

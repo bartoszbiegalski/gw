@@ -51,6 +51,38 @@ namespace tree_operations
 
         return nullptr;
     }
+    void get_xmlNodes_with_names(xmlNodePtr nodePtr, std::vector<xmlNodePtr> &foundNodes, const std::vector<std::string> &names, const std::string &prefix)
+    {
+        if (nodePtr->type == XML_ELEMENT_NODE)
+        {
+            std::string newName = reinterpret_cast<const char *>(nodePtr->name);
+            if (prefix == "")
+            {
+                if (std::find(names.begin(), names.end(), newName) != names.end())
+                {
+                    foundNodes.push_back(nodePtr);
+                }
+            }
+            else
+            {
+                if (prefix == reinterpret_cast<const char *>(nodePtr->ns->prefix) && std::find(names.begin(), names.end(), newName) != names.end())
+                {
+                    foundNodes.push_back(nodePtr);
+                }
+            }
+        }
+        auto childPtr = nodePtr->children;
+        if (childPtr != nullptr)
+        {
+            get_xmlNodes_with_names(childPtr, foundNodes, names, prefix);
+        }
+
+        auto nextPtr = nodePtr->next;
+        if (nextPtr != nullptr)
+        {
+            get_xmlNodes_with_names(nextPtr, foundNodes, names, prefix);
+        }
+    }
 
     xmlNodePtr get_xmlNode_from_name(xmlNodePtr nodePtr, const std::string &name, const std::string &prefix)
     {
@@ -94,52 +126,42 @@ namespace tree_operations
         return nullptr;
     }
 
-    bool check_xmlNodes_name_value_pattern(xmlNodePtr nodePtr, const std::string &namePattern, const std::string &valuePattern, const std::string &prefix)
+    xmlNodePtr get_xmlNodes_name_value_pattern(xmlNodePtr nodePtr, const std::string &namePattern, const std::string &valuePattern, const std::string &prefix)
     {
-        bool result = false;
+        if (!nodePtr)
+            return nullptr;
+
         if (nodePtr->type == XML_ELEMENT_NODE)
         {
             std::string name = reinterpret_cast<const char *>(nodePtr->name);
-            if (name.find(namePattern) != std::string::npos)
+            if (name.find(namePattern) != std::string::npos && nodePtr->children != nullptr)
             {
-                if (nodePtr->children != nullptr)
+                std::string value = reinterpret_cast<const char *>(nodePtr->children->content);
+                std::regex r(valuePattern);
+
+                if (std::regex_match(value, r))
                 {
-                    std::string value = reinterpret_cast<const char *>(nodePtr->children->content);
                     if (prefix == "")
-                    {
-                        if (value.find(valuePattern) != std::string::npos)
-                        {
-                            return true;
-                        }
-                    }
-                    else
-                    {
-                        if (value.find(valuePattern) != std::string::npos && prefix == reinterpret_cast<const char *>(nodePtr->ns->prefix))
-                        {
-                            return true;
-                        }
-                    }
+                        return nodePtr;
+
+                    if (nodePtr->ns && prefix == reinterpret_cast<const char *>(nodePtr->ns->prefix))
+                        return nodePtr;
                 }
             }
         }
-        auto childPtr = nodePtr->children;
-        if (childPtr != nullptr)
+        if (nodePtr->children)
         {
-            if (check_xmlNodes_name_value_pattern(childPtr, namePattern, valuePattern, prefix))
-            {
-                return true;
-            }
+            if (auto res = get_xmlNodes_name_value_pattern(nodePtr->children, namePattern, valuePattern, prefix))
+                return res;
         }
 
-        auto nextPtr = nodePtr->next;
-        if (nextPtr != nullptr)
+        if (nodePtr->next)
         {
-            if (check_xmlNodes_name_value_pattern(nextPtr, namePattern, valuePattern, prefix))
-            {
-                return true;
-            }
+            if (auto res = get_xmlNodes_name_value_pattern(nodePtr->next, namePattern, valuePattern, prefix))
+                return res;
         }
-        return false;
+
+        return nullptr;
     }
 
     void traverse_gml_id(xmlNodePtr nodePtr, const std::string &name, const std::string &attr, std::vector<GmlId> &foundId, const std::string &prefix)
@@ -224,5 +246,54 @@ namespace tree_operations
         {
             get_xmlNodes_with_attr(nextPtr, foundXmlNodes, attr, prefix);
         }
+    }
+
+    bool find_xmlNode_value(xmlNodePtr nodePtr, const std::string &value, const std::string &prefix)
+    {
+        if (!nodePtr)
+        {
+            return false;
+        }
+
+        if (nodePtr->type == XML_ELEMENT_NODE && nodePtr->children != nullptr)
+        {
+            if (nodePtr->children->content != nullptr)
+            {
+                std::string contentValue = reinterpret_cast<const char *>(nodePtr->children->content);
+                if (!contentValue.empty())
+                {
+                    if (contentValue.find(value) != std::string::npos)
+                    {
+                        return true;
+                    }
+                }
+            }
+        }
+        if (nodePtr->children != nullptr)
+        {
+            if (find_xmlNode_value(nodePtr->children, value))
+            {
+                return true;
+            }
+        }
+
+        if (nodePtr->next != nullptr)
+        {
+            if (find_xmlNode_value(nodePtr->next, value))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    std::string get_class_name(xmlNodePtr nodePtr)
+    {
+        if (nodePtr->type == XML_TEXT_NODE || nodePtr->name == nullptr)
+            return std::string();
+
+        std::string nodeName(reinterpret_cast<const char *>(nodePtr->name));
+        return nodeName;
     }
 }

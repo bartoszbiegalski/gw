@@ -1,4 +1,3 @@
-
 #include <gtest/gtest.h>
 
 #include "core/types.h"
@@ -6,6 +5,7 @@
 #include "exceptions/Exceptions.h"
 #include "services/XmlConfig.h"
 #include "services/XsdConfig.h"
+#include "services/GmlReporter.h"
 #include "logic/GmlServices.h"
 #include "io/GmlCreate.h"
 #include "io/GmlImport.h"
@@ -18,11 +18,19 @@
 class QueryFixture : public ::testing::Test
 {
 protected:
-    std::string testFile;
+    std::string testFile1;
+    std::string testFile2;
+    std::string testFile3;
+    std::string testFile4;
+    std::string testFile5;
 
     void SetUp() override
     {
-        testFile = (std::filesystem::temp_directory_path() / "egib1.gml").string();
+        testFile1 = (std::filesystem::temp_directory_path() / "aSzkoleniowy2021.gml").string();
+        testFile2 = (std::filesystem::temp_directory_path() / "egib1.gml").string();
+        testFile3 = (std::filesystem::temp_directory_path() / "egib2.gml").string();
+        testFile4 = (std::filesystem::temp_directory_path() / "egib3.gml").string();
+        testFile5 = (std::filesystem::temp_directory_path() / "egib4.gml").string();
     }
 };
 
@@ -44,26 +52,31 @@ TEST_F(QueryFixture, QueryFind)
     xsdCfgs["egb"] = std::make_unique<XsdConfig>(FilePath{"resources/egb.json"});
     xsdCfgs["ot"] = std::make_unique<XsdConfig>(FilePath{"resources/ot.json"});
 
-    std::string query_type = "gml_filters";
-    std::string query_request = "filter_by_class";
-    auto classMap = gmlCfg.get()->get_json(query_type + '.' + query_request);
-
     gml.Init(
         std::move(gmlCfg),
         std::move(xsdCfgs));
 
-    std::map<ClassName, std::map<NamespacePrefix, std::vector<std::pair<GmlId, int>>>> queryMap;
+    std::vector<GmlId> reszta;
 
-    // EXPECT_NO_THROW({
-    //     gml.Get().PerformImport(testFile, sourceObj);
-    //     auto queryElements = gml.Get().GetElementsFromQuery(sourceObj, "gml_filters.filter_by_class", "EGB_ObrebEwidencyjny");
+    EXPECT_NO_THROW({
+        gml.Get().PerformImport(testFile5, sourceObj);
+        auto tree = gml.Get().GetJO(sourceObj, "EGB_ObrebEwidencyjny", reszta);
+        // gml.PerformDivisionO(testFile1);
+        // gml.Get().PerformDivisionJ(testFile4, true);
+        // gml.Get().PerformDivisionO(testFile4, true);
+        // GmlReporter::printReport(sourceObj);
 
-    //     gml.Get().PerformCreateGml(std::filesystem::temp_directory_path() / "egib1-dest.gml");
-    //     gml.Get().PerformImport(std::filesystem::temp_directory_path() / "egib1-dest.gml", destObj);
-    //     auto idSet = queryElements["egb"];
-    //     std::vector<GmlId> idVector(idSet.begin(), idSet.end());
-    //     GmlDivide::DivideFromIdVector(gml.Get().gmlCfg, sourceObj, "egb", idVector, destObj);
+        // auto tree1 = gml.Get().GetJO(sourceObj, "EGB_JednostkaEwidencyjna");
+        // auto tree2 = gml.Get().GetJO(sourceObj, "EGB_ObrebEwidencyjny");
 
-    //     gml.Get().PerformExport(destObj);
-    // });
+        //     auto queryElements = gml.Get().GetElementsFromQuery(sourceObj, "gml_filters.filter_by_class", "EGB_ObrebEwidencyjny");
+
+        //     gml.Get().PerformCreateGml(std::filesystem::temp_directory_path() / "egib1-dest.gml");
+        //     gml.Get().PerformImport(std::filesystem::temp_directory_path() / "egib1-dest.gml", destObj);
+        //     auto idSet = queryElements["egb"];
+        //     std::vector<GmlId> idVector(idSet.begin(), idSet.end());
+        //     GmlDivide::DivideFromIdVector(gml.Get().gmlCfg, sourceObj, "egb", idVector, destObj);
+
+        //     gml.Get().PerformExport(destObj);
+    });
 }

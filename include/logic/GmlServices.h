@@ -1,5 +1,7 @@
 #pragma once
 
+#include <libxml/tree.h>
+
 #include "core/types.h"
 #include "core/GmlObject.h"
 #include "io/GmlCreate.h"
@@ -14,6 +16,9 @@
 #include "services/XmlParser.h"
 #include "logic/GmlDivide.h"
 #include "logic/GmlMerge.h"
+#include "logic/GmlSpatialServices.h"
+
+#include <geos/operation/valid/IsValidOp.h>
 
 class GmlServices
 {
@@ -28,7 +33,11 @@ public:
     void PerformImport(const std::filesystem::path &inFile, std::unique_ptr<GmlObject> &importedObject);
     void PerformExport(const std::unique_ptr<GmlObject> &exportObject);
 
-    void PerformDivision(const std::filesystem::path &inFile, std::vector<NamespacePrefix> &nsVec, bool isZip);
+    void PerformDivision(const FilePath &inFile, std::vector<NamespacePrefix> &nsVec, bool isZip);
+    void PerformDivisionJ(const FilePath &inFile, bool isRaport);
+    void PerformDivisionO(const FilePath &inFile, bool isRaport);
+    void PerformDivisionWithIdVector(const FilePath &inFile, const std::string &fileSuffix, std::vector<GmlId> &idVector, bool isZip);
+
     void PerformMerge(const FilePath &inFile, std::vector<FilePath> &filePathVec);
 
     std::map<NamespacePrefix, std::map<GmlId, std::vector<GmlId>>> GetReferencesTo(const std::unique_ptr<GmlObject> &sourceObject, const std::map<NamespacePrefix, std::vector<std::string>> &classMap);
@@ -38,7 +47,10 @@ public:
     std::map<NamespacePrefix, std::vector<GmlId>> GetElementsFromClass(const std::unique_ptr<GmlObject> &sourceObject, const NamespacePrefix &prefix, const ClassName &className);
     std::map<NamespacePrefix, std::vector<GmlId>> GetElementsFromClasses(const std::unique_ptr<GmlObject> &sourceObject, const std::map<NamespacePrefix, std::vector<ClassName>> &classes);
 
-    std::map<NamespacePrefix, std::set<GmlId>> GetElementsFromQuery(const std::unique_ptr<GmlObject> &sourceObject, const std::string &query_type, const std::string &query_request);
+    GmlTreeModel GetJO(const std::unique_ptr<GmlObject> &sourceObject, const std::string &type, std::vector<GmlId> &reszta);
+
+    std::map<GmlId, std::set<GmlId>> GetElementsFromQuery(const std::unique_ptr<GmlObject> &sourceObject, const std::string &query_type, const std::string &query_request, std::map<GmlId, std::pair<std::string, std::string>> &extra_attributes);
+    const std::unique_ptr<XmlConfig> &GetGmlCfg() { return gmlCfg; }
 
 private:
     GmlServices() = default;

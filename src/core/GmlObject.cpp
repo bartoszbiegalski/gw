@@ -51,3 +51,4 @@ std::map<std::string, int> GmlObject::GetClassNames(const NamespacePrefix &prefi
 
     return classNameMap;
 }
+

@@ -5,6 +5,9 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
+set(CMAKE_FIND_LIBRARY_PREFERENCES "ONLY" CACHE STRING "" FORCE)
+
 # wspólne definicje
 add_definitions(-DLIBXML_STATIC -DLIBZIP_NO_CRYPTO)
 
@@ -33,7 +36,12 @@ add_subdirectory(tests)
 enable_testing()
 
 add_executable(gmlWorker src/release/text_main.cpp)
+add_executable(obreby src/release/obreby.cpp)
+
+target_include_directories(obreby PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/src
+)
+
 target_link_libraries(gmlWorker PRIVATE gw_lib)
-
-
-
+target_link_libraries(obreby PRIVATE gw_lib -static)
+target_link_options(obreby PRIVATE)

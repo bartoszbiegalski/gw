@@ -12,6 +12,7 @@
 #include <filesystem>
 #include <optional>
 #include <algorithm>
+#include <regex>
 
 #include <string.h>
 
@@ -53,3 +54,4 @@ using XsdValidityMap = std::map<NamespacePrefix, bool>;
 using XmlSchemaParserCtxtPtr = std::unique_ptr<_xmlSchemaParserCtxt, decltype(&xmlSchemaFreeParserCtxt)>;
 using XmlSchemaPtr = std::unique_ptr<_xmlSchema, decltype(&xmlSchemaFree)>;
 using XmlSchemaValidCtxtPtr = std::unique_ptr<_xmlSchemaValidCtxt, decltype(&xmlSchemaFreeValidCtxt)>;
+using GmlTreeModel = std::map<std::string, std::map<ClassName, std::vector<std::pair<xmlNodePtr, GmlId>>>>;

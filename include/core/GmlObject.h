@@ -6,6 +6,7 @@
 
 #include "core/types.h"
 #include "core/GmlStorage.h"
+#include "utils/tree_operations.h"
 
 #include <numeric>
 class GmlObject

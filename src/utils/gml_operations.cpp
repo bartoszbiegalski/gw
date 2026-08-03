@@ -134,6 +134,37 @@ namespace gml_operations
             }
         }
     }
+    void DivideFromClassVector(const std::unique_ptr<GmlObject> &sourceObj, std::unique_ptr<GmlObject> &destObj, std::vector<std::string> &classVec)
+    {
+        const NamespaceMap &oldMap = sourceObj->getNamespaceMap();
+        for (const auto &[prefix, nsValue] : oldMap)
+        {
+            if (destObj->getNamespaceMap().find(prefix) ==
+                destObj->getNamespaceMap().end())
+            {
+                destObj->addToNamespaceMap(prefix, nsValue);
+            }
+        }
+
+        auto &srcMap = sourceObj->getGmlStorage().getGmlMap();
+        auto &destMap = destObj->getGmlStorage().getGmlMap();
+
+        for (const auto &className : classVec)
+        {
+            for (auto &[prefix, vec] : srcMap)
+            {
+                auto classNameCountMap = sourceObj.get()->GetClassNames(prefix);
+                if (classNameCountMap.find(className) == classNameCountMap.end())
+                    continue;
+
+                auto classMapForPrefix = gml_operations::GetClassMap(sourceObj, prefix, className);
+
+                destMap[prefix].insert(
+                    classMapForPrefix.begin(),
+                    classMapForPrefix.end());
+            }
+        }
+    }
 
     void CopyElementWithId(const std::unique_ptr<GmlObject> &sourceObj, std::unique_ptr<GmlObject> &destObj, NamespacePrefix prefix, GmlId id)
     {
