@@ -10,10 +10,10 @@
 
 std::map<std::string, std::string> NamespaceTool::GetAttributesMap(const std::unique_ptr<XmlConfig> &cfg, const std::unique_ptr<GmlObject> &obj)
 {
-    xmlTextReaderPtr reader = xmlReaderForFile(obj->getFilePath().u8string().c_str(), nullptr, 0);
+    xmlTextReaderPtr reader = xmlReaderForFile(obj->getFilePath().string().c_str(), nullptr, 0);
     if (!reader)
     {
-        throw FileNotFoundException(obj->getFilePath().u8string());
+        throw FileNotFoundException(obj->getFilePath().string());
     }
 
     /// uzywamy cfg do sprawdzania elementow gml-a

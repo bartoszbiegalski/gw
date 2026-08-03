@@ -51,7 +51,7 @@ void XsdParser::Parse(std::unique_ptr<XmlConfig> &cfg, std::unique_ptr<GmlObject
             xmlSaveFormatFileEnc("plik.xml", tempDoc, "UTF-8", 1);
 
             std::cout << "przed result\n";
-            auto doc = xmlReadFile(obj->getFilePath().u8string().c_str(), nullptr, 0);
+            auto doc = xmlReadFile(obj->getFilePath().string().c_str(), nullptr, 0);
 
             int result = xmlSchemaValidateDoc(validCtxt.get(), tempDoc);
 
@@ -87,4 +87,5 @@ xmlParserInputPtr XsdParser::myResolver(const std::filesystem::path url, xmlPars
 
     // // domyślnie: pozwól libxml2 ładować URL normalnie
     // return xmlLoadExternalEntity(URL, ID, ctxt);
+    return nullptr;
 }

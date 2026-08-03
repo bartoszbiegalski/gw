@@ -73,7 +73,7 @@ void GmlServices::PerformDivision(const FilePath &inFile, std::vector<NamespaceP
             }
         };
         fillZipVec(objVec);
-        ZipSaver::SaveToZip(obj.get()->getFilePath().stem().u8string(), obj.get()->getFilePath().parent_path(), zipFileVec);
+        // ZipSaver::SaveToZip(obj.get()->getFilePath().stem().string(), obj.get()->getFilePath().parent_path(), zipFileVec);
 
         for (const auto &obj : objVec)
         {
@@ -94,7 +94,7 @@ void GmlServices::PerformDivisionJ(const FilePath &inFile, bool isRaport)
 
     if (isRaport)
     {
-        std::string zapisFileName = obj->getFilePath().stem().u8string() + "-j-raport.txt";
+        std::string zapisFileName = obj->getFilePath().stem().string() + "-j-raport.txt";
         FilePath zapisPath = (obj->getFilePath().parent_path() / zapisFileName).u8string();
         zapis.open(zapisPath);
         zapis << " " << obj->getFileName() << ": " << std::endl;
@@ -172,7 +172,7 @@ void GmlServices::PerformDivisionO(const FilePath &inFile, bool isRaport)
 
     if (isRaport)
     {
-        std::string zapisFileName = obj->getFilePath().stem().u8string() + "-o-raport.txt";
+        std::string zapisFileName = obj->getFilePath().stem().string() + "-o-raport.txt";
         FilePath zapisPath = (obj->getFilePath().parent_path() / zapisFileName).u8string();
         zapis.open(zapisPath);
         zapis << " " << obj->getFileName() << ": " << std::endl;
@@ -251,7 +251,7 @@ void GmlServices::PerformDivisionWithIdVector(const FilePath &inFile, const std:
     {
         std::vector<std::string> zipFileVec;
         zipFileVec.push_back(destObject->getFileName());
-        ZipSaver::SaveToZip(destObject.get()->getFilePath().stem().u8string(), destObject.get()->getFilePath().parent_path(), zipFileVec);
+        // ZipSaver::SaveToZip(destObject.get()->getFilePath().stem().string(), destObject.get()->getFilePath().parent_path(), zipFileVec);
 
         std::filesystem::remove(destObject->getFilePath());
     }

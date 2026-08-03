@@ -65,11 +65,11 @@ void GmlExport::Export(const std::unique_ptr<XmlConfig> &cfg, const std::unique_
     std::string idAttr{cfg->get("id_attribute", "")};
     std::string idValue{cfg->get("id_value", "")};
 
-    xmlTextWriterPtr writer = xmlNewTextWriterFilename(obj->getFilePath().u8string().c_str(), 0);
+    xmlTextWriterPtr writer = xmlNewTextWriterFilename(obj->getFilePath().string().c_str(), 0);
     xmlTextWriterSetIndent(writer, 0);
 
     xmlTextWriterStartDocument(writer, gmlVersion.c_str(), encoding.c_str(), nullptr);
-    //xmlTextWriterWriteComment(writer, BAD_CAST obj->getComment().c_str());
+    // xmlTextWriterWriteComment(writer, BAD_CAST obj->getComment().c_str());
 
     // Tworzymy root
     xmlTextWriterStartElementNS(writer, nullptr, BAD_CAST rootName.c_str(), nullptr);
@@ -111,7 +111,7 @@ void GmlExport::Export(const std::unique_ptr<XmlConfig> &cfg, const std::unique_
             // zmiana gml:id
             auto idNodesVector = std::vector<xmlNodePtr>();
             tree_operations::get_xmlNodes_with_attr(
-                node->children, 
+                node->children,
                 idNodesVector,
                 string_operations::get_suffix(idAttr, sep),
                 string_operations::get_prefix(idAttr, sep));

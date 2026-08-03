@@ -23,7 +23,7 @@ void GmlCreate::Create(const std::unique_ptr<XmlConfig> &cfg, const FilePath &fi
     xmlNewProp(root, BAD_CAST idAttr.c_str(), BAD_CAST(idValue + std::to_string(idNum)).c_str());
 
     std::filesystem::path savePath = filePath;
-    xmlSaveFormatFileEnc(savePath.u8string().c_str(), doc, enconding.c_str(), 1);
+    xmlSaveFormatFileEnc(savePath.string().c_str(), doc, enconding.c_str(), 1);
 
     xmlFreeDoc(doc);
     xmlBufferFree(buf);
@@ -51,7 +51,7 @@ void GmlCreate::Create(const std::unique_ptr<XmlConfig> &cfg, const FilePath &fi
     xmlNewProp(root, BAD_CAST idAttr.c_str(), BAD_CAST(idValue + std::to_string(idNum)).c_str());
 
     std::filesystem::path savePath = filePath / fileName;
-    xmlSaveFormatFileEnc(savePath.u8string().c_str(), doc, enconding.c_str(), 1);
+    xmlSaveFormatFileEnc(savePath.string().c_str(), doc, enconding.c_str(), 1);
 
     xmlFreeDoc(doc);
     xmlBufferFree(buf);

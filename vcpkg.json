@@ -1,0 +1,9 @@
+{
+  "name": "gw",
+  "version": "2.1.0",
+  "dependencies": [
+    "libxml2",
+    "libzip",
+    "geos"
+  ]
+}

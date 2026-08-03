@@ -20,7 +20,7 @@ void GmlDivide::Divide(const std::unique_ptr<XmlConfig> &cfg, std::unique_ptr<Gm
 
             GmlStorage gmlStorage;
             gmlStorage.setGmlMap(gmlMap);
-            const std::string newFileName = sourceObject->getFilePath().stem().u8string() + fileSuffix + extension;
+            const std::string newFileName = sourceObject->getFilePath().stem().string() + fileSuffix + extension;
             newObj->setFileName(newFileName);
             newObj->setFilePath((sourceObject->getFilePath().parent_path() / newFileName).u8string());
             newObj->setComment(sourceObject.get()->getComment());
@@ -70,7 +70,7 @@ void GmlDivide::DivideFromIdVector(const std::unique_ptr<XmlConfig> &cfg, std::u
         GmlMap gmlMap;
         GmlStorage gmlStorage;
         gmlStorage.setGmlMap(gmlMap);
-        const std::string newFileName = sourceObject->getFilePath().stem().u8string() + fileSuffix + extension;
+        const std::string newFileName = sourceObject->getFilePath().stem().string() + fileSuffix + extension;
         dividedObject->setFileName(newFileName);
         dividedObject->setFilePath((sourceObject->getFilePath().parent_path() / newFileName).u8string());
         dividedObject->setComment(sourceObject.get()->getComment());
