@@ -1,11 +1,9 @@
+
+
 #Build folder
 /build/
 /build32
-
-#vcpkg
-vcpkg/
-vcpkg_installed
-
+/vcpkg
 #Binaries
 *.o
 *.obj

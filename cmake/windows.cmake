@@ -6,10 +6,14 @@
 # set(LibXml2_DIR "C:/msys64/mingw64/lib/cmake/libxml2" CACHE PATH "" FORCE)
 # set(LibXml2_USE_STATIC_LIBS ON CACHE BOOL "" FORCE)
 
-# set(LIBZIP_LIBRARY "C:/msys64/mingw64/lib/libzip.a" CACHE FILEPATH "" FORCE)
-# set(LIBZIP_INCLUDE_DIR "C:/msys64/mingw64/include" CACHE PATH "" FORCE)
-# set(LibZip_DIR "C:/msys64/mingw64/lib/cmake/libzip" CACHE PATH "" FORCE)
-# set(LibZip_USE_STATIC_LIBS ON CACHE BOOL "" FORCE)
+set(LIBZIP_LIBRARY "C:/msys64/mingw64/lib/libzip.a" CACHE FILEPATH "" FORCE)
+set(LIBZIP_INCLUDE_DIR "C:/msys64/mingw64/include" CACHE PATH "" FORCE)
+set(LibZip_DIR "C:/msys64/mingw64/lib/cmake/libzip" CACHE PATH "" FORCE)
+set(LibZip_USE_STATIC_LIBS ON CACHE BOOL "" FORCE)
+
+set(GEOS_LIBRARY "C:/msys64/mingw64/lib/libgeos.a" CACHE FILEPATH "" FORCE)
+set(GEOS_INCLUDE_DIR "C:/msys64/mingw64/include/geos" CACHE PATH "" FORCE)
+set(GEOS_USE_STATIC_LIBS ON CACHE BOOL "" FORCE)
 
 find_package(LibXml2 CONFIG REQUIRED)
 #find_package(LibZip CONFIG REQUIRED)
@@ -24,20 +28,20 @@ add_library(gw_lib STATIC ${GW_LIBRARY_SOURCES})
 target_include_directories(gw_lib PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/include
     ${CMAKE_CURRENT_BINARY_DIR}
-    #${LIBZIP_INCLUDE_DIR}
+    ${LIBZIP_INCLUDE_DIR}
+    ${GEOS_INCLUDE_DIR}
 )
 target_link_libraries(gw_lib PUBLIC
     LibXml2::LibXml2
-    #LibZip::LibZip
-    #${LIBZIP_LIBRARY}
-    GEOS::geos
-    # -lz
-    # -lbz2
-    # -llzma
-    # -lzstd
-    # -liconv
-    # -lws2_32
-    # -lbcrypt
+    ${LIBZIP_LIBRARY}
+    ${GEOS_LIBRARY}
+    -lz
+    -lbz2
+    -llzma
+    -lzstd
+    -liconv
+    -lws2_32
+    -lbcrypt
 )
 
 # # gw_dll

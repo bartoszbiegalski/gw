@@ -425,6 +425,7 @@ GmlTreeModel GmlServices::GetJO(const std::unique_ptr<GmlObject> &sourceObject, 
 
                     if (terytNode != nullptr && terytNode->children != nullptr)
                     {
+
                         std::string teryt = reinterpret_cast<const char *>(terytNode->children->content);
                         std::string name = reinterpret_cast<const char *>(nameNode->children->content);
                         obreby.push_back(elId);
@@ -534,6 +535,7 @@ GmlTreeModel GmlServices::GetJO(const std::unique_ptr<GmlObject> &sourceObject, 
             }
         }
     }
+
     for (auto &[prefix, elVec] : inneObiekty)
     {
         for (auto &[elId, elNode] : elVec)
@@ -654,11 +656,18 @@ GmlTreeModel GmlServices::GetJO(const std::unique_ptr<GmlObject> &sourceObject, 
         auto node2 = tree_operations::get_xmlNode_from_name(elNode.get(), "budynekZBlokiemBud", "egb");
         if (node1)
         {
-            refId = std::string(reinterpret_cast<char *>(xmlGetProp(node1, BAD_CAST "href")));
+            if (xmlGetProp(node1, BAD_CAST "href") != nullptr)
+            {
+                refId = std::string(reinterpret_cast<char *>(xmlGetProp(node1, BAD_CAST "href")));
+            }
         }
         else if (node2)
         {
-            refId = std::string(reinterpret_cast<char *>(xmlGetProp(node2, BAD_CAST "href")));
+
+            if (xmlGetProp(node2, BAD_CAST "href") != nullptr)
+            {
+                refId = std::string(reinterpret_cast<char *>(xmlGetProp(node2, BAD_CAST "href")));
+            }
         }
         if (!refId.empty())
         {
