@@ -17,6 +17,8 @@ add_executable(gw_tests
     query_test.cpp
     export_test.cpp
     obreb_parser_test.cpp
+
+    gml_operations_test.cpp
 )
 
 target_link_libraries(gw_tests PRIVATE gw_lib gtest_main)
