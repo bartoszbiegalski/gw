@@ -11,6 +11,10 @@ set(LIBZIP_INCLUDE_DIR "C:/msys64/mingw64/include" CACHE PATH "" FORCE)
 set(LibZip_DIR "C:/msys64/mingw64/lib/cmake/libzip" CACHE PATH "" FORCE)
 set(LibZip_USE_STATIC_LIBS ON CACHE BOOL "" FORCE)
 
+set(GEOS_LIBRARY "C:/msys64/mingw64/lib/libgeos.a" CACHE FILEPATH "" FORCE)
+set(GEOS_INCLUDE_DIR "C:/msys64/mingw64/include/geos" CACHE PATH "" FORCE)
+set(GEOS_USE_STATIC_LIBS ON CACHE BOOL "" FORCE)
+
 find_package(LibXml2 REQUIRED ON)
 find_package(LibZip REQUIRED ON)
 find_package(GEOS REQUIRED ON)
@@ -24,12 +28,13 @@ target_include_directories(gw_lib PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/include
     ${CMAKE_CURRENT_BINARY_DIR}
     ${LIBZIP_INCLUDE_DIR}
+    ${GEOS_INCLUDE_DIR}
 )
 
 target_link_libraries(gw_lib PUBLIC
     LibXml2::LibXml2
     ${LIBZIP_LIBRARY}
-    GEOS::geos
+    ${GEOS_LIBRARY}
     -lz
     -lbz2
     -llzma

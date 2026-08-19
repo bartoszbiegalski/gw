@@ -1,9 +1,9 @@
-<<<<<<< Updated upstream
 
 
 #Build folder
 /build/
 /build32
+/vcpkg
 #Binaries
 *.o
 *.obj
@@ -21,6 +21,3 @@ Makefile
 /dll
 
 .vscode/
-=======
-/build/
->>>>>>> Stashed changes
