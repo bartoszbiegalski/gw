@@ -50,6 +50,8 @@ public:
 
     GmlTreeModel GetJO(const std::unique_ptr<GmlObject> &sourceObject, const std::string &type, std::vector<GmlId> &reszta);
 
+    std::vector<GmlId> GetTouchingElements(const std::unique_ptr<GmlObject> &sourceObject, const geos::geom::CoordinateSequence sequence);
+
     std::map<GmlId, std::set<GmlId>> GetElementsFromQuery(const std::unique_ptr<GmlObject> &sourceObject, const std::string &query_type, const std::string &query_request, std::map<GmlId, std::pair<std::string, std::string>> &extra_attributes);
     const std::unique_ptr<XmlConfig> &GetGmlCfg() { return gmlCfg; }
 

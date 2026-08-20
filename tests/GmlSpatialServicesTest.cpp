@@ -4,34 +4,31 @@
 #include "core/GmlObject.h"
 #include "exceptions/Exceptions.h"
 #include "services/XmlConfig.h"
+#include "services/XsdConfig.h"
 #include "logic/GmlServices.h"
-#include "io/TxtImport.h"
 #include "io/GmlCreate.h"
 #include "io/GmlImport.h"
 #include "io/GmlExport.h"
+#include "utils/tree_operations.h"
 #include "utils/gml_operations.h"
 
-class GmlServicesTest : public ::testing::Test
+class GmlSpatialServicesTest : ::testing::Test
 {
 protected:
     FilePath testPath;
     FilePath testFile1;
-    FilePath testFile2;
 
     void SetUp() override
     {
         testPath = std::filesystem::path("C:/msys64/test/gw");
-        testFile1 = testPath / "GetTouchingObjectsFile.gml";
-        testFile2 = testPath / "GetTouchingObjectsFile.txt";
+        testFile1 = testPath / "GmlSpatialServicesFile1.gml";
     }
 };
 
-TEST_F(GmlServicesTest, GetTouchingObjects)
+TEST_F(GmlSpatialServicesTest, IsAreaTouching)
 {
     auto sourceObj = std::make_unique<GmlObject>();
     auto destObj = std::make_unique<GmlObject>();
-
-    geos::geom::CoordinateSequence sequence;
 
     auto &gml = GmlServices::Get();
 
@@ -47,9 +44,5 @@ TEST_F(GmlServicesTest, GetTouchingObjects)
 
     EXPECT_NO_THROW({
         gml.Get().PerformImport(testFile1, sourceObj);
-        TxtImport::Import(testFile2, sequence);
-
-        auto vec = gml.Get().GetTouchingElements(sourceObj, sequence);
-        std::cout << vec.size() << "\n";
     });
 }

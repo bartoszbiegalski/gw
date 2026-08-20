@@ -10,7 +10,7 @@
 class GmlSpatialServices
 {
 public:
-    static bool IsIntersecting(const GmlNodePtr &first, const GmlNodePtr &second);
+    static bool IsTouching(const geos::geom::CoordinateSequence &firstSequence, const geos::geom::CoordinateSequence &secondSequence);
 
     static GmlGeometry CreateGmlGeometryFromJO(const xmlNodePtr &node);
     static std::vector<geos::geom::CoordinateSequence> CreateCoordinateSequences(const xmlNodePtr &node, const std::string &prefix);

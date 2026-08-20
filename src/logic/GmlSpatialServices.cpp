@@ -1,11 +1,23 @@
 #include "logic/GmlSpatialServices.h"
 #include "utils/tree_operations.h"
 
-bool GmlSpatialServices::IsIntersecting(const GmlNodePtr &first, const GmlNodePtr &second)
+bool GmlSpatialServices::IsTouching(const geos::geom::CoordinateSequence &firstSequence, const geos::geom::CoordinateSequence &secondSequence)
 {
-    geos::geom::CoordinateXY c1;
-    //  std::string firstPosList = tree_operations::find_xmlNode_value(first.get(), "")
+    auto factory = geos::geom::GeometryFactory::create();
 
+    auto firstRing = factory->createLinearRing(
+        std::unique_ptr<geos::geom::CoordinateSequence>(
+            firstSequence.clone()));
+    auto firstPolygon = factory->createPolygon(std::move(firstRing));
+    for (size_t i = 0; i < secondSequence.size(); i++)
+    {
+        std::unique_ptr<geos::geom::Point> point = factory->createPoint(secondSequence.getAt(i));
+
+        if (firstPolygon->covers(point.get()))
+        {
+            return true;
+        }
+    }
     return false;
 }
 

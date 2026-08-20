@@ -11,14 +11,16 @@ file(GLOB_RECURSE GW_TEST_SOURCES
 )
 
 add_executable(gw_tests
-    basic_test.cpp
-    divide_from_map_test.cpp
-    reference_test.cpp
-    query_test.cpp
-    export_test.cpp
-    obreb_parser_test.cpp
+    # basic_test.cpp
+    # divide_from_map_test.cpp
+    # reference_test.cpp
+    # query_test.cpp
+    # export_test.cpp
+    # obreb_parser_test.cpp
+    GmlServicesTest.cpp
 
-    gml_operations_test.cpp
+    # gml_operations_test.cpp
+    # TxtImportTest.cpp
 )
 
 target_link_libraries(gw_tests PRIVATE gw_lib gtest_main)

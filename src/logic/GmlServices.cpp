@@ -306,31 +306,6 @@ std::map<NamespacePrefix, std::map<GmlId, std::vector<GmlId>>> GmlServices::GetR
                 referenceMap[prefix][id] = idVector;
             }
         }
-        /*
-        for (auto &className : classVector)
-        {
-            auto refVec = xsdCfgs[prefix].get()->get_json(className);
-            std::vector<std::string> refs;
-            for (const auto &obj : refVec)
-            {
-                if (obj.contains("referencesTo"))
-                {
-                    refs = obj["referencesTo"].get<std::vector<std::string>>();
-                }
-            }
-            auto gmlMap = gml_operations::GetClassMap(sourceObject, prefix, className);
-
-            for (auto &[id, ptr] : gmlMap)
-            {
-                auto idVector = std::vector<GmlId>();
-                for (auto referenceElement : refs)
-                {
-                    tree_operations::traverse_gml_id(ptr.get(), referenceElement, referenceAttr, idVector, prefix);
-                }
-                referenceMap[prefix][id] = idVector;
-            }
-        }
-        */
     }
     return referenceMap;
 }
@@ -483,7 +458,6 @@ GmlTreeModel GmlServices::GetJO(const std::unique_ptr<GmlObject> &sourceObject, 
 
                     if (terytNode != nullptr && terytNode->children != nullptr)
                     {
-
                         std::string teryt = reinterpret_cast<const char *>(terytNode->children->content);
                         std::string name = reinterpret_cast<const char *>(nameNode->children->content);
                         obreby.push_back(elId);
@@ -745,6 +719,28 @@ GmlTreeModel GmlServices::GetJO(const std::unique_ptr<GmlObject> &sourceObject, 
     }
 
     return obrebyTreeModel;
+}
+
+std::vector<GmlId> GmlServices::GetTouchingElements(const std::unique_ptr<GmlObject> &sourceObject, const geos::geom::CoordinateSequence sequence)
+{
+    std::vector<GmlId> ids;
+    for (auto &[prefix, prefixMap] : sourceObject.get()->getGmlStorage().getGmlMap())
+    {
+        for (auto &[gmlId, nodePtr] : prefixMap)
+        {
+            auto sequences = GmlSpatialServices::CreateCoordinateSequences(nodePtr.get(), prefix);
+            bool br = false;
+            for (auto seq : sequences)
+            {
+                if (GmlSpatialServices::IsTouching(sequence, seq))
+                {
+                    ids.push_back(gmlId);
+                    break;
+                }
+            }
+        }
+    }
+    return ids;
 }
 
 std::map<GmlId, std::set<GmlId>> GmlServices::GetElementsFromQuery(const std::unique_ptr<GmlObject> &sourceObject, const std::string &query_type, const std::string &query_request, std::map<GmlId, std::pair<std::string, std::string>> &extra_attributes)
