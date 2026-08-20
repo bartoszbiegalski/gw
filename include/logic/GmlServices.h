@@ -40,7 +40,8 @@ public:
 
     void PerformMerge(const FilePath &inFile, std::vector<FilePath> &filePathVec);
 
-    std::map<NamespacePrefix, std::map<GmlId, std::vector<GmlId>>> GetReferencesTo(const std::unique_ptr<GmlObject> &sourceObject, const std::map<NamespacePrefix, std::vector<std::string>> &classMap);
+    std::map<NamespacePrefix, std::map<GmlId, std::vector<GmlId>>> GetReferencesTo(const std::unique_ptr<GmlObject> &sourceObject, const std::map<NamespacePrefix, std::vector<ClassName>> &classMap);
+    std::map<NamespacePrefix, std::map<GmlId, std::vector<GmlId>>> GetReferencesTo(const std::unique_ptr<GmlObject> &sourceObject, const std::vector<GmlId> &vecId);
     std::map<NamespacePrefix, std::vector<GmlId>> GetReferencesFrom(const std::unique_ptr<GmlObject> &sourceObject, std::map<NamespacePrefix, std::map<GmlId, std::vector<GmlId>>> &referencesMap);
     std::map<NamespacePrefix, std::vector<GmlId>> GetReferencesFromConfig(const std::unique_ptr<GmlObject> &sourceObject);
 

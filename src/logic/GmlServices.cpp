@@ -277,7 +277,65 @@ void GmlServices::PerformMerge(const FilePath &inFile, std::vector<FilePath> &fi
     GmlExport::Export(gmlCfg, destObj);
 }
 
-std::map<std::string, std::map<GmlId, std::vector<GmlId>>> GmlServices::GetReferencesTo(const std::unique_ptr<GmlObject> &sourceObject, const std::map<std::string, std::vector<std::string>> &classMap)
+std::map<NamespacePrefix, std::map<GmlId, std::vector<GmlId>>> GmlServices::GetReferencesTo(const std::unique_ptr<GmlObject> &sourceObject, const std::vector<GmlId> &vecId)
+{
+    std::string referenceAttr = gmlCfg.get()->get("reference_attr", "href");
+    auto referenceMap = std::map<std::string, std::map<GmlId, std::vector<GmlId>>>();
+    for (auto &[prefix, idMap] : sourceObject.get()->getGmlStorage().getGmlMap())
+    {
+        for (auto id : vecId)
+        {
+            if (idMap.find(id) != idMap.end())
+            {
+                ClassName className = tree_operations::get_class_name(idMap[id].get());
+                auto refVec = xsdCfgs[prefix].get()->get_json(className);
+                std::vector<std::string> refs;
+                for (const auto &obj : refVec)
+                {
+                    if (obj.contains("referencesTo"))
+                    {
+                        refs = obj["referencesTo"].get<std::vector<std::string>>();
+                    }
+                }
+
+                auto idVector = std::vector<GmlId>();
+                for (auto referenceElement : refs)
+                {
+                    tree_operations::traverse_gml_id(idMap[id].get(), referenceElement, referenceAttr, idVector, prefix);
+                }
+                referenceMap[prefix][id] = idVector;
+            }
+        }
+        /*
+        for (auto &className : classVector)
+        {
+            auto refVec = xsdCfgs[prefix].get()->get_json(className);
+            std::vector<std::string> refs;
+            for (const auto &obj : refVec)
+            {
+                if (obj.contains("referencesTo"))
+                {
+                    refs = obj["referencesTo"].get<std::vector<std::string>>();
+                }
+            }
+            auto gmlMap = gml_operations::GetClassMap(sourceObject, prefix, className);
+
+            for (auto &[id, ptr] : gmlMap)
+            {
+                auto idVector = std::vector<GmlId>();
+                for (auto referenceElement : refs)
+                {
+                    tree_operations::traverse_gml_id(ptr.get(), referenceElement, referenceAttr, idVector, prefix);
+                }
+                referenceMap[prefix][id] = idVector;
+            }
+        }
+        */
+    }
+    return referenceMap;
+}
+
+std::map<NamespacePrefix, std::map<GmlId, std::vector<GmlId>>> GmlServices::GetReferencesTo(const std::unique_ptr<GmlObject> &sourceObject, const std::map<NamespacePrefix, std::vector<ClassName>> &classMap)
 {
     std::string referenceAttr = gmlCfg.get()->get("reference_attr", "href");
     auto referenceMap = std::map<std::string, std::map<GmlId, std::vector<GmlId>>>();
@@ -310,7 +368,7 @@ std::map<std::string, std::map<GmlId, std::vector<GmlId>>> GmlServices::GetRefer
     return referenceMap;
 }
 
-std::map<std::string, std::vector<GmlId>> GmlServices::GetReferencesFrom(const std::unique_ptr<GmlObject> &sourceObject, std::map<std::string, std::map<GmlId, std::vector<GmlId>>> &referencesMap)
+std::map<NamespacePrefix, std::vector<GmlId>> GmlServices::GetReferencesFrom(const std::unique_ptr<GmlObject> &sourceObject, std::map<std::string, std::map<GmlId, std::vector<GmlId>>> &referencesMap)
 {
     auto referencesFromMap = std::map<std::string, std::vector<GmlId>>();
 

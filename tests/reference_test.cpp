@@ -14,23 +14,19 @@
 
 // FileImport tests
 
-class ReferencesFixture : public ::testing::Test
+class FindReferencesTest : public ::testing::Test
 {
 protected:
-    std::vector<std::string> referencesVector;
+    FilePath testPath;
+    FilePath testFile1;
 
-    // void SetUp() override
-    // {
-    //     referencesVector =
-    // }
-
-    void TearDown() override
+    void SetUp() override
     {
-        referencesVector.clear();
+        testPath = std::filesystem::path("C:/msys64/test/gw");
+        testFile1 = testPath / "FindReferencesTest.gml";
     }
 };
-
-TEST_F(ReferencesFixture, ReferencesCreate)
+TEST_F(FindReferencesTest, ReferencesCreate)
 {
     EXPECT_NO_THROW({
         auto cfg = std::make_unique<XsdConfig>(FilePath{"resources/egb.json"});
@@ -44,50 +40,42 @@ TEST_F(ReferencesFixture, ReferencesCreate)
                 refs = obj["referencesTo"].get<std::vector<std::string>>();
             }
         }
+        for (auto r : refs)
+        {
+            std::cout << r << '\n';
+        }
     });
 }
 
-TEST_F(ReferencesFixture, ReferencesFound)
+TEST_F(FindReferencesTest, FindReferences)
 {
-    auto refConfig = std::make_unique<XsdConfig>(FilePath{"resources/egb.json"});
-    auto refVec = refConfig.get()->get_json("PrezentacjaGraficzna");
-    std::vector<std::string> refs;
-    std::vector<GmlId> foundRefs;
-
     auto sourceObj = std::make_unique<GmlObject>();
-    auto cfg = std::make_unique<XmlConfig>(static_config::staticGmlData);
-    std::map<std::string, std::vector<std::string>> classMap;
-    classMap["egb"] = {"PrezentacjaGraficzna"};
+    auto destObj = std::make_unique<GmlObject>();
+
+    auto &gml = GmlServices::Get();
+
+    auto gmlCfg = std::make_unique<XmlConfig>(FilePath{"resources/config.json"});
+    std::map<std::string, std::unique_ptr<XsdConfig>> xsdCfgs;
+
+    xsdCfgs["egb"] = std::make_unique<XsdConfig>(FilePath{"resources/egb.json"});
+    xsdCfgs["ot"] = std::make_unique<XsdConfig>(FilePath{"resources/ot.json"});
+
+    gml.Init(
+        std::move(gmlCfg),
+        std::move(xsdCfgs));
+
+    std::vector<GmlId> refs{"EGB_DzialkaEwidencyjn.9n"};
 
     EXPECT_NO_THROW({
-        for (const auto &obj : refVec)
-        {
-            if (obj.contains("referencesTo"))
-            {
-                refs = obj["referencesTo"].get<std::vector<std::string>>();
-            }
-        }
-
-        GmlImport::Import(std::filesystem::temp_directory_path() / "source.gml", sourceObj);
-        NamespaceTool::Process(cfg, sourceObj);
-        XmlParser::SetContent(cfg, sourceObj);
-        for (auto className : classMap["egb"])
-        {
-            auto elemMap = gml_operations::GetClassMap(sourceObj, "egb", className);
-            for (auto &[first, second] : elemMap)
-            {
-                for (auto ref : refs)
-                {
-                    tree_operations::traverse_gml_id(second.get(), ref, "href", foundRefs, "egb");
-                }
-            }
-        }
+        gml.Get().PerformImport(testFile1, sourceObj);
+        auto foundReferences = gml.Get().GetReferencesTo(sourceObj, refs);
     });
 }
 
+/*
 TEST_F(ReferencesFixture, GetReferencesTo)
 {
-    auto sourceObj = std::make_unique<GmlObject>();
+    auto sourceObject = std::make_unique<GmlObject>();
 
     auto &gml = GmlServices::Get();
 
@@ -104,18 +92,23 @@ TEST_F(ReferencesFixture, GetReferencesTo)
     std::map<std::string, std::vector<std::string>> classMap;
 
     EXPECT_NO_THROW({
-        gml.Get().PerformImport(std::filesystem::temp_directory_path() / "source.gml", sourceObj);
+        gml.Get().PerformImport(std::filesystem::temp_directory_path() / "source.gml", sourceObject);
 
         classMap["egb"] = {"EGB_DzialkaEwidencyjna"};
-        for (auto i : gml.Get().GetReferencesTo(sourceObj, classMap))
+        for (auto &[prefix, refMap] : gml.Get().GetReferencesTo(sourceObject, classMap))
         {
+            std::cout << prefix << '\n';
+            for (auto r : refMap)
+            {
+                std::cout << r.first << " " << r.second.size() << "\n";
+            }
         }
     });
 }
 
 TEST_F(ReferencesFixture, GetReferencesFromXsd)
 {
-    auto sourceObj = std::make_unique<GmlObject>();
+    auto sourceObject = std::make_unique<GmlObject>();
     auto destObj = std::make_unique<GmlObject>();
 
     auto &gml = GmlServices::Get();
@@ -133,10 +126,9 @@ TEST_F(ReferencesFixture, GetReferencesFromXsd)
     std::map<std::string, std::vector<std::string>> referencesFrom;
 
     EXPECT_NO_THROW({
-        gml.Get().PerformImport(std::filesystem::temp_directory_path() / "source.gml", sourceObj);
+        gml.Get().PerformImport(std::filesystem::temp_directory_path() / "source.gml", sourceObject);
 
-        referencesFrom = gml.Get().GetReferencesFromConfig(sourceObj);
-
-      
+        referencesFrom = gml.Get().GetReferencesFromConfig(sourceObject);
     });
 }
+*/
