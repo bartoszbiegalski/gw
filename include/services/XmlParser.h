@@ -4,6 +4,7 @@
 #include "core/GmlObject.h"
 #include "exceptions/Exceptions.h"
 #include "services/XmlConfig.h"
+#include "utils/tree_operations.h"
 
 class XmlParser
 {

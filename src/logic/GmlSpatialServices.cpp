@@ -20,6 +20,29 @@ bool GmlSpatialServices::IsTouching(const geos::geom::CoordinateSequence &firstS
     }
     return false;
 }
+bool GmlSpatialServices::IsIntersecting(const geos::geom::CoordinateSequence &firstSequence, const geos::geom::CoordinateSequence &secondSequence)
+{
+    // auto factory = geos::geom::GeometryFactory::create();
+
+    // auto firstRing = factory->createLinearRing(
+    //     std::unique_ptr<geos::geom::CoordinateSequence>(
+    //         firstSequence.clone()));
+    // auto firstPolygon = factory->createPolygon(std::move(firstRing));
+
+    // if (secondSequence.front() != secondSequence.back())
+    // {
+    //     auto destLine = factory->createLineString(
+    //         std::unique_ptr<geos::geom::CoordinateSequence>(
+    //             secondSequence.clone()));
+    //     return firstPolygon->intersection(destLine.get());
+    // }
+    // else
+    // {
+    //     auto
+    // }
+
+    // return firstPolygon->intersects(secondPolygon.get());
+}
 
 GmlGeometry GmlSpatialServices::CreateGmlGeometryFromJO(const xmlNodePtr &node)
 {

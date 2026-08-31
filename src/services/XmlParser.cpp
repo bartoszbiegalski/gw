@@ -31,7 +31,7 @@ void XmlParser::SetContent(const std::unique_ptr<XmlConfig> &cfg, std::unique_pt
                         prefix = ""; // np. pusty prefix dla domyślnej przestrzeni nazw
                     if (prefix != "")
                     {
-                        std::string id = reinterpret_cast<const char *>(childChild->properties->children->content);
+                        auto id = tree_operations::get_attribute_value(childChild, "id", "gml");
                         if (childChild->ns)
                         {
                             xmlNsPtr mainNs = xmlSearchNs(doc, childChild, childChild->ns->prefix);

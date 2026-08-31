@@ -296,4 +296,29 @@ namespace tree_operations
         std::string nodeName(reinterpret_cast<const char *>(nodePtr->name));
         return nodeName;
     }
+
+    std::string get_attribute_value(xmlNodePtr nodePtr, const std::string &name, const std::string &prefix)
+    {
+        for (xmlAttr *attrNode = nodePtr->properties; attrNode; attrNode = attrNode->next)
+        {
+
+            if (prefix == "")
+            {
+                if (attrNode->name && name == reinterpret_cast<const char *>(attrNode->name))
+                {
+                    xmlChar *value = xmlNodeListGetString(nodePtr->doc, attrNode->children, 1);
+                    return reinterpret_cast<const char *>(value);
+                }
+            }
+            else
+            {
+                if (attrNode->name && attrNode->ns && name == reinterpret_cast<const char *>(attrNode->name) && prefix == reinterpret_cast<const char *>(attrNode->ns->prefix))
+                {
+                    xmlChar *value = xmlNodeListGetString(nodePtr->doc, attrNode->children, 1);
+                    return reinterpret_cast<const char *>(value);
+                }
+            }
+        }
+        return std::string{};
+    }
 }

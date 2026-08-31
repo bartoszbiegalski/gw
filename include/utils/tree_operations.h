@@ -23,5 +23,6 @@ namespace tree_operations
 
     std::string get_class_name(xmlNodePtr nodePtr);
 
+    std::string get_attribute_value(xmlNodePtr nodePtr, const std::string &name, const std::string &prefix = "/");
 
 }

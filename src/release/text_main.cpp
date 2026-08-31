@@ -194,7 +194,7 @@ void mainLoop()
                     vNamespaces.push_back(vParams[i]);
                 }
                 auto dividedFiles = std::vector<std::unique_ptr<GmlObject>>();
-                GmlDivide::Divide(cfg, loadedObjects.at(vParams[1]), vNamespaces, dividedFiles);
+                GmlDivide::DivideFromPrefixes(cfg, loadedObjects.at(vParams[1]), vNamespaces, dividedFiles);
 
                 for (auto &i : dividedFiles)
                 {

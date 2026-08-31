@@ -1,5 +1,7 @@
 #pragma once
 
+#include <geos/geom.h>
+
 #include "core/types.h"
 #include "core/GmlObject.h"
 #include "utils/string_operations.h"
@@ -9,7 +11,7 @@
 class GmlDivide
 {
 public:
-    static void Divide(const std::unique_ptr<XmlConfig> &cfg, std::unique_ptr<GmlObject> &sourceObject, const std::vector<NamespacePrefix> &prefixes, std::vector<std::unique_ptr<GmlObject>> &dividedObjects);
+    static void DivideFromPrefixes(const std::unique_ptr<XmlConfig> &cfg, std::unique_ptr<GmlObject> &sourceObject, const std::vector<NamespacePrefix> &prefixes, std::vector<std::unique_ptr<GmlObject>> &dividedObjects);
     static void DivideJO(const std::unique_ptr<XmlConfig> &cfg, const GmlTreeModel &model, std::unique_ptr<GmlObject> &sourceObject, std::vector<std::unique_ptr<GmlObject>> &dividedObjects);
     static void DivideFromIdVector(const std::unique_ptr<XmlConfig> &cfg, std::unique_ptr<GmlObject> &sourceObject, const std::string &fileSuffix, const std::vector<GmlId> idVector, std::unique_ptr<GmlObject> &dividedObject);
 };

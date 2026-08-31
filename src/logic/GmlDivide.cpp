@@ -1,7 +1,7 @@
 #include "logic/GmlDivide.h"
 #include <iostream>
 
-void GmlDivide::Divide(const std::unique_ptr<XmlConfig> &cfg, std::unique_ptr<GmlObject> &sourceObject, const std::vector<NamespacePrefix> &prefixes, std::vector<std::unique_ptr<GmlObject>> &dividedObjects)
+void GmlDivide::DivideFromPrefixes(const std::unique_ptr<XmlConfig> &cfg, std::unique_ptr<GmlObject> &sourceObject, const std::vector<NamespacePrefix> &prefixes, std::vector<std::unique_ptr<GmlObject>> &dividedObjects)
 {
     std::string extension = cfg.get()->get("gml_extension", "");
     for (auto ns : prefixes)
@@ -65,17 +65,18 @@ void GmlDivide::DivideJO(const std::unique_ptr<XmlConfig> &cfg, const GmlTreeMod
 void GmlDivide::DivideFromIdVector(const std::unique_ptr<XmlConfig> &cfg, std::unique_ptr<GmlObject> &sourceObject, const std::string &fileSuffix, const std::vector<GmlId> idVector, std::unique_ptr<GmlObject> &dividedObject)
 {
     std::string extension = cfg.get()->get("gml_extension", "");
+    GmlMap gmlMap;
+    GmlStorage gmlStorage;
+    gmlStorage.setGmlMap(gmlMap);
+    const std::string newFileName = sourceObject->getFilePath().stem().string() + fileSuffix + extension;
+    dividedObject->setFileName(newFileName);
+    dividedObject->setFilePath((sourceObject->getFilePath().parent_path() / newFileName).u8string());
+    dividedObject->setComment(sourceObject.get()->getComment());
+    dividedObject->setNamespaceMap(sourceObject->getNamespaceMap());
+    dividedObject->setGmlStorage(gmlStorage);
+
     for (auto &[prefix, _] : sourceObject.get()->getGmlStorage().getGmlMap())
     {
-        GmlMap gmlMap;
-        GmlStorage gmlStorage;
-        gmlStorage.setGmlMap(gmlMap);
-        const std::string newFileName = sourceObject->getFilePath().stem().string() + fileSuffix + extension;
-        dividedObject->setFileName(newFileName);
-        dividedObject->setFilePath((sourceObject->getFilePath().parent_path() / newFileName).u8string());
-        dividedObject->setComment(sourceObject.get()->getComment());
-        dividedObject->setNamespaceMap(sourceObject->getNamespaceMap());
-        dividedObject->setGmlStorage(gmlStorage);
         for (auto id : idVector)
         {
             gml_operations::CopyElementWithId(sourceObject, dividedObject, prefix, id);

@@ -18,7 +18,7 @@ add_executable(gw_tests
     # export_test.cpp
     # obreb_parser_test.cpp
     GmlServicesTest.cpp
-
+    #XmlParserTest.cpp
     # gml_operations_test.cpp
     # TxtImportTest.cpp
 )

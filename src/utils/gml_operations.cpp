@@ -195,7 +195,10 @@ namespace gml_operations
 
     void CopyElementWithId(const std::unique_ptr<GmlObject> &sourceObj, std::unique_ptr<GmlObject> &destObj, NamespacePrefix prefix, GmlId id)
     {
-        auto node = sourceObj.get()->getGmlStorage().getGmlMap()[prefix].at(id);
-        destObj.get()->getGmlStorage().getGmlMap()[prefix].emplace(id, node);
+        if (sourceObj.get()->getGmlStorage().getGmlMap()[prefix].find(id) != sourceObj.get()->getGmlStorage().getGmlMap()[prefix].end())
+        {
+            auto node = sourceObj.get()->getGmlStorage().getGmlMap()[prefix].at(id);
+            destObj.get()->getGmlStorage().getGmlMap()[prefix].emplace(id, node);
+        }
     }
 }

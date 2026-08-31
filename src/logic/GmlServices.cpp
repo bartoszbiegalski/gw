@@ -56,7 +56,7 @@ void GmlServices::PerformDivision(const FilePath &inFile, std::vector<NamespaceP
             nsVec.push_back(i.first);
         }
     }
-    GmlDivide::Divide(gmlCfg, obj, nsVec, objVec);
+    GmlDivide::DivideFromPrefixes(gmlCfg, obj, nsVec, objVec);
     for (auto &o : objVec)
     {
         GmlExport::Export(gmlCfg, o);
@@ -283,27 +283,30 @@ std::map<NamespacePrefix, std::map<GmlId, std::vector<GmlId>>> GmlServices::GetR
     auto referenceMap = std::map<std::string, std::map<GmlId, std::vector<GmlId>>>();
     for (auto &[prefix, idMap] : sourceObject.get()->getGmlStorage().getGmlMap())
     {
-        for (auto id : vecId)
+        if (xsdCfgs.find(prefix) != xsdCfgs.end())
         {
-            if (idMap.find(id) != idMap.end())
+            for (auto id : vecId)
             {
-                ClassName className = tree_operations::get_class_name(idMap[id].get());
-                auto refVec = xsdCfgs[prefix].get()->get_json(className);
-                std::vector<std::string> refs;
-                for (const auto &obj : refVec)
+                if (idMap.find(id) != idMap.end())
                 {
-                    if (obj.contains("referencesTo"))
+                    ClassName className = tree_operations::get_class_name(idMap[id].get());
+                    auto refVec = xsdCfgs[prefix].get()->get_json(className);
+                    std::vector<std::string> refs;
+                    for (const auto &obj : refVec)
                     {
-                        refs = obj["referencesTo"].get<std::vector<std::string>>();
+                        if (obj.contains("referencesTo"))
+                        {
+                            refs = obj["referencesTo"].get<std::vector<std::string>>();
+                        }
                     }
-                }
 
-                auto idVector = std::vector<GmlId>();
-                for (auto referenceElement : refs)
-                {
-                    tree_operations::traverse_gml_id(idMap[id].get(), referenceElement, referenceAttr, idVector, prefix);
+                    auto idVector = std::vector<GmlId>();
+                    for (auto referenceElement : refs)
+                    {
+                        tree_operations::traverse_gml_id(idMap[id].get(), referenceElement, referenceAttr, idVector, prefix);
+                    }
+                    referenceMap[prefix][id] = idVector;
                 }
-                referenceMap[prefix][id] = idVector;
             }
         }
     }
@@ -316,36 +319,39 @@ std::map<NamespacePrefix, std::map<GmlId, std::vector<GmlId>>> GmlServices::GetR
     auto referenceMap = std::map<std::string, std::map<GmlId, std::vector<GmlId>>>();
     for (auto &[prefix, classVector] : classMap)
     {
-        for (auto &className : classVector)
+        if (xsdCfgs.find(prefix) != xsdCfgs.end())
         {
-            auto refVec = xsdCfgs[prefix].get()->get_json(className);
-            std::vector<std::string> refs;
-            for (const auto &obj : refVec)
+            for (auto &className : classVector)
             {
-                if (obj.contains("referencesTo"))
+                auto refVec = xsdCfgs[prefix].get()->get_json(className);
+                std::vector<std::string> refs;
+                for (const auto &obj : refVec)
                 {
-                    refs = obj["referencesTo"].get<std::vector<std::string>>();
+                    if (obj.contains("referencesTo"))
+                    {
+                        refs = obj["referencesTo"].get<std::vector<std::string>>();
+                    }
                 }
-            }
-            auto gmlMap = gml_operations::GetClassMap(sourceObject, prefix, className);
+                auto gmlMap = gml_operations::GetClassMap(sourceObject, prefix, className);
 
-            for (auto &[id, ptr] : gmlMap)
-            {
-                auto idVector = std::vector<GmlId>();
-                for (auto referenceElement : refs)
+                for (auto &[id, ptr] : gmlMap)
                 {
-                    tree_operations::traverse_gml_id(ptr.get(), referenceElement, referenceAttr, idVector, prefix);
+                    auto idVector = std::vector<GmlId>();
+                    for (auto referenceElement : refs)
+                    {
+                        tree_operations::traverse_gml_id(ptr.get(), referenceElement, referenceAttr, idVector, prefix);
+                    }
+                    referenceMap[prefix][id] = idVector;
                 }
-                referenceMap[prefix][id] = idVector;
             }
         }
     }
     return referenceMap;
 }
 
-std::map<NamespacePrefix, std::vector<GmlId>> GmlServices::GetReferencesFrom(const std::unique_ptr<GmlObject> &sourceObject, std::map<std::string, std::map<GmlId, std::vector<GmlId>>> &referencesMap)
+std::map<NamespacePrefix, std::vector<GmlId>> GmlServices::GetReferencesFrom(const std::unique_ptr<GmlObject> &sourceObject, std::map<NamespacePrefix, std::map<GmlId, std::vector<GmlId>>> &referencesMap)
 {
-    auto referencesFromMap = std::map<std::string, std::vector<GmlId>>();
+    auto referencesFromMap = std::map<NamespacePrefix, std::vector<GmlId>>();
 
     for (auto &[prefix, refMap] : referencesMap)
     {
@@ -364,7 +370,7 @@ std::map<NamespacePrefix, std::vector<GmlId>> GmlServices::GetReferencesFrom(con
     return referencesFromMap;
 }
 
-std::map<NamespacePrefix, std::vector<GmlId>> GmlServices::GetReferencesFromConfig(const std::unique_ptr<GmlObject> &sourceObject)
+std::map<NamespacePrefix, std::vector<ClassName>> GmlServices::GetReferencesFromConfig(const std::unique_ptr<GmlObject> &sourceObject)
 {
     auto referencesFromMap = gmlCfg.get()->get_json("xsd.references_from").get<std::map<std::string, std::vector<std::string>>>();
     return referencesFromMap;
@@ -730,6 +736,7 @@ std::vector<GmlId> GmlServices::GetTouchingElements(const std::unique_ptr<GmlObj
         {
             auto sequences = GmlSpatialServices::CreateCoordinateSequences(nodePtr.get(), prefix);
             bool br = false;
+
             for (auto seq : sequences)
             {
                 if (GmlSpatialServices::IsTouching(sequence, seq))
@@ -741,6 +748,11 @@ std::vector<GmlId> GmlServices::GetTouchingElements(const std::unique_ptr<GmlObj
         }
     }
     return ids;
+}
+
+std::vector<GmlId> GmlServices::GetIntersectingElements(const std::unique_ptr<GmlObject> &sourceObject, const geos::geom::Polygon &polygon)
+{
+    // TODO: Do it properly
 }
 
 std::map<GmlId, std::set<GmlId>> GmlServices::GetElementsFromQuery(const std::unique_ptr<GmlObject> &sourceObject, const std::string &query_type, const std::string &query_request, std::map<GmlId, std::pair<std::string, std::string>> &extra_attributes)
